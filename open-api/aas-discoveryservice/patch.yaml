@@ -1,0 +1,41 @@
+- op: replace
+  path: /servers
+  value: []
+
+- op: add 
+  path: /components
+  value: 
+    schemas: 
+      PagedResultOrStringItems:
+        type: object
+        allOf: []
+
+- op: copy
+  from: /paths/~1lookup~1shells/get/responses/200/content/application~1json/schema/allOf
+  path: /components/schemas/PagedResultOrStringItems/allOf
+- op: add
+  path: /paths/~1lookup~1shells/get/responses/200/content/application~1json/schema
+  value: 
+    $ref: '#/components/schemas/PagedResultOrStringItems'
+
+
+- op: replace
+  path: /paths/~1lookup~1shells/get/tags
+  value:
+  - Asset Administration Shell Basic Discovery
+- op: replace
+  path: /paths/~1lookup~1shells~1{aasIdentifier}/get/tags
+  value:
+  - Asset Administration Shell Basic Discovery
+- op: replace
+  path: /paths/~1lookup~1shells~1{aasIdentifier}/post/tags
+  value:
+  - Asset Administration Shell Basic Discovery
+- op: replace
+  path: /paths/~1lookup~1shells~1{aasIdentifier}/delete/tags
+  value:
+  - Asset Administration Shell Basic Discovery
+- op: replace
+  path: /paths/~1description/get/tags
+  value:
+  - Asset Administration Shell Basic Discovery

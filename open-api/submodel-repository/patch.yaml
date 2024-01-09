@@ -1,0 +1,139 @@
+
+- op: replace
+  path: /servers
+  value: []
+- op: replace
+  path: /paths/~1submodels/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels/post/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1$metadata/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1$value/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1$reference/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1$path/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}/put/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}/patch/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}/delete/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1$metadata/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1$metadata/patch/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1$value/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1$value/patch/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1$reference/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1$path/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements/post/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1$metadata/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1$value/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1$reference/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1$path/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/put/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/post/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/patch/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/delete/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$metadata/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$metadata/patch/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$value/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$value/patch/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$reference/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$path/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1attachment/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1attachment/put/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1attachment/delete/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1invoke/post/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1invoke~1$value/post/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1invoke-async/post/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1invoke-async~1$value/post/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1operation-status~1{handleId}/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}~1$value/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1serialization/get/tags/0
+  value: Submodel Repository
+- op: replace
+  path: /paths/~1description/get/tags/0
+  value: Submodel Repository

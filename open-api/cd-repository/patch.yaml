@@ -1,0 +1,39 @@
+- op: replace
+  path: /servers
+  value: []
+- op: replace
+  path: /paths/~1concept-descriptions/get/tags/0
+  value: Concept Description Repository
+- op: replace
+  path: /paths/~1concept-descriptions/post/tags/0
+  value: Concept Description Repository
+- op: replace
+  path: /paths/~1concept-descriptions~1{cdIdentifier}/get/tags/0
+  value: Concept Description Repository
+- op: replace
+  path: /paths/~1concept-descriptions~1{cdIdentifier}/put/tags/0
+  value: Concept Description Repository
+- op: replace
+  path: /paths/~1concept-descriptions~1{cdIdentifier}/delete/tags/0
+  value: Concept Description Repository
+- op: replace
+  path: /paths/~1serialization/get/tags/0
+  value: Concept Description Repository
+- op: replace
+  path: /paths/~1description/get/tags/0
+  value: Concept Description Repository
+- op: add
+  path: /paths/~1concept-descriptions/get/parameters/1/x-utf8-base64-url-encoded-as-string
+  value: true 
+- op: add
+  path: /paths/~1concept-descriptions/get/parameters/2/x-utf8-base64-url-encoded-as-string
+  value: true 
+- op: add
+  path: /paths/~1concept-descriptions~1{cdIdentifier}/get/parameters/0/x-utf8-base64-url-encoded-as-string
+  value: true 
+- op: add
+  path: /paths/~1concept-descriptions~1{cdIdentifier}/put/parameters/0/x-utf8-base64-url-encoded-as-string
+  value: true
+- op: add
+  path: /paths/~1concept-descriptions~1{cdIdentifier}/delete/parameters/0/x-utf8-base64-url-encoded-as-string
+  value: true 

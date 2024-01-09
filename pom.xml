@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.dfki.cos.basys</groupId>
+	<artifactId>clients-v3</artifactId>
+	<packaging>pom</packaging>
+	<version>0.5.0-SNAPSHOT</version>
+
+	<parent>
+		<groupId>de.dfki.cos.basys</groupId>
+		<artifactId>pom</artifactId>
+		<version>0.5.1</version>
+		<relativePath />
+	</parent>
+
+	<properties>
+
+		<jsonpatch.plugin.version>0.5.2-SNAPSHOT</jsonpatch.plugin.version>
+
+		<openapitools.version>6.6.0</openapitools.version>
+		<openapitools.jacksonnullable.version>0.2.6</openapitools.jacksonnullable.version>
+		<jsr305.version>3.0.2</jsr305.version>
+	</properties>
+
+	<modules>
+		<module>java/model-part1</module>
+		<module>java/model-part2</module>
+		<module>java/aas-registry</module>
+		<module>java/submodel-registry</module>
+		<module>java/aas-discoveryservice</module>
+		<module>java/aas-repository</module>
+		<module>java/cd-repository</module>
+		<module>java/submodel-repository</module>
+	</modules>
+
+
+	<developers>
+		<developer>
+			<name>Gerhard Sonnenberg</name>
+			<email>gerhard.sonnenberg@dfki.de</email>
+			<organization>DFKI</organization>
+			<organizationUrl>https://www.dfki.de</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>de.dfki.cos.basys.common</groupId>
+					<artifactId>jsonpatch-maven-plugin</artifactId>
+					<version>${jsonpatch.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<!-- If you want to override templates you can copy these:
+					https://github.com/OpenAPITools/openapi-generator/tree/v6.6.0/modules/openapi-generator/src/main/resources -->
+					<groupId>org.openapitools</groupId>
+					<artifactId>openapi-generator-maven-plugin</artifactId>
+					<version>${openapitools.version}</version>
+				</plugin>
+			</plugins>
+
+		</pluginManagement>
+	</build>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>${jsr305.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openapitools</groupId>
+				<artifactId>jackson-databind-nullable</artifactId>
+				<version>${openapitools.jacksonnullable.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
