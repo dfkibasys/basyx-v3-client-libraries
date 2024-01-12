@@ -4,21 +4,22 @@ info:
   title: "DotAAS Part 2 | HTTP/REST | Asset Administration Shell Repository Service\
     \ Specification"
   description: "The Full Profile of the Asset Administration Shell Repository Service\
-    \ Specification as part of Specification of the Asset Administration Shell: Part\
-    \ 2. Publisher: Industrial Digital Twin Association (IDTA) April 2023"
+    \ Specification as part of the [Specification of the Asset Administration Shell:\
+    \ Part 2](http://industrialdigitaltwin.org/en/content-hub).  \nPublisher: Industrial\
+    \ Digital Twin Association (IDTA) April 2023"
   contact:
     name: "Industrial Digital Twin Association (IDTA)"
     email: "info@idtwin.org"
   license:
     name: "CC BY 4.0"
     url: "https://creativecommons.org/licenses/by/4.0/"
-  version: "V3.0_SSP-001"
+  version: "V3.0.1_SSP-001"
 servers: []
 paths:
   /shells:
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns all Asset Administration Shells"
       operationId: "GetAllAssetAdministrationShells"
       x-semanticIds:
@@ -49,7 +50,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     post:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Creates a new Asset Administration Shell"
       operationId: "PostAssetAdministrationShell"
       x-semanticIds:
@@ -64,6 +65,11 @@ paths:
       responses:
         "201":
           description: "Asset Administration Shell created successfully"
+          headers:
+            Location:
+              description: "URL of the newly created resource"
+              schema:
+                type: "string"
           content:
             application/json:
               schema:
@@ -83,7 +89,7 @@ paths:
   /shells/$reference:
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns References to all Asset Administration Shells"
       operationId: "GetAllAssetAdministrationShells-Reference"
       x-semanticIds:
@@ -117,7 +123,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/AssetAdministrationShellIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns a specific Asset Administration Shell"
       operationId: "GetAssetAdministrationShellById"
       x-semanticIds:
@@ -143,7 +149,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     put:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates an existing Asset Administration Shell"
       operationId: "PutAssetAdministrationShellById"
       x-semanticIds:
@@ -172,7 +178,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     delete:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Deletes an Asset Administration Shell"
       operationId: "DeleteAssetAdministrationShellById"
       x-semanticIds:
@@ -203,7 +209,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/AssetAdministrationShellIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns a specific Asset Administration Shell as a Reference"
       operationId: "GetAssetAdministrationShellById-Reference_AasRepository"
       x-semanticIds:
@@ -232,7 +238,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/AssetAdministrationShellIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the Asset Information"
       operationId: "GetAssetInformation_AasRepository"
       x-semanticIds:
@@ -258,7 +264,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     put:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates the Asset Information"
       operationId: "PutAssetInformation_AasRepository"
       x-semanticIds:
@@ -290,7 +296,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/AssetAdministrationShellIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       operationId: "GetThumbnail_AasRepository"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetThumbnail/3/0"
@@ -316,7 +322,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     put:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       operationId: "PutThumbnail_AasRepository"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/PutThumbnail/3/0"
@@ -353,7 +359,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     delete:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       operationId: "DeleteThumbnail_AasRepository"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/DeleteThumbnail/3/0"
@@ -377,7 +383,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/AssetAdministrationShellIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns all submodel references"
       operationId: "GetAllSubmodelReferences_AasRepository"
       x-semanticIds:
@@ -391,9 +397,7 @@ paths:
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetReferencesResult"
+                $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetReferencesResult"
         "400":
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/bad-request"
         "401":
@@ -408,7 +412,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     post:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Creates a submodel reference at the Asset Administration Shell"
       operationId: "PostSubmodelReference_AasRepository"
       x-semanticIds:
@@ -423,6 +427,11 @@ paths:
       responses:
         "201":
           description: "Submodel reference created successfully"
+          headers:
+            Location:
+              description: "URL of the newly created resource"
+              schema:
+                type: "string"
           content:
             application/json:
               schema:
@@ -447,7 +456,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     delete:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Deletes the submodel reference from the Asset Administration Shell.\
         \ Does not delete the submodel itself!"
       operationId: "DeleteSubmodelReferenceById_AasRepository"
@@ -474,7 +483,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the Submodel"
       operationId: "GetSubmodelById_AasRepository"
       x-semanticIds:
@@ -503,21 +512,11 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     put:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates the Submodel"
       operationId: "PutSubmodelById_AasRepository"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/PutSubmodel/3/0"
-      parameters:
-      - name: "level"
-        in: "query"
-        description: "Determines the structural depth of the respective resource content"
-        required: false
-        schema:
-          type: "string"
-          default: "deep"
-          enum:
-          - "deep"
       requestBody:
         description: "Submodel object"
         content:
@@ -542,7 +541,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     patch:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates the Submodel"
       operationId: "PatchSubmodel_AasRepository"
       x-semanticIds:
@@ -579,13 +578,9 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/internal-server-error"
         default:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
-  /shells/{aasIdentifier}/submodels/{submodelIdentifier}/$metadata:
-    parameters:
-    - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/AssetAdministrationShellIdentifier"
-    - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     delete:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Deletes the submodel from the Asset Administration Shell and the Repository."
       operationId: "DeleteSubmodelById_AasRepository"
       x-semanticIds:
@@ -605,9 +600,13 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/internal-server-error"
         default:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
+  /shells/{aasIdentifier}/submodels/{submodelIdentifier}/$metadata:
+    parameters:
+    - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/AssetAdministrationShellIdentifier"
+    - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the Submodel's metadata elements"
       operationId: "GetSubmodelById-Metadata_AasRepository"
       x-semanticIds:
@@ -635,7 +634,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     patch:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates the metadata attributes of the Submodel"
       operationId: "PatchSubmodelById-Metadata_AasRepository"
       x-semanticIds:
@@ -678,7 +677,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the Submodel's ValueOnly representation"
       operationId: "GetSubmodelById-ValueOnly_AasRepository"
       x-semanticIds:
@@ -707,7 +706,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     patch:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates teh values of the Submodel"
       operationId: "PatchSubmodelById-ValueOnly_AasRepository"
       x-semanticIds:
@@ -750,21 +749,11 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the Submodel as a Reference"
       operationId: "GetSubmodelById-Reference_AasRepository"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetSubmodel/3/0"
-      parameters:
-      - name: "level"
-        in: "query"
-        description: "Determines the structural depth of the respective resource content"
-        required: false
-        schema:
-          type: "string"
-          default: "core"
-          enum:
-          - "core"
       responses:
         "200":
           description: "Requested Submodel as a Reference"
@@ -790,7 +779,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the Submodel's metadata elements"
       operationId: "GetSubmodelById-Path_AasRepository"
       x-semanticIds:
@@ -824,7 +813,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns all submodel elements including their hierarchy"
       operationId: "GetAllSubmodelElements_AasRepository"
       x-semanticIds:
@@ -855,14 +844,11 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     post:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Creates a new submodel element"
       operationId: "PostSubmodelElement_AasRepository"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/PostSubmodelElement/3/0"
-      parameters:
-      - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Level"
-      - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Extent"
       requestBody:
         description: "Requested submodel element"
         content:
@@ -873,6 +859,11 @@ paths:
       responses:
         "201":
           description: "Submodel element created successfully"
+          headers:
+            Location:
+              description: "URL of the newly created resource"
+              schema:
+                type: "string"
           content:
             application/json:
               schema:
@@ -897,7 +888,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns all submodel elements including their hierarchy"
       operationId: "GetAllSubmodelElements-Metadata_AasRepository"
       x-semanticIds:
@@ -912,9 +903,7 @@ paths:
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetSubmodelElementsMetadataResult"
+                $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetSubmodelElementsMetadataResult"
         "400":
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/bad-request"
         "401":
@@ -933,7 +922,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns all submodel elements including their hierarchy in the ValueOnly\
         \ representation"
       operationId: "GetAllSubmodelElements-ValueOnly_AasRepository"
@@ -949,9 +938,7 @@ paths:
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetSubmodelElementsValueResult"
+                $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetSubmodelElementsValueResult"
         "400":
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/bad-request"
         "401":
@@ -970,7 +957,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns all submodel elements as a list of References"
       operationId: "GetAllSubmodelElements-Reference_AasRepository"
       x-semanticIds:
@@ -993,9 +980,7 @@ paths:
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetReferencesResult"
+                $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetReferencesResult"
         "400":
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/bad-request"
         "401":
@@ -1014,7 +999,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns all submodel elements including their hierarchy"
       operationId: "GetAllSubmodelElements-Path_AasRepository"
       x-semanticIds:
@@ -1050,15 +1035,13 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns a specific submodel element from the Submodel at a specified\
         \ path"
       operationId: "GetSubmodelElementByPath_AasRepository"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetSubmodelElementByPath/3/0"
       parameters:
-      - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Limit"
-      - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Cursor"
       - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Level"
       - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Extent"
       responses:
@@ -1067,7 +1050,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetSubmodelElementsResult"
+                $ref: "../../model-part1/openapi/api.yaml#/components/schemas/SubmodelElement"
         "400":
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/bad-request"
         "401":
@@ -1082,7 +1065,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     post:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Creates a new submodel element at a specified path within submodel\
         \ elements hierarchy"
       operationId: "PostSubmodelElementByPath_AasRepository"
@@ -1098,6 +1081,11 @@ paths:
       responses:
         "201":
           description: "Submodel element created successfully"
+          headers:
+            Location:
+              description: "URL of the newly created resource"
+              schema:
+                type: "string"
           content:
             application/json:
               schema:
@@ -1118,7 +1106,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     put:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates an existing submodel element at a specified path within submodel\
         \ elements hierarchy"
       operationId: "PutSubmodelElementByPath_AasRepository"
@@ -1149,7 +1137,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     patch:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates an existing submodel element value at a specified path within\
         \ submodel elements hierarchy"
       operationId: "PatchSubmodelElementValueByPath_AasRepository"
@@ -1181,7 +1169,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     delete:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Deletes a submodel element at a specified path within the submodel\
         \ elements hierarchy"
       operationId: "DeleteSubmodelElementByPath_AasRepository"
@@ -1209,15 +1197,13 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the metadata attributes if a specific submodel element from\
         \ the Submodel at a specified path"
       operationId: "GetSubmodelElementByPath-Metadata_AasRepository"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetSubmodelElementByPath/3/0"
       parameters:
-      - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Limit"
-      - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Cursor"
       - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Level"
       responses:
         "200":
@@ -1225,7 +1211,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetSubmodelElementsMetadataResult"
+                $ref: "../../model-part2/openapi/api.yaml#/components/schemas/SubmodelElementMetadata"
         "400":
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/bad-request"
         "401":
@@ -1240,7 +1226,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     patch:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates the metadata attributes of an existing submodel element value\
         \ at a specified path within submodel elements hierarchy"
       operationId: "PatchSubmodelElementValueByPath-Metadata"
@@ -1277,15 +1263,13 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns a specific submodel element from the Submodel at a specified\
         \ path in the ValueOnly representation"
       operationId: "GetSubmodelElementByPath-ValueOnly_AasRepository"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetSubmodelElementByPath/3/0"
       parameters:
-      - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Limit"
-      - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Cursor"
       - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Level"
       - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/Extent"
       responses:
@@ -1294,7 +1278,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../../model-part2/openapi/api.yaml#/components/schemas/GetSubmodelElementsValueResult"
+                $ref: "../../model-part2/openapi/api.yaml#/components/schemas/SubmodelElementValue"
         "400":
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/bad-request"
         "401":
@@ -1309,7 +1293,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     patch:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Updates the value of an existing submodel element value at a specified\
         \ path within submodel elements hierarchy"
       operationId: "PatchSubmodelElementValueByPath-ValueOnly"
@@ -1346,7 +1330,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the Reference of a specific submodel element from the Submodel\
         \ at a specified path"
       operationId: "GetSubmodelElementByPath-Reference_AasRepository"
@@ -1388,7 +1372,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns a specific submodel element from the Submodel at a specified\
         \ path in the Path notation"
       operationId: "GetSubmodelElementByPath-Path_AasRepository"
@@ -1422,7 +1406,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Downloads file content from a specific submodel element from the Submodel\
         \ at a specified path"
       operationId: "GetFileByPath_AasRepository"
@@ -1457,7 +1441,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     put:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Uploads file content to an existing submodel element at a specified\
         \ path within submodel elements hierarchy"
       operationId: "PutFileByPath_AasRepository"
@@ -1496,7 +1480,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     delete:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Deletes file content of an existing submodel element at a specified\
         \ path within submodel elements hierarchy"
       operationId: "DeleteFileByPath_AasRepository"
@@ -1524,7 +1508,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     post:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Synchronously invokes an Operation at a specified path"
       operationId: "InvokeOperation_AasRepository"
       x-semanticIds:
@@ -1562,7 +1546,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     post:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Synchronously invokes an Operation at a specified path"
       operationId: "InvokeOperation-ValueOnly_AasRepository"
       x-semanticIds:
@@ -1600,7 +1584,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     post:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Asynchronously invokes an Operation at a specified path"
       operationId: "InvokeOperationAsync_AasRepository"
       x-semanticIds:
@@ -1634,7 +1618,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/IdShortPath"
     post:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Asynchronously invokes an Operation at a specified path"
       operationId: "InvokeOperationAsync-ValueOnly_AasRepository"
       x-semanticIds:
@@ -1669,7 +1653,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/HandleId"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the Operation status of an asynchronous invoked Operation"
       operationId: "GetOperationAsyncStatus_AasRepository"
       x-semanticIds:
@@ -1704,7 +1688,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/HandleId"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the Operation result of an asynchronous invoked Operation"
       operationId: "GetOperationAsyncResult_AasRepository"
       x-semanticIds:
@@ -1736,7 +1720,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/HandleId"
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Asset Administration Shell Repository API"
       summary: "Returns the ValueOnly notation of the Operation result of an asynchronous\
         \ invoked Operation"
       operationId: "GetOperationAsyncResult-ValueOnly_AasRepository"
@@ -1764,7 +1748,7 @@ paths:
   /serialization:
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Serialization API"
       summary: "Returns an appropriate serialization based on the specified format\
         \ (see SerializationFormat)"
       operationId: "GenerateSerializationByIds"
@@ -1825,7 +1809,7 @@ paths:
   /description:
     get:
       tags:
-      - "Asset Administration Shell Repository"
+      - "Description API"
       summary: "Returns the self-describing information of a network resource (ServiceDescription)"
       operationId: "GetDescription"
       x-semanticIds:

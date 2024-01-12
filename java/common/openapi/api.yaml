@@ -1,0 +1,6 @@
+---
+openapi: "3.0.3"
+info:
+  title: "DotAAS | Metamodel | Schemas"
+  version: "V3.0.1"
+paths: {}

@@ -4,14 +4,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>de.dfki.cos.basys</groupId>
+		<groupId>de.dfki.cos.basys.clients</groupId>
 		<artifactId>clients-v3</artifactId>
 		<version>0.5.0-SNAPSHOT</version>
 		<relativePath>../..</relativePath>
 	</parent>
 
-	<artifactId>aas-discoveryservice-java-client-v3</artifactId>
-	<name>aas-discoveryservice-java-client-v3</name>
+	<artifactId>aas-basic-discovery-client-v3</artifactId>
+	<name>aas-basic-discovery-client-v3</name>
 	<packaging>jar</packaging>
 	<properties>
 		<!--TODO-->
@@ -125,34 +125,35 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
+							<skip>false</skip>
 							<generatorName>java</generatorName>
 							<library>native</library>
 							<inputSpec>${openapi.result.path}</inputSpec>
 							<output>${project.basedir}/${generated.folder}</output>
-							<packageName>de.dfki.basys.clients.discovery</packageName>
-							<apiPackage>de.dfki.basys.clients.discovery.api</apiPackage>
+							<packageName>de.dfki.basys.clients.v3.discovery.basic</packageName>
+							<apiPackage>de.dfki.basys.clients.v3.discovery.basic.api</apiPackage>
+							<invokerPackage>de.dfki.basys.clients.v3</invokerPackage>
 							<generateModels>true</generateModels>
 							<modelsToGenerate>PagedResultOrStringItems</modelsToGenerate>
-							<modelPackage>de.dfki.basys.clients.discovery.model</modelPackage>
+							<modelPackage>de.dfki.basys.clients.v3.discovery.basic.model</modelPackage>
 							<generateApis>true</generateApis>
 							<generateApiTests>false</generateApiTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
-							<generateModelTests>false</generateModelTests>
 							<generateApiDocumentation>false</generateApiDocumentation>
-							<generateSupportingFiles>true</generateSupportingFiles>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<supportingFilesToGenerate></supportingFilesToGenerate>
 							<templateDirectory>../templates</templateDirectory>
-							<supportingFilesToGenerate>ApiException.java,ApiClient.java,Pair.java,ApiResponse.java</supportingFilesToGenerate>
-							
+							<openapiNormalizer>SET_TAGS_FOR_ALL_OPERATIONS=Asset Administration Shell Basic Discovery</openapiNormalizer>
 							<importMappings>
-								AssetKind=de.dfki.basys.clients.model.v2.AssetKind,
-								AssetAdministrationShellDescriptor=de.dfki.basys.clients.model.v2.AssetAdministrationShellDescriptor,
-								GetAssetAdministrationShellDescriptorsResult=de.dfki.basys.clients.model.v2.GetAssetAdministrationShellDescriptorsResult,
-								GetSubmodelDescriptorsResult=de.dfki.basys.clients.model.v2.GetSubmodelDescriptorsResult,
-								Result=de.dfki.basys.clients.model.v2.Result,
-								SubmodelDescriptor=de.dfki.basys.clients.model.v2.SubmodelDescriptor,
-								ServiceDescription=de.dfki.basys.clients.model.v2.ServiceDescription,
-								SpecificAssetId=de.dfki.basys.clients.model.v1.SpecificAssetId,
-								PagedResultPagingMetadata=de.dfki.basys.clients.model.v2.PagedResultPagingMetadata
+								AssetKind=de.dfki.basys.clients.v3.metamodel.part2.AssetKind,
+								AssetAdministrationShellDescriptor=de.dfki.basys.clients.v3.metamodel.part2.AssetAdministrationShellDescriptor,
+								GetAssetAdministrationShellDescriptorsResult=de.dfki.basys.clients.v3.metamodel.part2.GetAssetAdministrationShellDescriptorsResult,
+								GetSubmodelDescriptorsResult=de.dfki.basys.clients.v3.metamodel.part2.GetSubmodelDescriptorsResult,
+								Result=de.dfki.basys.clients.v3.metamodel.part2.Result,
+								SubmodelDescriptor=de.dfki.basys.clients.v3.metamodel.part2.SubmodelDescriptor,
+								ServiceDescription=de.dfki.basys.clients.v3.metamodel.part2.ServiceDescription,
+								SpecificAssetId=de.dfki.basys.clients.v3.metamodel.part1.SpecificAssetId,
+								PagedResultPagingMetadata=de.dfki.basys.clients.v3.metamodel.part2.PagedResultPagingMetadata
 							</importMappings>
 							<skipOperationExample>true</skipOperationExample>
 							<configOptions>
@@ -160,6 +161,10 @@
 								<dateLibrary>java8</dateLibrary>
 								<sourceFolder>java</sourceFolder>
 								<useJakartaEe>false</useJakartaEe>
+						        <useOneOfDiscriminatorLookup>true</useOneOfDiscriminatorLookup>
+						        <legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+						        <disallowAdditionalPropertiesIfNotPresent>false</disallowAdditionalPropertiesIfNotPresent>
+						        <supportUrlQuery>false</supportUrlQuery>
 							</configOptions>
 						</configuration>
 					</execution>
@@ -198,9 +203,12 @@
 			<artifactId>javax.annotation-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>de.dfki.cos.basys</groupId>
-			<artifactId>model-part2-java-client-v3</artifactId>
-			<version>0.5.0-SNAPSHOT</version>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>clients-v3-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>clients-v3-metamodel-part2</artifactId>
 		</dependency>
 	</dependencies>
 </project>

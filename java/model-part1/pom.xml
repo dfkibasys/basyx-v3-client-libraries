@@ -4,14 +4,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>de.dfki.cos.basys</groupId>
+		<groupId>de.dfki.cos.basys.clients</groupId>
 		<artifactId>clients-v3</artifactId>
 		<version>0.5.0-SNAPSHOT</version>
 		<relativePath>../..</relativePath>
 	</parent>
 
-	<artifactId>model-part1-java-client-v3</artifactId>
-	<name>model-part1-java-client-v3</name>
+	<artifactId>clients-v3-metamodel-part1</artifactId>
+	<name>clients-v3-metamodel-part1</name>
 	<packaging>jar</packaging>
 	<properties>
 		<!--TODO-->
@@ -76,7 +76,7 @@
 					</execution>
 				</executions>
 			</plugin>
- 			<plugin>
+			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<executions>
@@ -89,22 +89,34 @@
 							<inputSpec>${openapi.result.path}</inputSpec>
 							<library>native</library>
 							<output>${project.basedir}/${generated.folder}</output>
-							<packageName>de.dfki.basys.clients.model</packageName>
-							<modelPackage>de.dfki.basys.clients.model.v1</modelPackage>
+							<packageName>de.dfki.basys.clients.v3</packageName>
+							<invokerPackage>de.dfki.basys.clients.v3</invokerPackage>
+							<modelPackage>
+								de.dfki.basys.clients.v3.metamodel.part1</modelPackage>
+
 							<generateModels>true</generateModels>
 							<generateApis>false</generateApis>
 							<generateApiTests>false</generateApiTests>
 							<generateModelDocumentation>false</generateModelDocumentation>
 							<generateModelTests>false</generateModelTests>
 							<generateApiDocumentation>false</generateApiDocumentation>
+							<templateDirectory>../templates</templateDirectory>
+							<openapiNormalizer>
+								REMOVE_ANYOF_ONEOF_AND_KEEP_PROPERTIES_ONLY=true</openapiNormalizer>
 							<generateSupportingFiles>true</generateSupportingFiles>
-						    <supportingFilesToGenerate>AbstractOpenApiSchema.java,JSON.java,RFC3339DateFormat.java</supportingFilesToGenerate> 
+							<supportingFilesToGenerate>
+								AbstractOpenApiSchema.java</supportingFilesToGenerate>
+							<skipOperationExample>true</skipOperationExample>
 							<configOptions>
 								<java8>true</java8>
 								<dateLibrary>java8</dateLibrary>
 								<sourceFolder>java</sourceFolder>
 								<useJakartaEe>true</useJakartaEe>
-								
+								<useOneOfDiscriminatorLookup>true</useOneOfDiscriminatorLookup>
+								<legacyDiscriminatorBehavior>false</legacyDiscriminatorBehavior>
+								<disallowAdditionalPropertiesIfNotPresent>false</disallowAdditionalPropertiesIfNotPresent>
+								<supportUrlQuery>false</supportUrlQuery>
+
 							</configOptions>
 						</configuration>
 					</execution>
@@ -143,6 +155,14 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>clients-v3-common</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -18,7 +18,7 @@ paths:
   /shell-descriptors:
     get:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Returns all Asset Administration Shell Descriptors"
       operationId: "GetAllAssetAdministrationShellDescriptors"
       x-semanticIds:
@@ -47,7 +47,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     post:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Creates a new Asset Administration Shell Descriptor, i.e. registers\
         \ an AAS"
       operationId: "PostAssetAdministrationShellDescriptor"
@@ -80,7 +80,7 @@ paths:
   /shell-descriptors/{aasIdentifier}:
     get:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Returns a specific Asset Administration Shell Descriptor"
       operationId: "GetAssetAdministrationShellDescriptorById"
       x-semanticIds:
@@ -106,7 +106,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     put:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Updates an existing Asset Administration Shell Descriptor"
       operationId: "PutAssetAdministrationShellDescriptorById"
       x-semanticIds:
@@ -135,7 +135,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     delete:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Deletes an Asset Administration Shell Descriptor, i.e. de-registers\
         \ an AAS"
       operationId: "DeleteAssetAdministrationShellDescriptorById"
@@ -159,7 +159,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/AssetAdministrationShellIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Returns all Submodel Descriptors"
       operationId: "GetAllSubmodelDescriptorsThroughSuperpath"
       x-semanticIds:
@@ -186,7 +186,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     post:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Creates a new Submodel Descriptor, i.e. registers a submodel"
       operationId: "PostSubmodelDescriptor-ThroughSuperpath"
       x-semanticIds:
@@ -223,7 +223,7 @@ paths:
     - $ref: "../../model-part2/openapi/api.yaml#/components/parameters/SubmodelIdentifier"
     get:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Returns a specific Submodel Descriptor"
       operationId: "GetSubmodelDescriptorByIdThroughSuperpath"
       x-semanticIds:
@@ -247,7 +247,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     put:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Updates an existing Submodel Descriptor"
       operationId: "PutSubmodelDescriptorByIdThroughSuperpath"
       x-semanticIds:
@@ -274,7 +274,7 @@ paths:
           $ref: "../../model-part2/openapi/api.yaml#/components/responses/default"
     delete:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Asset Administration Shell Registry API"
       summary: "Deletes a Submodel Descriptor, i.e. de-registers a submodel"
       operationId: "DeleteSubmodelDescriptorByIdThroughSuperpath"
       x-semanticIds:
@@ -293,7 +293,7 @@ paths:
   /description:
     get:
       tags:
-      - "Asset Administration Shell Registry"
+      - "Description API"
       summary: "Returns the self-describing information of a network resource (ServiceDescription)"
       operationId: "GetDescription"
       x-semanticIds:

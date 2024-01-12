@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.dfki.cos.basys</groupId>
+	<groupId>de.dfki.cos.basys.clients</groupId>
 	<artifactId>clients-v3</artifactId>
 	<packaging>pom</packaging>
 	<version>0.5.0-SNAPSHOT</version>
@@ -20,19 +20,20 @@
 
 		<jsonpatch.plugin.version>0.5.2-SNAPSHOT</jsonpatch.plugin.version>
 
-		<openapitools.version>6.6.0</openapitools.version>
+		<openapitools.version>7.2.0</openapitools.version>
 		<openapitools.jacksonnullable.version>0.2.6</openapitools.jacksonnullable.version>
 		<jsr305.version>3.0.2</jsr305.version>
 	</properties>
 
 	<modules>
-		<module>java/model-part1</module>
+	 	<module>java/common</module>
+	 	<module>java/model-part1</module>
 		<module>java/model-part2</module>
-		<module>java/aas-registry</module>
-		<module>java/submodel-registry</module>
 		<module>java/aas-discoveryservice</module>
+		<module>java/aas-registry</module>
 		<module>java/aas-repository</module>
 		<module>java/cd-repository</module>
+		<module>java/submodel-registry</module>
 		<module>java/submodel-repository</module>
 	</modules>
 
@@ -78,6 +79,21 @@
 				<groupId>org.openapitools</groupId>
 				<artifactId>jackson-databind-nullable</artifactId>
 				<version>${openapitools.jacksonnullable.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>clients-v3-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>clients-v3-metamodel-part1</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>clients-v3-metamodel-part2</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
