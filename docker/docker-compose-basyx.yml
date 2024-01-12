@@ -1,0 +1,109 @@
+version: '3.6'
+networks:
+  basyx:
+    name:  basyx-client-test
+    internal: false
+
+services:
+
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:1.3.1-alpine
+    container_name: nginx-proxy
+    restart: always
+    ports:
+    - "80:80"
+    volumes:
+    - /var/run/docker.sock:/tmp/docker.sock:ro
+    # cors settings
+    #- ./config/nginx-proxy/cors.conf:/etc/nginx/vhost.d/aas-registry.${EXTERNAL_HOSTNAME}_location:ro
+    #- ./config/nginx-proxy/cors.conf:/etc/nginx/vhost.d/aas-environment.${EXTERNAL_HOSTNAME}_location:ro
+    environment:
+      DEFAULT_HOST: ${EXTERNAL_HOSTNAME}
+    networks:
+      - basyx
+
+  portainer:
+    image: portainer/portainer-ce:2.18.2
+    container_name: portainer
+   # restart: always
+    command: --admin-password-file=/secrets/admin-password
+    ports: 
+      - "8084:9000"
+    environment:
+      VIRTUAL_HOST: portainer.${EXTERNAL_HOSTNAME}
+      VIRTUAL_PORT: 9000
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ./portainer/admin-password:/secrets/admin-password
+    networks:
+      - basyx
+
+  aas-registry:
+    image:  eclipsebasyx/aas-registry-log-mem:${BASYX_VERSION}
+    restart: always
+    container_name: aas-registry
+    ports:
+    - "8083:8080"
+    environment:
+      VIRTUAL_HOST: aas-registry.${EXTERNAL_HOSTNAME}
+      VIRTUAL_PORT: 8080
+    networks:
+      - basyx
+  
+  submodel-registry:
+    image:  eclipsebasyx/submodel-registry-log-mem:${BASYX_VERSION}
+    restart: always
+    container_name: submodel-registry
+    ports:
+    - 8082:8080
+    environment:
+      VIRTUAL_HOST: submodel-registry.${EXTERNAL_HOSTNAME}
+      VIRTUAL_PORT: 8080
+    networks:
+      - basyx
+
+  aas-environment:
+    image: eclipsebasyx/aas-environment:${BASYX_VERSION}
+    container_name: aas-environment
+    restart: always
+    ports:
+    - 8081:8081
+    environment:
+      BASYX_AASREPOSITORY_FEATURE_REGISTRYINTEGRATION: http://aas-registry:8080/api/v3.0
+      BASYX_SUBMODELREPOSITORY_FEATURE_REGISTRYINTEGRATION: http://submodel-registry:8080/api/v3.0
+      BASYX_AASREPOSITORY_FEATURE_AASXUPLOAD_ENABLED: "true"   
+      BASYX_CORS_ALLOWED_ORIGINS: http://localhost:3000
+      BASYX_EXTERNALURL: http://localhost:8081
+      BASYX_ENVIRONMENT: file:/tmp/aasx/testEnvironment.json
+      VIRTUAL_HOST: aas-environment.${EXTERNAL_HOSTNAME}
+      VIRTUAL_PORT: 8081
+      DEBUG: "true"
+    volumes:
+    - ./aasx/testEnvironment.json:/tmp/aasx/testEnvironment.json:ro
+    depends_on:
+      - aas-registry
+      - submodel-registry
+    networks:
+      - basyx
+
+  aas-gui:
+    image: eclipsebasyx/aas-gui:${AAS_WEBUI_VERSION}
+    container_name: aas-gui
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      VITE_REGISTRY_PATH: http://localhost:8087/api/v3.0
+      VITE_AAS_REPO_PATH: http://localhost:8081/shells
+      VITE_SUBMODEL_REPO_PATH: http://localhost:8081/submodels
+      VITE_CD_REPO_PATH: http://localhost:8081/concept-descriptions
+      VIRTUAL_HOST: aas-gui.${EXTERNAL_HOSTNAME}
+      VIRTUAL_PORT: 3000
+    ports:
+    - 3000:3000
+    depends_on:
+    - aas-environment
+    - aas-registry
+    networks:
+      - basyx
+
+
+

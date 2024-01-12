@@ -1,0 +1,1 @@
+https://app.swaggerhub.com/domains/Plattform_i40/Part2-API-Schemas/V3.0.1#/components/schemas/AssetAdministrationShellDescriptor
