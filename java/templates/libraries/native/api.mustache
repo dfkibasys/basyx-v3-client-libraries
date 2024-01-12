@@ -5,6 +5,7 @@ import {{invokerPackage}}.ApiClient;
 import {{invokerPackage}}.ApiException;
 import {{invokerPackage}}.ApiResponse;
 import {{invokerPackage}}.Pair;
+import {{invokerPackage}}.JSON;
 
 {{#imports}}
 import {{import}};
@@ -36,18 +37,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-{{^fullJavaUtil}}
 import java.util.ArrayList;
 import java.util.StringJoiner;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-{{/fullJavaUtil}}
-{{#asyncNative}}
-
-import java.util.concurrent.CompletableFuture;
-{{/asyncNative}}
 
 {{>generatedAnnotation}}
 {{#operations}}
@@ -55,27 +50,23 @@ public class {{classname}} {
   private final HttpClient memberVarHttpClient;
   private final ObjectMapper memberVarObjectMapper;
   private final String memberVarBaseUri;
-  private final {{#fullJavaUtil}}java.util.function.{{/fullJavaUtil}}Consumer<HttpRequest.Builder> memberVarInterceptor;
+  private final Consumer<HttpRequest.Builder> memberVarInterceptor;
   private final Duration memberVarReadTimeout;
-  private final {{#fullJavaUtil}}java.util.function.{{/fullJavaUtil}}Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-  private final {{#fullJavaUtil}}java.util.function.{{/fullJavaUtil}}Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+  private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
+  private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
 
   public {{classname}}() {
     this(new ApiClient());
   }
+
+  public {{classname}}(ObjectMapper mapper, String baseUri) {
+    this(new ApiClient(HttpClient.newBuilder(), mapper, baseUri));
+  }
   
-  public {{classname}}(String protocol, String host, int port) {
-    this(protocol + "://" + host + ":" + port + "/api/v3.0");
+  public {{classname}}(String baseUri) {
+    this(new ApiClient(HttpClient.newBuilder(), JSON.getDefault().getMapper(), baseUri));
   }
 
-  public {{classname}}(String basePath) {
-     this(withBaseUri(new ApiClient(), basePath));
-  }
-
-  private static ApiClient withBaseUri(ApiClient client, String uri) {
-    client.updateBaseUri(uri);
-    return client;
-  }
 
   public {{classname}}(ApiClient apiClient) {
     memberVarHttpClient = apiClient.getHttpClient();
@@ -86,21 +77,13 @@ public class {{classname}} {
     memberVarResponseInterceptor = apiClient.getResponseInterceptor();
     memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
   }
-  {{#asyncNative}}
-
-  private ApiException getApiException(String operationId, HttpResponse<String> response) {
-    String message = formatExceptionMessage(operationId, response.statusCode(), response.body());
-    return new ApiException(response.statusCode(), message, response.headers(), response.body());
-  }
-  {{/asyncNative}}
-  {{^asyncNative}}
+  
 
   protected ApiException getApiException(String operationId, HttpResponse<InputStream> response) throws IOException {
     String body = response.body() == null ? null : new String(response.body().readAllBytes());
     String message = formatExceptionMessage(operationId, response.statusCode(), body);
     return new ApiException(response.statusCode(), message, response.headers(), body);
   }
-  {{/asyncNative}}
 
   private String formatExceptionMessage(String operationId, int statusCode, String body) {
     if (body == null || body.isEmpty()) {
@@ -117,12 +100,9 @@ public class {{classname}} {
    * {{notes}}
    * @param apiRequest {@link API{{operationId}}Request}
    {{#returnType}}
-   * @return {{#asyncNative}}CompletableFuture&lt;{{/asyncNative}}{{returnType}}{{#asyncNative}}&gt;{{/asyncNative}}
+   * @return {{returnType}}
    {{/returnType}}
    {{^returnType}}
-   {{#asyncNative}}
-   * @return CompletableFuture&lt;Void&gt;
-   {{/asyncNative}}
    {{/returnType}}
    * @throws ApiException if fails to make API call
    {{#isDeprecated}}
@@ -136,18 +116,18 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
-  public {{#returnType}}{{#asyncNative}}CompletableFuture<{{{returnType}}}>{{/asyncNative}}{{^asyncNative}}{{{returnType}}}{{/asyncNative}}{{/returnType}}{{^returnType}}{{#asyncNative}}CompletableFuture<Void>{{/asyncNative}}{{^asyncNative}}void{{/asyncNative}}{{/returnType}} {{operationId}}(API{{operationId}}Request apiRequest) throws ApiException {
+  public {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}(API{{operationId}}Request apiRequest) throws ApiException {
     {{#allParams}}
     {{{dataType}}} {{paramName}} = apiRequest.{{paramName}}();
     {{/allParams}}
-    {{#returnType}}return {{/returnType}}{{^returnType}}{{#asyncNative}}return {{/asyncNative}}{{/returnType}}{{operationId}}({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
+    {{#returnType}}return {{/returnType}}{{^returnType}}{{/returnType}}{{operationId}}({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
   }
 
   /**
    * {{summary}}
    * {{notes}}
    * @param apiRequest {@link API{{operationId}}Request}
-   * @return {{#asyncNative}}CompletableFuture&lt;{{/asyncNative}}ApiResponse&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;{{#asyncNative}}&gt;{{/asyncNative}}
+   * @return ApiResponse&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;
    * @throws ApiException if fails to make API call
    {{#isDeprecated}}
    * @deprecated
@@ -160,7 +140,7 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
-  public {{#asyncNative}}CompletableFuture<{{/asyncNative}}ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}>{{#asyncNative}}>{{/asyncNative}} {{operationId}}WithHttpInfo(API{{operationId}}Request apiRequest) throws ApiException {
+  public ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfo(API{{operationId}}Request apiRequest) throws ApiException {
     {{#allParams}}
     {{{dataType}}} {{paramName}} = apiRequest.{{paramName}}();
     {{/allParams}}
@@ -176,12 +156,9 @@ public class {{classname}} {
    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{^isContainer}}{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/isContainer}}{{/required}}
    {{/allParams}}
    {{#returnType}}
-   * @return {{#asyncNative}}CompletableFuture&lt;{{/asyncNative}}{{returnType}}{{#asyncNative}}&gt;{{/asyncNative}}
+   * @return {{returnType}}
    {{/returnType}}
    {{^returnType}}
-   {{#asyncNative}}
-   * @return CompletableFuture&lt;Void&gt;
-   {{/asyncNative}}
    {{/returnType}}
    * @throws ApiException if fails to make API call
    {{#isDeprecated}}
@@ -195,41 +172,11 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
-  public {{#returnType}}{{#asyncNative}}CompletableFuture<{{{returnType}}}>{{/asyncNative}}{{^asyncNative}}{{{returnType}}}{{/asyncNative}}{{/returnType}}{{^returnType}}{{#asyncNative}}CompletableFuture<Void>{{/asyncNative}}{{^asyncNative}}void{{/asyncNative}}{{/returnType}} {{operationId}}({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}String{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
-    {{^asyncNative}}
+  public {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
     {{#returnType}}ApiResponse<{{{.}}}> localVarResponse = {{/returnType}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
     {{#returnType}}
     return localVarResponse.getData();
     {{/returnType}}
-    {{/asyncNative}}
-    {{#asyncNative}}
-    try {
-      HttpRequest.Builder localVarRequestBuilder = {{operationId}}RequestBuilder({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
-      return memberVarHttpClient.sendAsync(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofString()).thenComposeAsync(localVarResponse -> {
-            if (localVarResponse.statusCode()/ 100 != 2) {
-              return CompletableFuture.failedFuture(getApiException("{{operationId}}", localVarResponse));
-            }
-            {{#returnType}}
-            try {
-              String responseBody = localVarResponse.body();
-              return CompletableFuture.completedFuture(
-                  responseBody == null || responseBody.isBlank() ? null : memberVarObjectMapper.readValue(responseBody, new TypeReference<{{{returnType}}}>() {})
-              );
-            } catch (IOException e) {
-              return CompletableFuture.failedFuture(new ApiException(e));
-            }
-            {{/returnType}}
-            {{^returnType}}
-            return CompletableFuture.completedFuture(null);
-            {{/returnType}}
-      });
-    }
-    catch (ApiException e) {
-      return CompletableFuture.failedFuture(e);
-    }
-    {{/asyncNative}}
   }
 
   /**
@@ -238,7 +185,7 @@ public class {{classname}} {
    {{#allParams}}
    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{^isContainer}}{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/isContainer}}{{/required}}
    {{/allParams}}
-   * @return {{#asyncNative}}CompletableFuture&lt;{{/asyncNative}}ApiResponse&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;{{#asyncNative}}&gt;{{/asyncNative}}
+   * @return ApiResponse&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;
    * @throws ApiException if fails to make API call
    {{#isDeprecated}}
    * @deprecated
@@ -251,8 +198,16 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
-  public {{#asyncNative}}CompletableFuture<{{/asyncNative}}ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}>{{#asyncNative}}>{{/asyncNative}} {{operationId}}WithHttpInfo({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}String{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
-    {{^asyncNative}}
+  public ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfo({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+  	{{#allParams}}
+    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    {{{dataType}}} {{paramName}}AsBytes = ApiClient.base64UrlEncode({{paramName}});
+    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    {{/allParams}}
+  	return {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}AsBytes{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^-last}}, {{/-last}}{{/allParams}});
+  }
+   
+  private ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = {{operationId}}RequestBuilder({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -268,7 +223,7 @@ public class {{classname}} {
         {{#vendorExtensions.x-java-text-plain-string}}
         // for plain text response
         if (localVarResponse.headers().map().containsKey("Content-Type") &&
-                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0))) {
+                "text/plain".equalsIgnoreCase(localVarResponse.headers().map().get("Content-Type").get(0).split(";")[0].trim())) {
           java.util.Scanner s = new java.util.Scanner(localVarResponse.body()).useDelimiter("\\A");
           String responseBodyText = s.hasNext() ? s.next() : "";
           return new ApiResponse<String>(
@@ -308,47 +263,9 @@ public class {{classname}} {
       Thread.currentThread().interrupt();
       throw new ApiException(e);
     }
-    {{/asyncNative}}
-    {{#asyncNative}}
-    try {
-      HttpRequest.Builder localVarRequestBuilder = {{operationId}}RequestBuilder({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
-      return memberVarHttpClient.sendAsync(
-          localVarRequestBuilder.build(),
-          HttpResponse.BodyHandlers.ofString()).thenComposeAsync(localVarResponse -> {
-            if (memberVarAsyncResponseInterceptor != null) {
-              memberVarAsyncResponseInterceptor.accept(localVarResponse);
-            }
-            if (localVarResponse.statusCode()/ 100 != 2) {
-              return CompletableFuture.failedFuture(getApiException("{{operationId}}", localVarResponse));
-            }
-            {{#returnType}}
-            try {
-              String responseBody = localVarResponse.body();
-              return CompletableFuture.completedFuture(
-                  new ApiResponse<{{{returnType}}}>(
-                      localVarResponse.statusCode(),
-                      localVarResponse.headers().map(),
-                      responseBody == null || responseBody.isBlank() ? null : memberVarObjectMapper.readValue(responseBody, new TypeReference<{{{returnType}}}>() {}))
-              );
-            } catch (IOException e) {
-              return CompletableFuture.failedFuture(new ApiException(e));
-            }
-            {{/returnType}}
-            {{^returnType}}
-            return CompletableFuture.completedFuture(
-                new ApiResponse<Void>(localVarResponse.statusCode(), localVarResponse.headers().map(), null)
-            );
-            {{/returnType}}
-        }
-      );
-    }
-    catch (ApiException e) {
-      return CompletableFuture.failedFuture(e);
-    }
-    {{/asyncNative}}
   }
 
-  private HttpRequest.Builder {{operationId}}RequestBuilder({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}String{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+  private HttpRequest.Builder {{operationId}}RequestBuilder({{#allParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
     {{#allParams}}
     {{#required}}
     // verify the required parameter '{{paramName}}' is set
@@ -356,72 +273,23 @@ public class {{classname}} {
       throw new ApiException(400, "Missing the required parameter '{{paramName}}' when calling {{operationId}}");
     }
     {{/required}}
-    {{/allParams}}        
-
-    {{#hasPathParams}}{{#pathParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}String {{{paramName}}}AsBase64EncodedParam = {{{paramName}}} == null ? null : new String(java.util.Base64.getUrlEncoder().encode({{paramName}}.getBytes(java.nio.charset.StandardCharsets.UTF_8)), java.nio.charset.StandardCharsets.UTF_8);
-    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{/pathParams}}{{/hasPathParams}}
+    {{/allParams}}
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
-
     {{! Switch delimiters for baseName so we can write constants like "{query}" }}
     String localVarPath = "{{{path}}}"{{#pathParams}}
-        .replace({{=<% %>=}}"{<%baseName%>}"<%={{ }}=%>, ApiClient.urlEncode({{{paramName}}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}AsBase64EncodedParam{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}.toString())){{/pathParams}};
+        .replace({{=<% %>=}}"{<%baseName%>}"<%={{ }}=%>, ApiClient.urlEncodeObject({{{paramName}}})){{/pathParams}};
 
     {{#hasQueryParams}}
-    {{javaUtilPrefix}}List<Pair> localVarQueryParams = new {{javaUtilPrefix}}ArrayList<>();
-    {{javaUtilPrefix}}StringJoiner localVarQueryStringJoiner = new {{javaUtilPrefix}}StringJoiner("&");
+    List<Pair> localVarQueryParams = new ArrayList<>();
+    StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
     String localVarQueryParameterBaseName;
     {{#queryParams}}
     localVarQueryParameterBaseName = "{{{baseName}}}";
-    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    String {{{paramName}}}AsBase64EncodedQueryParam = {{{paramName}}} == null ? null : new String(java.util.Base64.getUrlEncoder().encode({{paramName}}.getBytes(java.nio.charset.StandardCharsets.UTF_8)), java.nio.charset.StandardCharsets.UTF_8);
-    {{#collectionFormat}}
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("{{{collectionFormat}}}", "{{baseName}}", {{paramName}}AsBase64EncodedQueryParam));
-    {{/collectionFormat}}
-    {{^collectionFormat}}
-      {{^collectionFormat}}
-        {{#isDeepObject}}
-    if ({{paramName}} != null) {
-            {{#isArray}}
-      for (int i=0; i < {{paramName}}.size(); i++) {
-        localVarQueryStringJoiner.add({{paramName}}.get(i).toUrlQueryString(String.format("{{baseName}}[%d]", i)));
-      }
-            {{/isArray}}
-            {{^isArray}}
-      localVarQueryStringJoiner.add({{paramName}}.toUrlQueryString("{{baseName}}"));
-            {{/isArray}}
-    }
-        {{/isDeepObject}}
-        {{^isDeepObject}}
-            {{#isExplode}}
-                {{#hasVars}}
-                    {{#vars}}
-                        {{#isArray}}
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("multi", "{{baseName}}", {{paramName}}.{{getter}}()));
-                        {{/isArray}}
-                        {{^isArray}}
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("{{baseName}}", {{paramName}}.{{getter}}()));
-                        {{/isArray}}
-                    {{/vars}}
-                {{/hasVars}}
-                {{^hasVars}}
-                {{#isModel}}
-    localVarQueryStringJoiner.add({{paramName}}.toUrlQueryString());
-                {{/isModel}}
-                {{^isModel}}
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("{{baseName}}", {{paramName}}AsBase64EncodedQueryParam));
-                {{/isModel}}
-                {{/hasVars}}
-            {{/isExplode}}
-            {{^isExplode}}
-    localVarQueryParams.addAll(ApiClient.parameterToPairs("{{baseName}}", {{paramName}}));
-            {{/isExplode}}
-        {{/isDeepObject}}
-      {{/collectionFormat}}
-    {{/collectionFormat}}
-    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
       {{#collectionFormat}}
+
+
+
     localVarQueryParams.addAll(ApiClient.parameterToPairs("{{{collectionFormat}}}", "{{baseName}}", {{paramName}}));
       {{/collectionFormat}}
       {{^collectionFormat}}
@@ -463,11 +331,10 @@ public class {{classname}} {
             {{/isExplode}}
         {{/isDeepObject}}
       {{/collectionFormat}}
-      {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
     {{/queryParams}}
 
     if (!localVarQueryParams.isEmpty() || localVarQueryStringJoiner.length() != 0) {
-      {{javaUtilPrefix}}StringJoiner queryJoiner = new {{javaUtilPrefix}}StringJoiner("&");
+      StringJoiner queryJoiner = new StringJoiner("&");
       localVarQueryParams.forEach(p -> queryJoiner.add(p.getName() + '=' + p.getValue()));
       if (localVarQueryStringJoiner.length() != 0) {
         queryJoiner.add(localVarQueryStringJoiner.toString());
@@ -512,7 +379,13 @@ public class {{classname}} {
     {{#formParams}}
     {{#isArray}}
     for (int i=0; i < {{paramName}}.size(); i++) {
+        {{#isFile}}
+        multiPartBuilder.addBinaryBody("{{{baseName}}}", {{paramName}}.get(i));
+        hasFiles = true;
+        {{/isFile}}
+        {{^isFile}}
         multiPartBuilder.addTextBody("{{{baseName}}}", {{paramName}}.get(i).toString());
+        {{/isFile}}
     }
     {{/isArray}}
     {{^isArray}}
@@ -648,5 +521,21 @@ public class {{classname}} {
   {{/hasParams}}
   {{/vendorExtensions.x-group-parameters}}
   {{/operation}}
+  
+
+  private byte[] asBase64UrlEncoded(String value) {
+  	return new String(java.util.Base64.getUrlEncoder().encode(value.getBytes(java.nio.charset.StandardCharsets.UTF_8)), java.nio.charset.StandardCharsets.UTF_8).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+  }
+
+  private List<byte[]> asBase64UrlEncoded(List<String> values) {
+    if (values == null) {
+      return null;
+    }
+    List<byte[]> toReturn = new ArrayList<>(values.size());
+    for (String eachValue : values) {
+      toReturn.add(asBase64UrlEncoded(eachValue));
+    }
+    return toReturn;
+  }
 }
 {{/operations}}

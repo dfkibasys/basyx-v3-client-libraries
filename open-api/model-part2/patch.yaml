@@ -62,10 +62,15 @@
 - op: remove
   path: /components/schemas/SubmodelElementValue/oneOf/11
 
+# we need a choice here -> can't use submodelelement at this position
+- op: replace
+  path: /components/schemas/GetSubmodelElementsResult/allOf/1/properties/result/items/$ref
+  value: "https://api.swaggerhub.com/domains/Plattform_i40/Part1-MetaModel-Schemas/V3.0.1#/components/schemas/SubmodelElement_choice"
+
 
 # # add url encode hints
 - op: add
-  path: /components/parameters/Limit/x-utf8-base64-url-encoded-as-string
+  path: /components/parameters/AssetIds/x-utf8-base64-url-encoded-as-string
   value: true 
 - op: add
   path: /components/parameters/AssetAdministrationShellIdentifier/x-utf8-base64-url-encoded-as-string
