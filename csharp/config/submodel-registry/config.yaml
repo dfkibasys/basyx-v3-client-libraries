@@ -1,0 +1,6 @@
+templateDir: ../templates
+additionalProperties:
+  supportsAsync: false
+  additionalUsing: 
+  - using De.Dfki.Basys.Clients.V3_0_1.Model.Part1;
+  targetFramework: net8.0

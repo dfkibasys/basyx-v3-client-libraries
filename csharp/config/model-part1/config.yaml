@@ -1,0 +1,9 @@
+templateDir: ../templates
+additionalProperties:
+  packageVersion: 1.0.1
+  packageAuthors: Gerhard Sonnenberg
+  packageCompany: DFKI GmbH
+  packageTitle: Basys-Clients-V3.0.1
+  packageCopyright: DFKI GmbH
+  licenseId: MIT
+  targetFramework: net8.0

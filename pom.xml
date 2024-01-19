@@ -35,6 +35,8 @@
 		<module>java/cd-repository</module>
 		<module>java/submodel-registry</module>
 		<module>java/submodel-repository</module>
+		<module>csharp/model-part1</module>
+		<module>csharp/model-part2</module>
 	</modules>
 
 
