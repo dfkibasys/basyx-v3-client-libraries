@@ -161,10 +161,10 @@
   path: /paths
   value: {}
 
-- op: add
-  path: /components/schemas/SubmodelElement_choice/discriminator
-  value:
-    propertyName: modelType
+# - op: add
+#   path: /components/schemas/SubmodelElement_choice/discriminator
+#   value:
+#     propertyName: modelType
     # mapping:
     #   RelationshipElement: '#/components/schemas/RelationshipElement'
     #   AnnotatedRelationshipElement: '#/components/schemas/AnnotatedRelationshipElement'

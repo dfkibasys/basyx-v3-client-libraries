@@ -4,12 +4,12 @@
 - op: replace
   path: /paths/~1shell-descriptors~1{aasIdentifier}/get/parameters
   value:
-  - $ref: 'https://api.swaggerhub.com/domains/Plattform_i40/Part2-API-Schemas/V3.0#/components/parameters/AssetAdministrationShellIdentifier'
+  - $ref: 'https://api.swaggerhub.com/domains/Plattform_i40/Part2-API-Schemas/V3.0.1#/components/parameters/AssetAdministrationShellIdentifier'
 - op: replace
   path: /paths/~1shell-descriptors~1{aasIdentifier}/put/parameters
   value: 
-  - $ref: 'https://api.swaggerhub.com/domains/Plattform_i40/Part2-API-Schemas/V3.0#/components/parameters/AssetAdministrationShellIdentifier'
+  - $ref: 'https://api.swaggerhub.com/domains/Plattform_i40/Part2-API-Schemas/V3.0.1#/components/parameters/AssetAdministrationShellIdentifier'
 - op: replace
   path: /paths/~1shell-descriptors~1{aasIdentifier}/delete/parameters
   value:  
-  - $ref: 'https://api.swaggerhub.com/domains/Plattform_i40/Part2-API-Schemas/V3.0#/components/parameters/AssetAdministrationShellIdentifier'
+  - $ref: 'https://api.swaggerhub.com/domains/Plattform_i40/Part2-API-Schemas/V3.0.1#/components/parameters/AssetAdministrationShellIdentifier'

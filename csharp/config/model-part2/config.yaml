@@ -1,0 +1,44 @@
+additionalProperties:
+  packageAuthors: Gerhard Sonnenberg
+  packageCompany: DFKI GmbH
+  packageTitle: Basys-Clients-V3.0.1
+  packageCopyright: DFKI GmbH
+  licenseId: MIT
+  # Because csharp does not handle importmappings we need an additional using statement here
+  #https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator/src/main/java/org/openapitools/codegen/languages/AbstractCSharpCodegen.java#L118
+  additionalUsing: using De.Dfki.Basys.Clients.V3_0_1.Model.Part1;
+
+# gobalProperties: {}
+#   #generateAliasAsModel: true
+#   # supportingFiles: 
+#   # models:
+# configOptions: 
+#   licenseId: MIT
+#   optionalProjectFile: true
+#   packageName: De.Dfki.Basys.Clients.V3_0_1
+#   modelPackage: MetaModelPart1
+#   generateModels: true
+#   generateApis: false
+#   generateApiTests: false
+#   apisToGenerate: []
+#   generateModelDocumentation: false
+#   generateModelTests: false
+#   generateApiDocumentation: false
+#   openapiNormalizer: REMOVE_ANYOF_ONEOF_AND_KEEP_PROPERTIES_ONLY=true
+#   generateSupportingFiles: true
+#   packageVersion: 0.1.0
+#   releaseNote: Initial Setup
+#   sourceFolder: src
+#   targetFramework: net8.0
+#   netCoreProjectFile: true
+#   skipOperationExample: true
+#   packageTags:
+#   - basys
+#   - V3_0_1
+#   - clients
+#   supportingFilesToGenerate: 
+#   - De.Dfki.Basys.Clients.V3.csproj
+#   - AbstractOpenAPISchema.cs
+#   #- OpenAPIDateConverter.cs
+# additionalProperties: 
+#   packageAuthors: Gerhard Sonnenberg
