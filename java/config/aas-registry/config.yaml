@@ -1,4 +1,3 @@
-templateDir: templates
 additionalProperties:
   java8: true
   useRuntimeException: true
