@@ -47,6 +47,8 @@ services:
     environment:
       VIRTUAL_HOST: aas-registry.${EXTERNAL_HOSTNAME}
       VIRTUAL_PORT: 8080
+      BASYX_CORS_ALLOWED_ORIGINS: '*'
+      BASYX_CORS_ALLOWED_METHODS: GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD
     networks:
       - basyx
   
@@ -59,6 +61,8 @@ services:
     environment:
       VIRTUAL_HOST: submodel-registry.${EXTERNAL_HOSTNAME}
       VIRTUAL_PORT: 8080
+      BASYX_CORS_ALLOWED_ORIGINS: '*'
+      BASYX_CORS_ALLOWED_METHODS: GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD
     networks:
       - basyx
 
@@ -69,20 +73,23 @@ services:
     ports:
     - 8081:8081
     environment:
-      BASYX_AASREPOSITORY_FEATURE_REGISTRYINTEGRATION: http://aas-registry:8080/api/v3.0
-      BASYX_SUBMODELREPOSITORY_FEATURE_REGISTRYINTEGRATION: http://submodel-registry:8080/api/v3.0
+      BASYX_AASREPOSITORY_FEATURE_REGISTRYINTEGRATION: http://aas-registry:8080
+      BASYX_SUBMODELREPOSITORY_FEATURE_REGISTRYINTEGRATION: http://submodel-registry:8080
       BASYX_AASREPOSITORY_FEATURE_AASXUPLOAD_ENABLED: "true"   
-      BASYX_CORS_ALLOWED_ORIGINS: http://localhost:3000
+      BASYX_CORS_ALLOWED_ORIGINS: '*'
+      BASYX_CORS_ALLOWED_METHODS: GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD
       BASYX_EXTERNALURL: http://localhost:8081
-      BASYX_ENVIRONMENT: file:/tmp/aasx/testEnvironment.json
+      BASYX_ENVIRONMENT: file:/tmp/aasx/
       VIRTUAL_HOST: aas-environment.${EXTERNAL_HOSTNAME}
       VIRTUAL_PORT: 8081
       DEBUG: "true"
     volumes:
-    - ./aasx/testEnvironment.json:/tmp/aasx/testEnvironment.json:ro
+    - ./aasx/:/tmp/aasx/:ro
     depends_on:
-      - aas-registry
-      - submodel-registry
+      aas-registry:
+        condition: service_healthy
+      submodel-registry:
+        condition: service_healthy
     networks:
       - basyx
 
@@ -91,7 +98,8 @@ services:
     container_name: aas-gui
     environment:
       CHOKIDAR_USEPOLLING: "true"
-      VITE_REGISTRY_PATH: http://localhost:8087/api/v3.0
+      VITE_AAS_REGISTRY_PATH: http://localhost:8083
+      VITE_SUBMODEL_REGISTRY_PATH: http://localhost:8082
       VITE_AAS_REPO_PATH: http://localhost:8081/shells
       VITE_SUBMODEL_REPO_PATH: http://localhost:8081/submodels
       VITE_CD_REPO_PATH: http://localhost:8081/concept-descriptions
@@ -100,8 +108,12 @@ services:
     ports:
     - 3000:3000
     depends_on:
-    - aas-environment
-    - aas-registry
+      aas-registry:
+        condition: service_healthy
+      submodel-registry:
+        condition: service_healthy    
+      aas-environment:
+        condition: service_healthy
     networks:
       - basyx
 

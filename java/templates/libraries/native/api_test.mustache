@@ -1,0 +1,57 @@
+{{>licenseInfo}}
+
+package {{package}};
+
+import {{invokerPackage}}.ApiException;
+{{#imports}}import {{import}};
+{{/imports}}
+import org.junit.Test;
+import org.junit.Ignore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+{{#asyncNative}}
+import java.util.concurrent.CompletableFuture;
+{{/asyncNative}}
+
+/**
+ * API tests for {{classname}}
+ */
+@Ignore
+public class {{classname}}Test {
+
+    private final {{classname}} api = new {{classname}}();
+
+    {{#operations}}{{#operation}}
+    /**
+     * {{summary}}
+     *
+     * {{notes}}
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void {{operationId}}Test() throws ApiException {
+        {{#allParams}}
+        {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}} = null;
+        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        {{{dataType}}} {{paramName}} = null;
+        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        
+        {{/allParams}}
+       
+        {{#returnType}}{{{returnType}}} response = {{/returnType}}
+        {{^returnType}}{{/returnType}}api.{{operationId}}({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
+       
+
+        // TODO: test validations
+    }
+    {{/operation}}{{/operations}}
+}

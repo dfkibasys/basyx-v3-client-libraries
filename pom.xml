@@ -20,7 +20,7 @@
 
 		<jsonpatch.plugin.version>0.5.1</jsonpatch.plugin.version>
 
-		<openapitools.version>7.2.0</openapitools.version>
+		<openapitools.version>7.3.0</openapitools.version>
 		<openapitools.jacksonnullable.version>0.2.6</openapitools.jacksonnullable.version>
 		<jsr305.version>3.0.2</jsr305.version>
 	</properties>

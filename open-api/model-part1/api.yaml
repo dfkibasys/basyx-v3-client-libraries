@@ -97,6 +97,8 @@ components:
           submodels:
             type: array
             items:
+              type: string
+              minLength: 1
               "$ref": "#/components/schemas/Reference"
             minItems: 1
           modelType:

@@ -1,6 +1,6 @@
 # Add Source
 
-You need to add a source at first (replace the file path):
+You need to add a source at first (replace the file path, prefer cmd shell):
 ``` sh
 dotnet nuget add source C:\repo\i4.0\basys\basyx-v3-client-libraries\csharp\release -n localsource
 ```
@@ -12,7 +12,7 @@ dotnet nuget list source
 
 A dependency was already added:
 ``` sh
-dotnet add package De.Dfki.Basys.Clients.V3_0_1 --version 1.0.0
+dotnet add package De.Dfki.Basys.Clients.V3 --version 1.1.0
 ```
 
 Now build the project with the specific source:
