@@ -45,7 +45,7 @@
 
 	<modules>
 		<module>java</module>
-		<!--	<module>csharp-unity</module>-->
+		<module>csharp-unity</module>
 	</modules>
 
 
