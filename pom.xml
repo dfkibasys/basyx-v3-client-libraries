@@ -17,24 +17,35 @@
 	</parent>
 
 	<properties>
+		<iterator-maven-plugin.version>0.5.1</iterator-maven-plugin.version>
+		<maven-plugin-plugin.version>3.9.0</maven-plugin-plugin.version>
+		<jsonpatch-maven-plugin.version>0.5.1</jsonpatch-maven-plugin.version>
+		<find-and-replace-maven-plugin.version>1.1.0</find-and-replace-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.3.0</openapi-generator-maven-plugin.version>
+		<properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
+		<openapi.parentFolder.name>open-api</openapi.parentFolder.name>
+		<openapi.parentFolder.path>${project.basedir}/../${openapi.parentFolder.name}</openapi.parentFolder.path>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<generated.folder.name>build/generated</generated.folder.name>
+		<openapi.folder.name>@item@</openapi.folder.name>
+		<openapi.input.name>api.yaml</openapi.input.name>
+		<openapi.output.name>@item@.yaml</openapi.output.name>
+		<openapi.patch.name>patch.yaml</openapi.patch.name>
+		<openapi.input.path>
+			${openapi.parentFolder.path}/${openapi.folder.name}/${openapi.input.name}</openapi.input.path>
+		<openapi.patch.path>
+			${openapi.parentFolder.path}/${openapi.folder.name}/${openapi.patch.name}</openapi.patch.path>
+		<openapi.output.folder>${project.basedir}/${generated.folder.name}/openapi</openapi.output.folder>
+		<gensrc.output.folder>${project.basedir}/${generated.folder.name}/project</gensrc.output.folder>
+		<openapi.output.path>${openapi.output.folder}/${openapi.output.name}</openapi.output.path>
+		<openapi.generator.config.name>config</openapi.generator.config.name>
+		<openapi.generator.config.path>${project.basedir}/${openapi.generator.config.name}</openapi.generator.config.path>
 
-		<jsonpatch.plugin.version>0.5.1</jsonpatch.plugin.version>
-
-		<openapitools.version>7.2.0</openapitools.version>
-		<openapitools.jacksonnullable.version>0.2.6</openapitools.jacksonnullable.version>
-		<jsr305.version>3.0.2</jsr305.version>
 	</properties>
 
 	<modules>
-	 	<module>java/common</module>
-	 	<module>java/model-part1</module>
-		<module>java/model-part2</module>
-		<module>java/aas-discoveryservice</module>
-		<module>java/aas-registry</module>
-		<module>java/aas-repository</module>
-		<module>java/cd-repository</module>
-		<module>java/submodel-registry</module>
-		<module>java/submodel-repository</module>
+		<module>java</module>
+		<module>csharp-unity</module>
 	</modules>
 
 
@@ -49,52 +60,219 @@
 			</roles>
 		</developer>
 	</developers>
+
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>de.dfki.cos.basys.common</groupId>
-					<artifactId>jsonpatch-maven-plugin</artifactId>
-					<version>${jsonpatch.plugin.version}</version>
-				</plugin>
-				<plugin>
-					<!-- If you want to override templates you can copy these:
-					https://github.com/OpenAPITools/openapi-generator/tree/v6.6.0/modules/openapi-generator/src/main/resources -->
-					<groupId>org.openapitools</groupId>
-					<artifactId>openapi-generator-maven-plugin</artifactId>
-					<version>${openapitools.version}</version>
-				</plugin>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${openapi.output.folder}</directory>
+							<excludes>
+								<exclude>**/.gitkeep</exclude>
+							</excludes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+						<fileset>
+							<directory>${gensrc.output.folder}</directory>
+							<excludes>
+								<exclude>.openapi-generator-ignore</exclude>
+								<exclude>.project</exclude>
+							</excludes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
 			</plugins>
 
-		</pluginManagement>
 	</build>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.google.code.findbugs</groupId>
-				<artifactId>jsr305</artifactId>
-				<version>${jsr305.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openapitools</groupId>
-				<artifactId>jackson-databind-nullable</artifactId>
-				<version>${openapitools.jacksonnullable.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>clients-v3-common</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>clients-v3-metamodel-part1</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>clients-v3-metamodel-part2</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>prepare-openapi</id>
+			<activation>
+				<file>
+					<exists>${project.basedir}/config</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.soebes.maven.plugins</groupId>
+						<artifactId>iterator-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>generate-openapi-files</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>iterator</goal>
+								</goals>
+								<configuration>
+									<folder>${openapi.parentFolder.path}</folder>
+									<pluginExecutors>
+										<pluginExecutor>
+											<goal>jsonpatch-maven-plugin</goal>
+											<plugin>
+												<groupId>de.dfki.cos.basys.common</groupId>
+												<artifactId>jsonpatch-maven-plugin</artifactId>
+											</plugin>
+											<configuration>
+												<input>${openapi.input.path}</input>
+												<patch>${openapi.patch.path}</patch>
+												<output>${openapi.output.path}</output>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<goal>find-and-replace</goal>
+											<plugin>
+												<groupId>io.github.floverfelt</groupId>
+												<artifactId>find-and-replace-maven-plugin</artifactId>
+											</plugin>
+											<configuration>
+												<replacementType>file-contents</replacementType>
+												<baseDir>${generated.folder.name}/openapi</baseDir>
+												<findRegex>
+													https:\/\/api\.swaggerhub\.com/domains\/Plattform_i40\/Part([1|2])\-(MetaModel|API)\-Schemas\/V3\.0\.[1|2]#</findRegex>
+												<replaceValue>./model-part$1.yaml#</replaceValue>
+												<recursive>false</recursive>
+												<fileMask>${openapi.output.name}</fileMask>
+											</configuration>
+										</pluginExecutor>
+									</pluginExecutors>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-plugin-plugin</artifactId>
+							<version>${maven-plugin-plugin.version}</version>
+						</plugin>
+						<plugin>
+							<groupId>de.dfki.cos.basys.common</groupId>
+							<artifactId>jsonpatch-maven-plugin</artifactId>
+							<version>${jsonpatch-maven-plugin.version}</version>
+						</plugin>
+						<plugin>
+							<groupId>io.github.floverfelt</groupId>
+							<artifactId>find-and-replace-maven-plugin</artifactId>
+							<version>${find-and-replace-maven-plugin.version}</version>
+						</plugin>
+						<plugin>
+							<groupId>com.soebes.maven.plugins</groupId>
+							<artifactId>iterator-maven-plugin</artifactId>
+							<version>${iterator-maven-plugin.version}</version>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+
+		</profile>
+		<profile>
+			<id>generate-api-classes</id>
+			<activation>
+				<file>
+					<exists>config</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>properties-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>initialize</phase>
+								<goals>
+									<goal>read-project-properties</goal>
+								</goals>
+								<configuration>
+									<files>
+										<file>${project.basedir}/config/base.properties</file>
+									</files>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.soebes.maven.plugins</groupId>
+						<artifactId>iterator-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>generate-code</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>iterator</goal>
+								</goals>
+								<configuration>
+									<folder>${openapi.parentFolder.path}</folder>
+
+									<pluginExecutors>
+										<pluginExecutor>
+											<goal>read-project-properties</goal>
+											<plugin>
+												<groupId>org.codehaus.mojo</groupId>
+												<artifactId>properties-maven-plugin</artifactId>
+											</plugin>
+											<configuration>
+												<files>
+													<file>
+														${project.basedir}/config/@item@/generator.properties</file>
+												</files>
+											</configuration>
+										</pluginExecutor>
+
+										<pluginExecutor>
+											<goal>generate</goal>
+											<plugin>
+												<groupId>org.openapitools</groupId>
+												<artifactId>openapi-generator-maven-plugin</artifactId>
+											</plugin>
+											<configuration>
+												<inputSpec>${openapi.output.path}</inputSpec>
+												<output>${gensrc.output.folder}</output>
+												<configurationFile>
+													${project.basedir}/config/@item@/config.yaml</configurationFile>
+												<templateResourcePath>${project.basedir}/templates</templateResourcePath>
+											</configuration>
+										</pluginExecutor>
+
+									</pluginExecutors>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>com.soebes.maven.plugins</groupId>
+							<artifactId>iterator-maven-plugin</artifactId>
+							<version>${iterator-maven-plugin.version}</version>
+						</plugin>
+
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>properties-maven-plugin</artifactId>
+							<version>${properties-maven-plugin.version}</version>
+						</plugin>
+						<plugin>
+							<groupId>org.openapitools</groupId>
+							<artifactId>openapi-generator-maven-plugin</artifactId>
+							<version>${openapi-generator-maven-plugin.version}</version>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
+
 </project>

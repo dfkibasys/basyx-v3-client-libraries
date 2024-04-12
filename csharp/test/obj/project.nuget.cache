@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dgSpecHash": "c930AtCG2FSI1a1zDt6L/7OMxtYPVsSwT4AISVxOA4d8gKhpOvlyZTHQeux+6FXVbagGYShl4XLalOS2Wl3uAQ==",
+  "success": true,
+  "projectFilePath": "C:\\repo\\i4.0\\basys\\basyx-v3-client-libraries\\csharp\\test\\test.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\geso02\\.nuget\\packages\\jsonsubtypes\\2.0.1\\jsonsubtypes.2.0.1.nupkg.sha512",
+    "C:\\Users\\geso02\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\geso02\\.nuget\\packages\\org.eclipse.digitaltwin.basyx.v3.clients\\1.1.0\\org.eclipse.digitaltwin.basyx.v3.clients.1.1.0.nupkg.sha512",
+    "C:\\Users\\geso02\\.nuget\\packages\\polly\\8.1.0\\polly.8.1.0.nupkg.sha512",
+    "C:\\Users\\geso02\\.nuget\\packages\\polly.core\\8.1.0\\polly.core.8.1.0.nupkg.sha512",
+    "C:\\Users\\geso02\\.nuget\\packages\\restsharp\\110.2.0\\restsharp.110.2.0.nupkg.sha512",
+    "C:\\Users\\geso02\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
+    "C:\\Users\\geso02\\.nuget\\packages\\system.text.json\\7.0.2\\system.text.json.7.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

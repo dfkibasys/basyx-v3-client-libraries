@@ -1,0 +1,13 @@
+additionalProperties:
+  packageAuthors: Gerhard Sonnenberg
+  packageCompany: DFKI GmbH
+  packageTitle: Basys-Clients-V3
+  packageCopyright: DFKI GmbH
+  licenseId: MIT
+  packageVersion: 1.1.0
+  supportsAsync: true
+  netCoreProjectFile: true
+  targetFramework: net8.0
+  additionalUsing: 
+  - using Org.Eclipse.Digitaltwin.Basyx.V3.Clients.Model.Part1;
+  - using Org.Eclipse.Digitaltwin.Basyx.V3.Clients.Model.Part2;

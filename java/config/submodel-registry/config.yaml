@@ -1,0 +1,9 @@
+additionalProperties:
+  java8: true
+  dateLibrary: java8
+  sourceFolder: src/main/java
+  useJarkartaEe: true
+  legacyDiscriminatorBehavior: false
+  disallowAdditionalPropertiesIfNotPresent: false
+  supportUrlQuery: false
+  artifactVersion: 0.0.1-SNAPSHOT

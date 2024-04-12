@@ -1,0 +1,6 @@
+additionalProperties:
+  supportsAsync: true
+  additionalUsing: 
+  - using Org.Eclipse.Digitaltwin.Basyx.V3.Clients.Model.Part1;
+  - using Org.Eclipse.Digitaltwin.Basyx.V3.Clients.Model.Part2;
+  targetFramework: net8.0

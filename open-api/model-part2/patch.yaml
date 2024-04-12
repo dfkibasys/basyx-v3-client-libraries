@@ -1,3 +1,4 @@
+
 - op: remove
   path: /components/schemas/AssetAdministrationShellDescriptor/example
 - op: replace
@@ -84,7 +85,7 @@
 
 
 
-# # due to the bug in yaml patch just remove the patterns here
-# # - op: remove
-# #   path: /components/parameters/AssetInformation/properties/assetType/pattern
-# #   path: /components/schemas/Key/properties/value/pattern
+# # # due to the bug in yaml patch just remove the patterns here
+# # # - op: remove
+# # #   path: /components/parameters/AssetInformation/properties/assetType/pattern
+# # #   path: /components/schemas/Key/properties/value/pattern

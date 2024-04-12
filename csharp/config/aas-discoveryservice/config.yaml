@@ -2,7 +2,7 @@ templateDir: ../templates
 additionalProperties:
   supportsAsync: false
   additionalUsing: 
-  - using De.Dfki.Basys.Clients.V3_0_1.Model.Part1;
-  - using De.Dfki.Basys.Clients.V3_0_1.Model.Part2;
+  - using Org.Eclipse.Digitaltwin.Basyx.V3.Clients.Model.Part1;
+  - using Org.Eclipse.Digitaltwin.Basyx.V3.Clients.Model.Part2;
   netCoreProjectFile: true
   targetFramework: net8.0

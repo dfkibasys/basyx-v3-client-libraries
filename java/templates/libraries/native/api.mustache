@@ -77,7 +77,6 @@ public class {{classname}} {
     memberVarResponseInterceptor = apiClient.getResponseInterceptor();
     memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
   }
-  
 
   protected ApiException getApiException(String operationId, HttpResponse<InputStream> response) throws IOException {
     String body = response.body() == null ? null : new String(response.body().readAllBytes());
@@ -127,7 +126,7 @@ public class {{classname}} {
    * {{summary}}
    * {{notes}}
    * @param apiRequest {@link API{{operationId}}Request}
-   * @return ApiResponse&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;
+   * @return ApiResponse&lt;{{{returnType}}}{{^returnType}}Void{{/returnType}}&gt;
    * @throws ApiException if fails to make API call
    {{#isDeprecated}}
    * @deprecated
@@ -158,8 +157,6 @@ public class {{classname}} {
    {{#returnType}}
    * @return {{returnType}}
    {{/returnType}}
-   {{^returnType}}
-   {{/returnType}}
    * @throws ApiException if fails to make API call
    {{#isDeprecated}}
    * @deprecated
@@ -173,6 +170,7 @@ public class {{classname}} {
   @Deprecated
   {{/isDeprecated}}
   public {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+
     {{#returnType}}ApiResponse<{{{.}}}> localVarResponse = {{/returnType}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
     {{#returnType}}
     return localVarResponse.getData();
@@ -198,16 +196,37 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
-  public ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfo({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
-  	{{#allParams}}
+ public ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfo({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+ 	{{#allParams}}
     {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    {{{dataType}}} {{paramName}}AsBytes = ApiClient.base64UrlEncode({{paramName}});
+    {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}}AsBytes = ApiClient.base64UrlEncode({{paramName}});
     {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
     {{/allParams}}
   	return {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}AsBytes{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^-last}}, {{/-last}}{{/allParams}});
-  }
-   
-  private ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+ 	
+ }
+
+
+  /**
+   * {{summary}}
+   * {{notes}}
+   {{#allParams}}
+   * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{^isContainer}}{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/isContainer}}{{/required}}
+   {{/allParams}}
+   * @return ApiResponse&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;
+   * @throws ApiException if fails to make API call
+   {{#isDeprecated}}
+   * @deprecated
+   {{/isDeprecated}}
+   {{#externalDocs}}
+   * {{description}}
+   * @see <a href="{{url}}">{{summary}} Documentation</a>
+   {{/externalDocs}}
+   */
+  {{#isDeprecated}}
+  @Deprecated
+  {{/isDeprecated}}
+  public ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = {{operationId}}RequestBuilder({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -265,7 +284,7 @@ public class {{classname}} {
     }
   }
 
-  private HttpRequest.Builder {{operationId}}RequestBuilder({{#allParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+  private HttpRequest.Builder {{operationId}}RequestBuilder({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
     {{#allParams}}
     {{#required}}
     // verify the required parameter '{{paramName}}' is set
@@ -276,9 +295,10 @@ public class {{classname}} {
     {{/allParams}}
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
     {{! Switch delimiters for baseName so we can write constants like "{query}" }}
     String localVarPath = "{{{path}}}"{{#pathParams}}
-        .replace({{=<% %>=}}"{<%baseName%>}"<%={{ }}=%>, ApiClient.urlEncodeObject({{{paramName}}})){{/pathParams}};
+        .replace({{=<% %>=}}"{<%baseName%>}"<%={{ }}=%>, ApiClient.urlEncode({{{paramName}}}.toString())){{/pathParams}};
 
     {{#hasQueryParams}}
     List<Pair> localVarQueryParams = new ArrayList<>();
@@ -287,9 +307,6 @@ public class {{classname}} {
     {{#queryParams}}
     localVarQueryParameterBaseName = "{{{baseName}}}";
       {{#collectionFormat}}
-
-
-
     localVarQueryParams.addAll(ApiClient.parameterToPairs("{{{collectionFormat}}}", "{{baseName}}", {{paramName}}));
       {{/collectionFormat}}
       {{^collectionFormat}}
@@ -522,20 +539,5 @@ public class {{classname}} {
   {{/vendorExtensions.x-group-parameters}}
   {{/operation}}
   
-
-  private byte[] asBase64UrlEncoded(String value) {
-  	return new String(java.util.Base64.getUrlEncoder().encode(value.getBytes(java.nio.charset.StandardCharsets.UTF_8)), java.nio.charset.StandardCharsets.UTF_8).getBytes(java.nio.charset.StandardCharsets.UTF_8);
-  }
-
-  private List<byte[]> asBase64UrlEncoded(List<String> values) {
-    if (values == null) {
-      return null;
-    }
-    List<byte[]> toReturn = new ArrayList<>(values.size());
-    for (String eachValue : values) {
-      toReturn.add(asBase64UrlEncoded(eachValue));
-    }
-    return toReturn;
-  }
 }
 {{/operations}}
