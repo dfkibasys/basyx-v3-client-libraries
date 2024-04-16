@@ -540,7 +540,7 @@ namespace {{packageName}}.{{apiPackage}}
         {{#isDeprecated}}
         [Obsolete]
         {{/isDeprecated}}
-        {{#returnType}}public async System.Threading.Tasks.Task<{{{.}}}>{{/returnType}}{{^returnType}}public async System.Threading.Tasks.Task{{/returnType}} {{operationId}}Async({{#allParams}}{{{dataType}}} {{paramName}}{{^required}}{{#optionalMethodArgument}} = default({{{dataType}}}){{/optionalMethodArgument}}{{/required}}{{^-last}}, {{/-last}}{{/allParams}}{{#allParams.0}}, {{/allParams.0}}System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {{#returnType}}public async System.Threading.Tasks.Task<{{{.}}}>{{/returnType}}{{^returnType}}public async System.Threading.Tasks.Task{{/returnType}} {{operationId}}Async({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}string {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}} {{paramName}}{{^required}}{{#optionalMethodArgument}} = default({{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}string {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}){{/optionalMethodArgument}}{{/required}}{{^-last}}, {{/-last}}{{/allParams}}{{#allParams.0}}, {{/allParams.0}}System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var task = {{operationId}}WithHttpInfoAsync({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}{{#allParams.0}}, {{/allParams.0}}cancellationToken);
             {{#returnType}}
@@ -560,6 +560,16 @@ namespace {{packageName}}.{{apiPackage}}
             {{/returnType}}
         }
 
+        public async System.Threading.Tasks.Task<{{packageName}}.Client.ApiResponse<{{{returnType}}}{{^returnType}}Object{{/returnType}}>> {{operationId}}WithHttpInfoAsync({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}string {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}} {{paramName}}{{^required}}{{#optionalMethodArgument}} = default({{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}string {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}){{/optionalMethodArgument}}{{/required}}{{^-last}}, {{/-last}}{{/allParams}}{{#allParams.0}}, {{/allParams.0}}System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            {{#allParams}}
+            {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+            {{#isArray}}List<String>{{/isArray}}{{^isArray}}string{{/isArray}} {{paramName}}AsBytes = {{packageName}}.Client.ClientUtils.Base64UrlEncode({{paramName}});
+            {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+            {{/allParams}}     
+            return {{operationId}}WithHttpInfoNoUrlEncodingAsync({{#allParams}}{{paramName}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}AsBytes{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^-last}}, {{/-last}}{{/allParams}});
+        }
+
         /// <summary>
         /// {{summary}} {{notes}}
         /// </summary>
@@ -572,17 +582,15 @@ namespace {{packageName}}.{{apiPackage}}
         {{#isDeprecated}}
         [Obsolete]
         {{/isDeprecated}}
-        public async System.Threading.Tasks.Task<{{packageName}}.Client.ApiResponse<{{{returnType}}}{{^returnType}}Object{{/returnType}}>> {{operationId}}WithHttpInfoAsync({{#allParams}}{{{dataType}}} {{paramName}}{{^required}}{{#optionalMethodArgument}} = default({{{dataType}}}){{/optionalMethodArgument}}{{/required}}{{^-last}}, {{/-last}}{{/allParams}}{{#allParams.0}}, {{/allParams.0}}System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        private async System.Threading.Tasks.Task<{{packageName}}.Client.ApiResponse<{{{returnType}}}{{^returnType}}Object{{/returnType}}>> {{operationId}}WithHttpInfoNoUrlEncodingAsync({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}string {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}} {{paramName}}{{^required}}{{#optionalMethodArgument}} = default({{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}string {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}){{/optionalMethodArgument}}{{/required}}{{^-last}}, {{/-last}}{{/allParams}}{{#allParams.0}}, {{/allParams.0}}System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             {{#allParams}}
             {{#required}}
             {{^vendorExtensions.x-csharp-value-type}}
             // verify the required parameter '{{paramName}}' is set
             if ({{paramName}} == null)
-            {
                 throw new {{packageName}}.Client.ApiException(400, "Missing required parameter '{{paramName}}' when calling {{classname}}->{{operationId}}");
-			}
-			
+
             {{/vendorExtensions.x-csharp-value-type}}
             {{/required}}
             {{/allParams}}
@@ -604,17 +612,11 @@ namespace {{packageName}}.{{apiPackage}}
 
 
             var localVarContentType = {{packageName}}.Client.ClientUtils.SelectHeaderContentType(_contentTypes);
-            if (localVarContentType != null) 
-            {
-            	localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
-			}
-			
+            if (localVarContentType != null) localVarRequestOptions.HeaderParameters.Add("Content-Type", localVarContentType);
+
             var localVarAccept = {{packageName}}.Client.ClientUtils.SelectHeaderAccept(_accepts);
-            if (localVarAccept != null) 
-            {
-            	localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
-			}
-			
+            if (localVarAccept != null) localVarRequestOptions.HeaderParameters.Add("Accept", localVarAccept);
+
             {{#pathParams}}
             {{#required}}
             localVarRequestOptions.PathParameters.Add("{{baseName}}", {{packageName}}.Client.ClientUtils.ParameterToString({{paramName}})); // path parameter
@@ -749,10 +751,7 @@ namespace {{packageName}}.{{apiPackage}}
             if (this.ExceptionFactory != null)
             {
                 Exception _exception = this.ExceptionFactory("{{operationId}}", localVarResponse);
-                if (_exception != null)
-                { 
-                	throw _exception;
-                }
+                if (_exception != null) throw _exception;
             }
 
             return localVarResponse;

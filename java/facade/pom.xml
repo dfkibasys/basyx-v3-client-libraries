@@ -5,7 +5,7 @@
 	<groupId>org.eclipse.digitaltwin.basyx.v3.clients</groupId>
 	<artifactId>basyx-java-client-facade</artifactId>
 	<packaging>jar</packaging>
-	<name>basyx-java-clients</name>
+	<name>basyx-java-client-facade</name>
 	<version>1.0.0</version>
 	<url>https://github.com/openapitools/openapi-generator</url>
 	<description>OpenAPI Java</description>

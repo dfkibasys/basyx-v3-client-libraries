@@ -11,15 +11,14 @@ source .env
 set +a
 
 echo ""
-echo "=== twinficient services  ==="
+echo "=== services services  ==="
 echo ""
 
-echo "Portainer:         http://portainer.$EXTERNAL_HOSTNAME (admin / $PORTAINER_PWD)"
-echo "Aas Registry:      http://aas-registry.$EXTERNAL_HOSTNAME" 
-echo "Submodel Registry: http://submodel-registry.$EXTERNAL_HOSTNAME" 
-echo "AasRepo:           http://aas-environment.$EXTERNAL_HOSTNAME/shells" 
-echo "SmRepo:            http://aas-environment.$EXTERNAL_HOSTNAME/submodels" 
-echo "CdRepo:            http://aas-environment.$EXTERNAL_HOSTNAME/concept-descriptions" 
-echo "AasGui:            http://aas-gui.$EXTERNAL_HOSTNAME/"
-echo "AasDiscovery:      http://aas-discovery.$EXTERNAL_HOSTNAME/"
+echo "Portainer:         http://locahost:8084 (admin / $PORTAINER_PWD)"
+echo "Aas Registry:      http://localhost:8083" 
+echo "Submodel Registry: http://localhost:8082" 
+echo "AasRepo:           http://localhost:8081/shells" 
+echo "SmRepo:            http://localhost:8081/submodels" 
+echo "CdRepo:            http://localhost:8081/concept-descriptions" 
+echo "AasGui:            http://localhost:3000/"
 

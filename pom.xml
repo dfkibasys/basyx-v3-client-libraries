@@ -40,15 +40,12 @@
 		<openapi.output.path>${openapi.output.folder}/${openapi.output.name}</openapi.output.path>
 		<openapi.generator.config.name>config</openapi.generator.config.name>
 		<openapi.generator.config.path>${project.basedir}/${openapi.generator.config.name}</openapi.generator.config.path>
-
 	</properties>
-
 	<modules>
 		<module>java</module>
+		<module>java/aggregator</module>
 		<module>csharp-unity</module>
 	</modules>
-
-
 	<developers>
 		<developer>
 			<name>Gerhard Sonnenberg</name>
@@ -60,9 +57,7 @@
 			</roles>
 		</developer>
 	</developers>
-
 	<build>
-
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -86,13 +81,11 @@
 					</filesets>
 				</configuration>
 			</plugin>
-			</plugins>
-
+		</plugins>
 	</build>
-
 	<profiles>
 		<profile>
-			<id>prepare-openapi</id>
+			<id>generate-openapi</id>
 			<activation>
 				<file>
 					<exists>${project.basedir}/config</exists>
@@ -101,11 +94,57 @@
 			<build>
 				<plugins>
 					<plugin>
+						<artifactId>maven-clean-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>clean</phase>
+							</execution>
+						</executions>	
+						<configuration>
+							
+							<filesets>
+								<fileset>
+									<directory>${openapi.output.folder}</directory>
+									<excludes>
+										<exclude>**/.gitkeep</exclude>
+									</excludes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+								<fileset>
+									<directory>${gensrc.output.folder}</directory>
+									<excludes>
+										<exclude>.openapi-generator-ignore</exclude>
+										<exclude>.project</exclude>
+									</excludes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
+					
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>properties-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>initialize</phase>
+								<goals>
+									<goal>read-project-properties</goal>
+								</goals>
+								<configuration>
+									<files>
+										<file>${project.basedir}/config/base.properties</file>
+									</files>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
 						<groupId>com.soebes.maven.plugins</groupId>
 						<artifactId>iterator-maven-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>generate-openapi-files</id>
+								<id>prepare-openapi-files</id>
 								<phase>generate-sources</phase>
 								<goals>
 									<goal>iterator</goal>
@@ -144,6 +183,47 @@
 									</pluginExecutors>
 								</configuration>
 							</execution>
+							<execution>
+								<id>generate-code</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>iterator</goal>
+								</goals>
+								<configuration>
+									<folder>${openapi.parentFolder.path}</folder>
+
+									<pluginExecutors>
+										<pluginExecutor>
+											<goal>read-project-properties</goal>
+											<plugin>
+												<groupId>org.codehaus.mojo</groupId>
+												<artifactId>properties-maven-plugin</artifactId>
+											</plugin>
+											<configuration>
+												<files>
+													<file>
+														${project.basedir}/config/@item@/generator.properties</file>
+												</files>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<goal>generate</goal>
+											<plugin>
+												<groupId>org.openapitools</groupId>
+												<artifactId>openapi-generator-maven-plugin</artifactId>
+											</plugin>
+											<configuration>
+												<inputSpec>${openapi.output.path}</inputSpec>
+												<output>${gensrc.output.folder}</output>
+												<configurationFile>
+													${project.basedir}/config/@item@/config.yaml</configurationFile>
+												<templateResourcePath>${project.basedir}/templates</templateResourcePath>
+											</configuration>
+										</pluginExecutor>
+
+									</pluginExecutors>
+								</configuration>
+							</execution>
 						</executions>
 					</plugin>
 				</plugins>
@@ -170,95 +250,6 @@
 							<artifactId>iterator-maven-plugin</artifactId>
 							<version>${iterator-maven-plugin.version}</version>
 						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
-
-		</profile>
-		<profile>
-			<id>generate-api-classes</id>
-			<activation>
-				<file>
-					<exists>config</exists>
-				</file>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>properties-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<phase>initialize</phase>
-								<goals>
-									<goal>read-project-properties</goal>
-								</goals>
-								<configuration>
-									<files>
-										<file>${project.basedir}/config/base.properties</file>
-									</files>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>com.soebes.maven.plugins</groupId>
-						<artifactId>iterator-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>generate-code</id>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>iterator</goal>
-								</goals>
-								<configuration>
-									<folder>${openapi.parentFolder.path}</folder>
-
-									<pluginExecutors>
-										<pluginExecutor>
-											<goal>read-project-properties</goal>
-											<plugin>
-												<groupId>org.codehaus.mojo</groupId>
-												<artifactId>properties-maven-plugin</artifactId>
-											</plugin>
-											<configuration>
-												<files>
-													<file>
-														${project.basedir}/config/@item@/generator.properties</file>
-												</files>
-											</configuration>
-										</pluginExecutor>
-
-										<pluginExecutor>
-											<goal>generate</goal>
-											<plugin>
-												<groupId>org.openapitools</groupId>
-												<artifactId>openapi-generator-maven-plugin</artifactId>
-											</plugin>
-											<configuration>
-												<inputSpec>${openapi.output.path}</inputSpec>
-												<output>${gensrc.output.folder}</output>
-												<configurationFile>
-													${project.basedir}/config/@item@/config.yaml</configurationFile>
-												<templateResourcePath>${project.basedir}/templates</templateResourcePath>
-											</configuration>
-										</pluginExecutor>
-
-									</pluginExecutors>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>com.soebes.maven.plugins</groupId>
-							<artifactId>iterator-maven-plugin</artifactId>
-							<version>${iterator-maven-plugin.version}</version>
-						</plugin>
-
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>properties-maven-plugin</artifactId>
@@ -272,6 +263,7 @@
 					</plugins>
 				</pluginManagement>
 			</build>
+
 		</profile>
 	</profiles>
 

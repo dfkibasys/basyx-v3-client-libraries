@@ -1,0 +1,274 @@
+package org.eclipse.digitaltwin.basyx.v3.clientfacade;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.Aas4jObjectMapperFactory;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.BasyxRegistryApis;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.PassThroughBasyxClientCache;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.EnvironmentBasedBasyxServiceConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.FirstEndpointResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SimpleSubmodelReferenceResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SubmodelDescriptorResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxCollectionIterable;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxResult;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.FetchingBasyxIterable;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.ResultResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementElementResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementHierarchyResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementPathsIterable;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementWalker;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementsIterable;
+import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRegistryApi;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRegistryApi;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetAssetAdministrationShellDescriptorsResult;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetSubmodelDescriptorsResult;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.search.Page;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.search.ShellDescriptorQuery;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.search.ShellDescriptorQuery.QueryTypeEnum;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.search.ShellDescriptorSearchRequest;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.search.ShellDescriptorSearchResponse;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortDirection;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.search.Sorting;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortingPath;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class DefaultBasyxServiceFacade implements BasyxServiceFacade {
+
+	private final ObjectMapper mapper;
+	private final BasyxRegistryApis registryApis;
+	private EndpointResolver endpointResolver;
+	private SubmodelDescriptorResolver smReferenceResolver;
+	private BasyxClientCache clientCache;
+	private final Integer limit;
+
+	public DefaultBasyxServiceFacade(ObjectMapper mapper, BasyxRegistryApis registryApis, Integer limit) {
+		this.mapper = mapper;
+		this.endpointResolver = new FirstEndpointResolver();
+		this.smReferenceResolver = new SimpleSubmodelReferenceResolver();
+		this.clientCache = new PassThroughBasyxClientCache();
+		this.registryApis = registryApis;
+		this.limit = limit;
+	}
+
+	public DefaultBasyxServiceFacade(ObjectMapper mapper, BasyxRegistryServiceConfiguration config) {
+		this(mapper, new BasyxRegistryApis(mapper, config), config.getFetchLimit());
+	}
+
+	public DefaultBasyxServiceFacade(ObjectMapper mapper) {
+		this(mapper, new EnvironmentBasedBasyxServiceConfiguration());
+	}
+
+	public DefaultBasyxServiceFacade(BasyxRegistryApis registryApis, Integer limit) {
+		this(new Aas4jObjectMapperFactory().newObjectMapper(), registryApis, limit);
+	}
+
+	public DefaultBasyxServiceFacade(BasyxRegistryServiceConfiguration config) {
+		this(new Aas4jObjectMapperFactory().newObjectMapper(), config);
+	}
+
+	public DefaultBasyxServiceFacade() {
+		this(new Aas4jObjectMapperFactory().newObjectMapper());
+	}
+
+	public DefaultBasyxServiceFacade withEndpointResolver(EndpointResolver endpointResolverStrategy) {
+		this.endpointResolver = endpointResolverStrategy;
+		return this;
+	}
+	
+
+	public DefaultBasyxServiceFacade withSubmodelResolver(SubmodelDescriptorResolver smReferenceResolver) {
+		this.smReferenceResolver = smReferenceResolver;
+		return this;
+	}
+
+	public DefaultBasyxServiceFacade withClientCache(BasyxClientCache cache) {
+		this.clientCache = cache;
+		return this;
+	}
+
+	@Override
+	public BasyxIterable<AssetAdministrationShell> getAllShells() throws ApiException {
+		return getAllShells(null, null);
+	}
+	
+	@Override
+	public BasyxIterable<AssetAdministrationShell> getAllShells(AssetKind assetKind, String assetType) throws ApiException {
+		// we load the shell descriptors from registry but we try to resolve the shell from cache
+		ResultResolver<String, AssetAdministrationShell> resolver = cursor -> fetchShells(cursor, assetKind, assetType);
+		return new FetchingBasyxIterable<>(resolver);
+	}
+
+	@Override
+	public BasyxIterable<Submodel> getAllSubmodels(AssetAdministrationShell shell) {		
+		if (shell == null) {
+			return BasyxCollectionIterable.empty();
+		}
+		List<Reference> submodelRefs = shell.getSubmodels();
+		if (submodelRefs == null) {
+			return BasyxCollectionIterable.empty();
+		}
+		List<Submodel> smDescrList = new ArrayList<>(submodelRefs.size());
+		// TODO implement this as iterator
+		for (Reference eachRef : submodelRefs) {
+			Submodel sm = clientCache.getSubmodelByReference(eachRef, this::fetchSubmodelByReference);			
+			smDescrList.add(sm);
+		}
+		return BasyxCollectionIterable.of(smDescrList);
+	}
+	
+	@Override
+	public BasyxIterable<Submodel> getAllSubmodels() {
+		ResultResolver<String, Submodel> resolver = cursor -> fetchSubmodels(cursor);
+		return new FetchingBasyxIterable<>(resolver);
+	}
+	
+	@Override
+	public BasyxIterable<SubmodelElement> getAllSubmodelElements(Submodel sm) {
+		return new SubmodelElementsIterable(sm);
+	}
+	
+	@Override
+	public BasyxIterable<String> getAllSubmodelElementPaths(Submodel sm) {
+		return new SubmodelElementPathsIterable(sm);
+	}
+	
+	@Override
+	public Optional<SubmodelElement> getSubmodelElementByIdShort(Submodel sm, String idShortPath) {
+		SubmodelElementElementResolver finder = new SubmodelElementElementResolver(idShortPath);
+		SubmodelElementWalker walker = new SubmodelElementWalker(finder, new SubmodelElementHierarchyResolver());
+		walker.walkSubmodel(sm);
+		return finder.result();
+	}
+
+	@Override
+	public AssetAdministrationShell getShellById(String id) {
+		return clientCache.getShellById(id, this::fetchShellById);
+	}
+
+	@Override
+	public Submodel getSubmodelById(String id) {
+		return clientCache.getSubmodelById(id, this::fetchSubmodelById);
+	}
+
+	@Override
+	public BasyxIterable<AssetAdministrationShell> findShellsByIdShort(String idShort) {
+		return findShellsByIdShort(idShort, null, null);
+	}
+
+	@Override
+	public BasyxIterable<AssetAdministrationShell> findShellsByIdShortRegex(String idShortRegex) {
+		return findShellsByIdShort(idShortRegex, null, QueryTypeEnum.REGEX);
+	}
+
+	@Override
+	public BasyxIterable<AssetAdministrationShell> findShellsByIdShort(String idShort, SortDirection direction) {
+		return findShellsByIdShort(idShort, new Sorting().direction(direction).addPathItem(SortingPath.IDSHORT), null);
+	}
+
+	@Override
+	public BasyxIterable<AssetAdministrationShell> findShellsByIdShortRegex(String idShortRegex, SortDirection direction) {
+		return findShellsByIdShort(idShortRegex, new Sorting().direction(direction).addPathItem(SortingPath.IDSHORT), QueryTypeEnum.REGEX);
+	}
+
+	private BasyxIterable<AssetAdministrationShell> findShellsByIdShort(String idShort, Sorting sorting, QueryTypeEnum queryType) {
+		ResultResolver<Integer, AssetAdministrationShell> resultResolver = index -> searchShellsByIdShort(idShort, index, sorting, queryType);
+		return new FetchingBasyxIterable<>(resultResolver);
+	}
+
+	private Submodel fetchSubmodelById(String id) {
+		SubmodelDescriptor descriptor = getSubmodelDescriptorById(id);
+		return endpointResolver.resolveSubmodel(mapper, descriptor.getEndpoints());
+	}
+	
+	private Submodel fetchSubmodelByReference(Reference ref) {
+		SubmodelRegistryApi regApi = registryApis.getSubmodelRegistryApi();
+		SubmodelDescriptor smDescr = smReferenceResolver.resolveSubmodelDescriptor(regApi, ref);
+		return clientCache.getSubmodelById(smDescr.getId(), i-> endpointResolver.resolveSubmodel(mapper, smDescr.getEndpoints()));
+	}
+
+	private SubmodelDescriptor getSubmodelDescriptorById(String id) {
+		SubmodelRegistryApi regApi = registryApis.getSubmodelRegistryApi();
+		return regApi.getSubmodelDescriptorById(id);
+	}
+
+	private BasyxResult<Integer, AssetAdministrationShell> searchShellsByIdShort(String idShort, Integer index, Sorting sorting, QueryTypeEnum queryType) {
+		if (index == null) {
+			index = 0;
+		}
+		AssetAdministrationShellRegistryApi regApi = registryApis.getShellRegistryApi();
+		Page page = new Page().index(index).size(limit);
+		ShellDescriptorQuery query = new ShellDescriptorQuery().path("idShort").value(idShort).queryType(queryType);
+		ShellDescriptorSearchRequest request = new ShellDescriptorSearchRequest().page(page).sortBy(sorting).query(query);
+		ShellDescriptorSearchResponse response = regApi.searchShellDescriptors(request);
+		int newIndex = ++index;
+		int pos = newIndex * limit;
+		Integer cursor = pos < response.getTotal() ? newIndex : null;
+		List<AssetAdministrationShellDescriptor> hits = response.getHits();
+		List<AssetAdministrationShell> toReturn = new ArrayList<>(hits.size());
+		for (AssetAdministrationShellDescriptor eachDescriptor : hits) {
+			AssetAdministrationShell shell = clientCache.getShellById(eachDescriptor.getId(), (id) -> endpointResolver.resolveShell(mapper, eachDescriptor.getEndpoints()));
+			toReturn.add(shell);
+		}
+		return new BasyxResult<>(cursor, toReturn);
+	}
+
+	private BasyxResult<String, SubmodelDescriptor> fetchSubmodelDescriptors(String cursor) {
+		SubmodelRegistryApi regApi = registryApis.getSubmodelRegistryApi();
+		GetSubmodelDescriptorsResult descriptorResult = regApi.getAllSubmodelDescriptors(this.limit, cursor);
+		List<SubmodelDescriptor> descriptors = descriptorResult.getResult();
+		return new BasyxResult<>(descriptorResult.getPagingMetadata().getCursor(), descriptors);
+	}
+
+	private BasyxResult<String, Submodel> fetchSubmodels(String cursor) {
+		BasyxResult<String, SubmodelDescriptor> descriptorResult = fetchSubmodelDescriptors(cursor);
+		List<SubmodelDescriptor> fetchedResult = descriptorResult.result();
+		List<Submodel> toReturn = new ArrayList<>(fetchedResult.size());
+		for (SubmodelDescriptor eachDescriptor : fetchedResult) {
+			Submodel sm = clientCache.getSubmodelById(eachDescriptor.getId(), (id) -> endpointResolver.resolveSubmodel(mapper, eachDescriptor.getEndpoints()));
+			toReturn.add(sm);
+		}
+		return new BasyxResult<>(descriptorResult.cursor(), toReturn);
+	}
+
+	private AssetAdministrationShell fetchShellById(String id) {
+		AssetAdministrationShellDescriptor descriptor = fetchShellDescriptorById(id);
+		return endpointResolver.resolveShell(mapper, descriptor.getEndpoints());
+	}
+
+	private BasyxResult<String, AssetAdministrationShellDescriptor> fetchShellDescriptors(String cursor, AssetKind assetKind, String assetType) throws ApiException {
+		AssetAdministrationShellRegistryApi registryApi = registryApis.getShellRegistryApi();
+		GetAssetAdministrationShellDescriptorsResult result = registryApi.getAllAssetAdministrationShellDescriptors(limit, cursor, assetKind, assetType);
+		return new BasyxResult<>(result.getPagingMetadata().getCursor(), result.getResult());
+	}
+
+	private AssetAdministrationShellDescriptor fetchShellDescriptorById(String id) {
+		AssetAdministrationShellRegistryApi regApi = registryApis.getShellRegistryApi();
+		return regApi.getAssetAdministrationShellDescriptorById(id);
+	}
+
+	private BasyxResult<String, AssetAdministrationShell> fetchShells(String cursor, AssetKind kind, String assetType) throws ApiException {
+		BasyxResult<String, AssetAdministrationShellDescriptor> descriptorResult = fetchShellDescriptors(cursor, kind, assetType);
+		List<AssetAdministrationShellDescriptor> fetchedResult = descriptorResult.result();
+		List<AssetAdministrationShell> toReturn = new ArrayList<>(fetchedResult.size());
+		for (AssetAdministrationShellDescriptor eachDescriptor : fetchedResult) {
+			AssetAdministrationShell shell = clientCache.getShellById(eachDescriptor.getId(), (id) -> endpointResolver.resolveShell(mapper, eachDescriptor.getEndpoints()));
+			toReturn.add(shell);
+		}
+		return new BasyxResult<>(descriptorResult.cursor(), toReturn);
+	}
+}

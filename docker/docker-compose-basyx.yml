@@ -1,26 +1,6 @@
 version: '3.6'
-networks:
-  basyx:
-    name:  basyx-client-test
-    internal: false
 
 services:
-
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy:1.3.1-alpine
-    container_name: nginx-proxy
-    restart: always
-    ports:
-    - "80:80"
-    volumes:
-    - /var/run/docker.sock:/tmp/docker.sock:ro
-    # cors settings
-    #- ./config/nginx-proxy/cors.conf:/etc/nginx/vhost.d/aas-registry.${EXTERNAL_HOSTNAME}_location:ro
-    #- ./config/nginx-proxy/cors.conf:/etc/nginx/vhost.d/aas-environment.${EXTERNAL_HOSTNAME}_location:ro
-    environment:
-      DEFAULT_HOST: ${EXTERNAL_HOSTNAME}
-    networks:
-      - basyx
 
   portainer:
     image: portainer/portainer-ce:2.18.2
@@ -35,8 +15,6 @@ services:
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - ./portainer/admin-password:/secrets/admin-password
-    networks:
-      - basyx
 
   aas-registry:
     image:  eclipsebasyx/aas-registry-log-mem:${BASYX_VERSION}
@@ -45,13 +23,9 @@ services:
     ports:
     - "8083:8080"
     environment:
-      VIRTUAL_HOST: aas-registry.${EXTERNAL_HOSTNAME}
-      VIRTUAL_PORT: 8080
       BASYX_CORS_ALLOWED_ORIGINS: '*'
       BASYX_CORS_ALLOWED_METHODS: GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD
-    networks:
-      - basyx
-  
+
   submodel-registry:
     image:  eclipsebasyx/submodel-registry-log-mem:${BASYX_VERSION}
     restart: always
@@ -59,12 +33,8 @@ services:
     ports:
     - 8082:8080
     environment:
-      VIRTUAL_HOST: submodel-registry.${EXTERNAL_HOSTNAME}
-      VIRTUAL_PORT: 8080
       BASYX_CORS_ALLOWED_ORIGINS: '*'
       BASYX_CORS_ALLOWED_METHODS: GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD
-    networks:
-      - basyx
 
   aas-environment:
     image: eclipsebasyx/aas-environment:${BASYX_VERSION}
@@ -90,8 +60,6 @@ services:
         condition: service_healthy
       submodel-registry:
         condition: service_healthy
-    networks:
-      - basyx
 
   aas-gui:
     image: eclipsebasyx/aas-gui:${AAS_WEBUI_VERSION}
@@ -103,8 +71,6 @@ services:
       VITE_AAS_REPO_PATH: http://localhost:8081/shells
       VITE_SUBMODEL_REPO_PATH: http://localhost:8081/submodels
       VITE_CD_REPO_PATH: http://localhost:8081/concept-descriptions
-      VIRTUAL_HOST: aas-gui.${EXTERNAL_HOSTNAME}
-      VIRTUAL_PORT: 3000
     ports:
     - 3000:3000
     depends_on:
@@ -114,8 +80,6 @@ services:
         condition: service_healthy    
       aas-environment:
         condition: service_healthy
-    networks:
-      - basyx
 
 
 
