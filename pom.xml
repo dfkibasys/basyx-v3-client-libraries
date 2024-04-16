@@ -74,7 +74,7 @@
 							<directory>${gensrc.output.folder}</directory>
 							<excludes>
 								<exclude>.openapi-generator-ignore</exclude>
-								<exclude>.project</exclude>
+								<exclude>pom.xml</exclude>
 							</excludes>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
