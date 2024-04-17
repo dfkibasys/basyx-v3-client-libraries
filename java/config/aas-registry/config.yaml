@@ -9,7 +9,7 @@ additionalProperties:
   supportUrlQuery: false
   groupId: org.eclipse.digitaltwin.basyx.v3.clients
   artifactId: basyx-java-clients
-  artifactVersion: 1.0.0-SNAPSHOT
+  artifactVersion: 0.2.0-SNAPSHOT
   licenseName: MIT
   develperName: Gerhard Sonnenberg
   developerEmail: gerhard.sonnenberg@dfki.de
