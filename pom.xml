@@ -57,32 +57,6 @@
 			</roles>
 		</developer>
 	</developers>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>${openapi.output.folder}</directory>
-							<excludes>
-								<exclude>**/.gitkeep</exclude>
-							</excludes>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-						<fileset>
-							<directory>${gensrc.output.folder}</directory>
-							<excludes>
-								<exclude>.openapi-generator-ignore</exclude>
-								<exclude>pom.xml</exclude>
-							</excludes>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 	<profiles>
 		<profile>
 			<id>generate-openapi</id>
@@ -114,7 +88,7 @@
 									<directory>${gensrc.output.folder}</directory>
 									<excludes>
 										<exclude>.openapi-generator-ignore</exclude>
-										<exclude>.project</exclude>
+										<exclude>pom.xml</exclude>
 									</excludes>
 									<followSymlinks>false</followSymlinks>
 								</fileset>
