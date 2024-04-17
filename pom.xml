@@ -7,7 +7,7 @@
 	<groupId>de.dfki.cos.basys.clients</groupId>
 	<artifactId>clients-v3</artifactId>
 	<packaging>pom</packaging>
-	<version>0.5.0-SNAPSHOT</version>
+	<version>0.2.0-SNAPSHOT</version>
 
 	<parent>
 		<groupId>de.dfki.cos.basys</groupId>

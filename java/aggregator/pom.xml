@@ -17,7 +17,7 @@
 	</parent>
 
     <modules>
-       <module>../build/generated/project</module>
+        <module>../build/generated/project</module>
         <module>../facade</module>
    </modules>
 

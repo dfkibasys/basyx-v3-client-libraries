@@ -1,6 +1,7 @@
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Property;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.Aas4jObjectMapperFactory;
@@ -61,6 +62,7 @@ public class MainByEnvSettings {
 			System.out.println(eachShell.getIdShort());
 			for (Submodel eachSm : facade.getAllSubmodels(eachShell)) {
 				System.out.println(eachSm.getId());
+				Property prop = facade.getSubmodelElementByIdShort(eachSm, "a.b.c").map(Property.class::cast).orElse(null);
 			}
 		}
 		for (Submodel eachSm : facade.getAllSubmodels()) {
