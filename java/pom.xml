@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>de.dfki.cos.basys.clients</groupId>
+		<groupId>org.eclipse.digitaltwin.basyx.v3.clients</groupId>
 		<artifactId>clients-v3</artifactId>
 		<version>0.2.0-SNAPSHOT</version>
 		<relativePath>..</relativePath>
