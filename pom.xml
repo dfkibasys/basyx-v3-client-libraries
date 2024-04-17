@@ -4,6 +4,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>de.dfki.cos.basys</groupId>
+		<artifactId>pom</artifactId>
+		<version>0.5.1</version>
+		<relativePath />
+	</parent>
+
+
 	<groupId>org.eclipse.digitaltwin.basyx.v3.clients</groupId>
 	<artifactId>clients-v3</artifactId>
 	<packaging>pom</packaging>

@@ -5,13 +5,9 @@ services:
   portainer:
     image: portainer/portainer-ce:2.18.2
     container_name: portainer
-   # restart: always
     command: --admin-password-file=/secrets/admin-password
     ports: 
       - "8084:9000"
-    environment:
-      VIRTUAL_HOST: portainer.${EXTERNAL_HOSTNAME}
-      VIRTUAL_PORT: 9000
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - ./portainer/admin-password:/secrets/admin-password
@@ -50,8 +46,6 @@ services:
       BASYX_CORS_ALLOWED_METHODS: GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD
       BASYX_EXTERNALURL: http://localhost:8081
       BASYX_ENVIRONMENT: file:/tmp/aasx/
-      VIRTUAL_HOST: aas-environment.${EXTERNAL_HOSTNAME}
-      VIRTUAL_PORT: 8081
       DEBUG: "true"
     volumes:
     - ./aasx/:/tmp/aasx/:ro

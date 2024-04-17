@@ -28,17 +28,17 @@ import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetKind;
+import org.eclipse.digitaltwin.aas4j.v3.model.Capability;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
-import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortDirection;
 
 public interface BasyxServiceFacade {
 
-	BasyxIterable<AssetAdministrationShell> getAllShells() throws ApiException;
+	BasyxIterable<AssetAdministrationShell> getAllShells();
 
-	BasyxIterable<AssetAdministrationShell> getAllShells(AssetKind assetKind, String assetType) throws ApiException;
+	BasyxIterable<AssetAdministrationShell> getAllShells(AssetKind assetKind, String assetType);
 
 	BasyxIterable<Submodel> getAllSubmodels(AssetAdministrationShell shell);
 	
@@ -60,5 +60,7 @@ public interface BasyxServiceFacade {
 
 	BasyxIterable<AssetAdministrationShell> findShellsByIdShort(String idShort, SortDirection direction);
 
-	Optional<SubmodelElement> getSubmodelElementByIdShort(Submodel sm, String idShortPath);	
+	Optional<SubmodelElement> getSubmodelElementByIdShortPath(Submodel sm, String idShortPath);
+
+	<T extends SubmodelElement> Optional<T> getSubmodelElementByIdShortPath(Submodel sm, String idShortPath, Class<T> resultCls);
 }

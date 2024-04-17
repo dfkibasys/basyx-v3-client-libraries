@@ -172,11 +172,16 @@ public class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 	}
 	
 	@Override
-	public Optional<SubmodelElement> getSubmodelElementByIdShort(Submodel sm, String idShortPath) {
+	public Optional<SubmodelElement> getSubmodelElementByIdShortPath(Submodel sm, String idShortPath) {
 		SubmodelElementElementResolver finder = new SubmodelElementElementResolver(idShortPath);
 		SubmodelElementWalker walker = new SubmodelElementWalker(finder, new SubmodelElementHierarchyResolver());
 		walker.walkSubmodel(sm);
 		return finder.result();
+	}
+	
+	@Override
+	public <T extends SubmodelElement> Optional<T> getSubmodelElementByIdShortPath(Submodel sm, String idShortPath, Class<T> resultCls) {
+		return getSubmodelElementByIdShortPath(sm, idShortPath).filter(resultCls::isInstance).map(resultCls::cast);
 	}
 
 	@Override

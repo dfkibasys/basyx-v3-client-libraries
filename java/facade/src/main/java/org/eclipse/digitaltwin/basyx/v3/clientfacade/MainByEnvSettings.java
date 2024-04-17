@@ -30,7 +30,7 @@ public class MainByEnvSettings {
 			System.out.println(new SubmodelElementPathsIterable(eachSm).stream().count());
 
 			System.out.println(facade.getAllSubmodelElementPaths(eachSm).stream().count());
-			facade.getSubmodelElementByIdShort(eachSm, "HeatingZones.HeatingZonesC9.HeatingZoneC9Hz3.HeatingZoneToHeatersC9Hz3.HeatingZoneToHeatersRelationShipElementC93Heater9").map(SubmodelElement::getIdShort)
+			facade.getSubmodelElementByIdShortPath(eachSm, "HeatingZones.HeatingZonesC9.HeatingZoneC9Hz3.HeatingZoneToHeatersC9Hz3.HeatingZoneToHeatersRelationShipElementC93Heater9").map(SubmodelElement::getIdShort)
 					.ifPresent(System.err::println);
 		}
 		facade.getAllSubmodels(shell).stream().map(Submodel::getKind).forEach(System.err::println);
@@ -64,7 +64,7 @@ public class MainByEnvSettings {
 			System.out.println(eachShell.getIdShort());
 			for (Submodel eachSm : facade.getAllSubmodels(eachShell)) {
 				System.out.println(eachSm.getId());
-				Property prop = facade.getSubmodelElementByIdShort(eachSm, "a.b.c").map(Property.class::cast).orElse(null);
+				Property prop = facade.getSubmodelElementByIdShortPath(eachSm, "a.b.c", Property.class).get();
 			}
 		}
 		for (Submodel eachSm : facade.getAllSubmodels()) {
