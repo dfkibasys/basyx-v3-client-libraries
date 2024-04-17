@@ -15,7 +15,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class MainByEnvSettings {
 
 	public static void main(String[] args) throws JsonProcessingException {
-		BasyxServiceFacade facade = new DefaultBasyxServiceFacade().withEndpointResolver(EndpointResolvers.firstWithAddress("127.0.0.1:8081")).withClientCache(new CaffeineBasyxClientCache());
+		BasyxServiceFacade facade = new DefaultBasyxServiceFacade()
+				.withEndpointResolver(EndpointResolvers.firstWithAddress("127.0.0.1:8081"))
+				.withClientCache(new CaffeineBasyxClientCache());
 
 		AssetAdministrationShell shell = facade.getShellById("http://aas.twinficient.de/virtual-factory-hall/BWS/Halle_A");
 
