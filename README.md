@@ -3,13 +3,13 @@
 Client SDKS based that interact with this server implementation: https://github.com/eclipse-basyx/basyx-java-server-sdk
 
 
-https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-maven-plugin
 
+# Get Started
 
-# TODO 
+Pull the repository
 
-- v3 im package namen vor model oder api
-- search api einbauen (wenig aufwändig, neue library?)
-- SubmodelElementList wieder rein (am besten wäre ein discriminator feld, da das wohl nicht geht kann man vielleicht den generator von außen bereitstellen und nicht generieren, submodelelement kann dann als provided in den maven dependencies angegeben werden)
-- patterns wieder rein (nicht besonders relevant)
-- client c#, typescript und optional go und python
+Run *mvn install*
+
+Go to the docker folder and run *./up.sh* and *./down.sh* to start and stop the server containers (docker needs to be installed).
+
+Check out the main methods in the [facade project](./java/facade/src/main/java/org/eclipse/digitaltwin/basyx/v3/clientfacade/). One method uses environment variables and could be started from an [eclipse launch file](./java/facade/MainByEnvSettings.launch).
