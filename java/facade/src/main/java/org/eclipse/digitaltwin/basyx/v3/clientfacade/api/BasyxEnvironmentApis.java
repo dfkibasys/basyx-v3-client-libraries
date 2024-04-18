@@ -22,31 +22,39 @@
  * 
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
-package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
+package org.eclipse.digitaltwin.basyx.v3.clientfacade.api;
 
-public class EnvironmentBasedBasyxServiceConfiguration implements BasyxRegistryServiceConfiguration {
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRepositoryApi;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRepositoryApi;
 
-	private static final String ENV_BASYX_AASREGISTRY_URL = "BASYX_AASREGISTRY";
-	private static final String ENV_BASYX_SUBMODELREGISTRY_URL = "BASYX_SUBMODELREGISTRY";
-	private static final String ENV_BASYX_FETCH_LIMIT = "BASYX_FETCH_LIMIT";
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class BasyxEnvironmentApis {
+
+	private final AssetAdministrationShellRepositoryApi shellRepoApi;
+	private final SubmodelRepositoryApi smRepoApi;
+
+	private BasyxEnvironmentApis(AssetAdministrationShellRepositoryApi shellRepoApi, SubmodelRepositoryApi smRepoApi) {
+		this.shellRepoApi = shellRepoApi;
+		this.smRepoApi = smRepoApi;
+	}
 	
-	@Override
-	public String getAasRegistryUrl() {
-		return System.getenv(ENV_BASYX_AASREGISTRY_URL);
+	public BasyxEnvironmentApis(ObjectMapper mapper, BasyxUpdateConfiguration conf) {
+		this(mapper, conf.getAasRepositoryUrl(), conf.getSubmodelRepositoryUrl());
+	}
+	
+	private BasyxEnvironmentApis(ObjectMapper mapper, String aasRepositoryUrl, String submodelRepositoryUrl) {
+		this(new AssetAdministrationShellRepositoryApi(mapper, aasRepositoryUrl), new SubmodelRepositoryApi(mapper, submodelRepositoryUrl));
+	}
+	
+	public AssetAdministrationShellRepositoryApi getShellRepoApi() {
+		return shellRepoApi;
+	}
+	
+	public SubmodelRepositoryApi getSubmodelRepoApi() {
+		return smRepoApi;
 	}
 
-	@Override
-	public String getSubmodelRegistrUrl() {
-		return System.getenv(ENV_BASYX_SUBMODELREGISTRY_URL);
-	}
-
-	@Override
-	public Integer getFetchLimit() {
-		String fetchLimitAsString = System.getenv(ENV_BASYX_FETCH_LIMIT);
-		if (fetchLimitAsString == null) {
-			return DEFAULT_FETCH_LIMIT;
-		}
-		return Integer.parseInt(fetchLimitAsString);
-	}
-
+	
 }

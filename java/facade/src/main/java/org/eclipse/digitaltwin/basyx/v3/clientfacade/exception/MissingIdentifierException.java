@@ -22,31 +22,16 @@
  * 
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
-package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
+package org.eclipse.digitaltwin.basyx.v3.clientfacade.exception;
 
-public class EnvironmentBasedBasyxServiceConfiguration implements BasyxRegistryServiceConfiguration {
+public class MissingIdentifierException extends RuntimeException {
 
-	private static final String ENV_BASYX_AASREGISTRY_URL = "BASYX_AASREGISTRY";
-	private static final String ENV_BASYX_SUBMODELREGISTRY_URL = "BASYX_SUBMODELREGISTRY";
-	private static final String ENV_BASYX_FETCH_LIMIT = "BASYX_FETCH_LIMIT";
+	private static final long serialVersionUID = 1L;
+
+	public MissingIdentifierException(String id) {
+		super(id == null ? "Element identifier should not be null." : "Element identifier should not be empty.");
+	}
 	
-	@Override
-	public String getAasRegistryUrl() {
-		return System.getenv(ENV_BASYX_AASREGISTRY_URL);
-	}
-
-	@Override
-	public String getSubmodelRegistrUrl() {
-		return System.getenv(ENV_BASYX_SUBMODELREGISTRY_URL);
-	}
-
-	@Override
-	public Integer getFetchLimit() {
-		String fetchLimitAsString = System.getenv(ENV_BASYX_FETCH_LIMIT);
-		if (fetchLimitAsString == null) {
-			return DEFAULT_FETCH_LIMIT;
-		}
-		return Integer.parseInt(fetchLimitAsString);
-	}
-
+	
+	
 }

@@ -24,29 +24,32 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
 
-public class EnvironmentBasedBasyxServiceConfiguration implements BasyxRegistryServiceConfiguration {
+public class SimpleBasyxUpdateConfiguration implements BasyxUpdateConfiguration {
 
-	private static final String ENV_BASYX_AASREGISTRY_URL = "BASYX_AASREGISTRY";
-	private static final String ENV_BASYX_SUBMODELREGISTRY_URL = "BASYX_SUBMODELREGISTRY";
-	private static final String ENV_BASYX_FETCH_LIMIT = "BASYX_FETCH_LIMIT";
+	private String aasRepoUrl;
+	private String submodelRepoUrl;
+	
+	public SimpleBasyxUpdateConfiguration withAasRepositoryUrl(String url) {
+		this.aasRepoUrl = url;
+		return this;
+	}
+	
+	public static final SimpleBasyxUpdateConfiguration forEnvironmentUrl(String url) {
+		return new SimpleBasyxUpdateConfiguration().withAasRepositoryUrl(url).withSubmodelRepositoryUrl(url);
+	}
+	
+	public SimpleBasyxUpdateConfiguration withSubmodelRepositoryUrl(String url) {
+		this.submodelRepoUrl = url;
+		return this;
+	}
 	
 	@Override
-	public String getAasRegistryUrl() {
-		return System.getenv(ENV_BASYX_AASREGISTRY_URL);
+	public String getAasRepositoryUrl() {
+		return aasRepoUrl;
 	}
-
+	
 	@Override
-	public String getSubmodelRegistrUrl() {
-		return System.getenv(ENV_BASYX_SUBMODELREGISTRY_URL);
+	public String getSubmodelRepositoryUrl() {
+		return submodelRepoUrl;
 	}
-
-	@Override
-	public Integer getFetchLimit() {
-		String fetchLimitAsString = System.getenv(ENV_BASYX_FETCH_LIMIT);
-		if (fetchLimitAsString == null) {
-			return DEFAULT_FETCH_LIMIT;
-		}
-		return Integer.parseInt(fetchLimitAsString);
-	}
-
 }

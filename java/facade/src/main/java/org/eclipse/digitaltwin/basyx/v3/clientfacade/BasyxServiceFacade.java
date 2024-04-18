@@ -28,9 +28,11 @@ import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetKind;
-import org.eclipse.digitaltwin.aas4j.v3.model.Capability;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SubmodelDescriptorResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortDirection;
 
@@ -48,9 +50,11 @@ public interface BasyxServiceFacade {
 
 	BasyxIterable<Submodel> getAllSubmodels();
 
-	AssetAdministrationShell getShellById(String id);
+	Optional<AssetAdministrationShell> getShellById(String id);
 
-	Submodel getSubmodelById(String id);
+	Optional<Submodel> getSubmodelById(String id);
+	
+	Optional<Submodel> getSubmodelByReference(Reference ref);
 
 	BasyxIterable<AssetAdministrationShell> findShellsByIdShort(String idShort);
 
@@ -63,4 +67,9 @@ public interface BasyxServiceFacade {
 	Optional<SubmodelElement> getSubmodelElementByIdShortPath(Submodel sm, String idShortPath);
 
 	<T extends SubmodelElement> Optional<T> getSubmodelElementByIdShortPath(Submodel sm, String idShortPath, Class<T> resultCls);
+
+	BasyxServiceFacade withSubmodelResolver(SubmodelDescriptorResolver smReferenceResolver);
+
+	BasyxServiceFacade withEndpointResolver(EndpointResolver endpointResolverStrategy);
+
 }

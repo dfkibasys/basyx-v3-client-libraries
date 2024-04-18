@@ -24,12 +24,19 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.references;
 
+import java.util.Optional;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
-import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRegistryApi;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 public interface SubmodelDescriptorResolver {
-
-	SubmodelDescriptor resolveSubmodelDescriptor(SubmodelRegistryApi smRegistryApi, Reference ref);
 	
+	Optional<Submodel> resolveSubmodel(Reference ref, SubmodelFetcher submodelFetcher);
+	
+	@FunctionalInterface
+	public interface SubmodelFetcher {
+		
+		Optional<Submodel> fetchSubmodelById(String id);
+		
+	}
 }

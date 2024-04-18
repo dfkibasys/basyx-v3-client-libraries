@@ -90,6 +90,9 @@ public class SubmodelElementPathsIterable implements BasyxIterable<String> {
 			}
 			SubmodelElement elem = iterators.peek().next();
 			String idShort = elem.getIdShort();
+			if (idShort == null) {
+				idShort = "";
+			}
 			idPathStack.offerLast(idShort);
 			
 			String path = idPathStack.stream().collect(Collectors.joining(".")); 

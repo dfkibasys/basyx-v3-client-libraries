@@ -1,12 +1,24 @@
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
+import java.util.List;
+
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
+import org.eclipse.digitaltwin.aas4j.v3.model.Entity;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell.Builder;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEntity;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.Aas4jObjectMapperFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.CaffeineBasyxClientCache;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolvers;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.MissingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementPathsIterable;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortDirection;
 
@@ -14,61 +26,53 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class MainByEnvSettings {
 
-	public static void main(String[] args) throws JsonProcessingException {
-		BasyxServiceFacade facade = new DefaultBasyxServiceFacade()
-				.withEndpointResolver(EndpointResolvers.firstWithAddress("127.0.0.1:8081"))
-				.withClientCache(new CaffeineBasyxClientCache());
+	public static void main(String[] args) throws JsonProcessingException, ConflictingIdentifierException {
+				
+		BasyxConnectionManager manager = new DefaultBasyxConnectionManager();
+		manager.withClientCache(new CaffeineBasyxClientCache());
+		
+		BasyxUpdateFacade updateFacade = manager.newUpdateFacade();
+		updateFacade.deleteAllShells();
+		updateFacade.deleteAllSubmodels();
+		postShells(updateFacade);
+		
+		BasyxServiceFacade facade = manager.newServiceFacade()
+				.withEndpointResolver(EndpointResolvers.firstWithAddress("127.0.0.1:8081"));
 
-		AssetAdministrationShell shell = facade.getShellById("http://aas.twinficient.de/virtual-factory-hall/BWS/Halle_A");
-
+		AssetAdministrationShell shell = facade.getShellById("http://aas.test.org/robot/5").get();
+		System.out.println(shell.getIdShort());
 		for (Submodel eachSm : facade.getAllSubmodels(shell)) {
-			String value = new Aas4jObjectMapperFactory().newObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(eachSm);
-			System.out.println(value);
-			for (String eachPath : new SubmodelElementPathsIterable(eachSm)) {
-				System.out.println(eachPath);
-			}
-			System.out.println(new SubmodelElementPathsIterable(eachSm).stream().count());
+			System.out.println(manager.toJsonPretty(eachSm));
+			facade.getAllSubmodelElementPaths(eachSm).stream().forEach(System.out::println);
+			System.out.println(facade.getSubmodelElementByIdShortPath(eachSm, "robot.height", Property.class).get().getValue());
 
-			System.out.println(facade.getAllSubmodelElementPaths(eachSm).stream().count());
-			facade.getSubmodelElementByIdShortPath(eachSm, "HeatingZones.HeatingZonesC9.HeatingZoneC9Hz3.HeatingZoneToHeatersC9Hz3.HeatingZoneToHeatersRelationShipElementC93Heater9").map(SubmodelElement::getIdShort)
-					.ifPresent(System.err::println);
 		}
 		facade.getAllSubmodels(shell).stream().map(Submodel::getKind).forEach(System.err::println);
 
-		shell = facade.getShellById("http://aas.twinficient.de/heater/BWS/C1/1/1");
-		System.out.println(shell.getId());
-		facade.findShellsByIdShortRegex("^Heater: BWS-C1-1-1.*$").stream().map(AssetAdministrationShell::getId).forEach(System.out::println);
-//		runGetAll(facade);
-//		runGetById(facade);
-//		runGetByIdShort(facade);
-
-	}
-
-	private static void runGetByIdShort(DefaultBasyxServiceFacade facade) {
-		for (AssetAdministrationShell eachShell : facade.findShellsByIdShortRegex("^Heater: Salmet-C.*-.*-.*$", SortDirection.ASC)) {
-			System.out.println(eachShell.getIdShort());
-		}
-
-	}
-
-	private static void runGetById(DefaultBasyxServiceFacade facade) {
-		AssetAdministrationShell shell = facade.getShellById("http://aas.twinficient.de/heater/BWS/C1/1/1");
-		System.out.println(shell.getId());
-		Submodel sm = facade.getSubmodelById("http://sm.twinficient.de/topology/heater/BWS/C1/1/1");
-		System.out.println(sm.getId());
-	}
-
-	private static void runGetAll(DefaultBasyxServiceFacade facade) {
-		for (AssetAdministrationShell eachShell : facade.getAllShells()) {
-			System.out.println(eachShell.getId());
-			System.out.println(eachShell.getIdShort());
-			for (Submodel eachSm : facade.getAllSubmodels(eachShell)) {
-				System.out.println(eachSm.getId());
-				Property prop = facade.getSubmodelElementByIdShortPath(eachSm, "a.b.c", Property.class).get();
-			}
-		}
+		facade.findShellsByIdShortRegex("^robot-.*[3|4|5]$").stream().map(AssetAdministrationShell::getId).forEach(System.out::println);
+		
 		for (Submodel eachSm : facade.getAllSubmodels()) {
 			System.out.println(eachSm.getId());
 		}
+		updateFacade.deleteAllShells();
+		updateFacade.deleteAllSubmodels();
+		
 	}
+
+	private static void postShells(BasyxUpdateFacade updateFacade) throws ConflictingIdentifierException {
+		for (int i = 0; i < 10; i++) {
+			Builder builder = new DefaultAssetAdministrationShell.Builder().id("http://aas.test.org/robot/" + i).idShort("robot-"+i);
+			for (int j = 0; j < 10; j++) {
+				Property height = new DefaultProperty.Builder().idShort("height").valueType(DataTypeDefXsd.INT).value("200").build();
+				Property width = new DefaultProperty.Builder().idShort("width").valueType(DataTypeDefXsd.INT).value("33").build();
+				Entity entity = new DefaultEntity.Builder().idShort("robot").statements(List.of(height, width)).build();
+				Submodel sm = new DefaultSubmodel.Builder().id("http://sm.test.org/technical/"+i +"/" +j).idShort("technical").submodelElements(entity).build();
+				Reference ref = updateFacade.postSubmodel(sm);
+				builder.submodels(ref);
+			}
+			updateFacade.postShell(builder.build());
+		}		
+	}
+
+	
 }

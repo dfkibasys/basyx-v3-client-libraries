@@ -24,22 +24,27 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.cache;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 public interface BasyxClientCache {
 
-	AssetAdministrationShell getShellById(String id, Function<String, AssetAdministrationShell> resolver);
 	
-	Submodel getSubmodelById(String id, Function<String, Submodel> resolver);
+	Optional<AssetAdministrationShell> getShellById(String id, Function<String, Optional<AssetAdministrationShell>> resolver);
 	
-	Submodel getSubmodelByReference(Reference ref, Function<Reference, Submodel> resolver);
+	Optional<AssetAdministrationShell> getShellByIdIfPresent(String id);
 	
-	void invalidateShell(AssetAdministrationShell shell);
+	Optional<Submodel> getSubmodelById(String id, Function<String, Optional<Submodel>> resolver);
 	
-	void invalidateSubmodel(Submodel sm);	
+	void invalidateShell(String shellId);
+	
+	void invalidateSubmodel(String smId);
+
+	void offerLocally(Submodel submodel);
+
+	void offerLocally(AssetAdministrationShell shell);	
 	
 }

@@ -25,9 +25,11 @@
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,9 +50,12 @@ public class RewritingEndpointResolver extends AbstractEndpointResolver {
 	}
 	
 	@Override
-	protected AssetAdministrationShell resolveShellInstance(ObjectMapper mapper, Endpoint endpoint) {
-		return resolver.resolveShellInstance(mapper, endpoint);
+	public Optional<AssetAdministrationShell> resolveShell(ObjectMapper mapper, List<Endpoint> endpoints, IdentifiableResolver<AssetAdministrationShell> shellResolver) {
+		return resolver.resolveShell(mapper, endpoints, shellResolver);
 	}
-
-
+	
+	@Override
+	public Optional<Submodel> resolveSubmodel(ObjectMapper mapper, List<Endpoint> endpoints, IdentifiableResolver<Submodel> submodelResolver) {
+		return resolver.resolveSubmodel(mapper, endpoints, submodelResolver);
+	}
 }

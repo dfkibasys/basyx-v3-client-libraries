@@ -22,31 +22,25 @@
  * 
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
-package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
+package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
-public class EnvironmentBasedBasyxServiceConfiguration implements BasyxRegistryServiceConfiguration {
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
 
-	private static final String ENV_BASYX_AASREGISTRY_URL = "BASYX_AASREGISTRY";
-	private static final String ENV_BASYX_SUBMODELREGISTRY_URL = "BASYX_SUBMODELREGISTRY";
-	private static final String ENV_BASYX_FETCH_LIMIT = "BASYX_FETCH_LIMIT";
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+public interface BasyxConnectionManager {
+
+	BasyxConnectionManager withClientCache(BasyxClientCache cache);
 	
-	@Override
-	public String getAasRegistryUrl() {
-		return System.getenv(ENV_BASYX_AASREGISTRY_URL);
-	}
+	BasyxServiceFacade newServiceFacade();
 
-	@Override
-	public String getSubmodelRegistrUrl() {
-		return System.getenv(ENV_BASYX_SUBMODELREGISTRY_URL);
-	}
+	BasyxServiceFacade newServiceFacade(BasyxRegistryServiceConfiguration conf);
 
-	@Override
-	public Integer getFetchLimit() {
-		String fetchLimitAsString = System.getenv(ENV_BASYX_FETCH_LIMIT);
-		if (fetchLimitAsString == null) {
-			return DEFAULT_FETCH_LIMIT;
-		}
-		return Integer.parseInt(fetchLimitAsString);
-	}
+	BasyxUpdateFacade newUpdateFacade(BasyxUpdateConfiguration conf);
 
+	BasyxUpdateFacade newUpdateFacade();
+	
+	String toJsonPretty(Object object) throws JsonProcessingException;
 }

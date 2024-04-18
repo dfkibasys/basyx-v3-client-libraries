@@ -24,34 +24,42 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.cache;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 public class PassThroughBasyxClientCache implements BasyxClientCache {
 
 	@Override
-	public AssetAdministrationShell getShellById(String id,Function<String, AssetAdministrationShell> resolver) {
+	public Optional<AssetAdministrationShell> getShellById(String id, Function<String, Optional<AssetAdministrationShell>> resolver) {
 		return resolver.apply(id);
-	}
-	
-	@Override
-	public Submodel getSubmodelById(String id, Function<String, Submodel> resolver) {
-		return resolver.apply(id);
-	}
-	
-	@Override
-	public Submodel getSubmodelByReference(Reference ref, Function<Reference, Submodel> resolver) {
-		return resolver.apply(ref);
 	}
 
 	@Override
-	public void invalidateShell(AssetAdministrationShell shell) {
+	public Optional<Submodel> getSubmodelById(String id, Function<String, Optional<Submodel>> resolver) {
+		return resolver.apply(id);
 	}
 
 	@Override
-	public void invalidateSubmodel(Submodel sm) {
+	public Optional<AssetAdministrationShell> getShellByIdIfPresent(String id) {
+		return Optional.empty();
+	}
+	
+	@Override
+	public void invalidateShell(String shellId) {
+	}
+
+	@Override
+	public void invalidateSubmodel(String smId) {
+	}
+
+	@Override
+	public void offerLocally(Submodel submodel) {
+	}
+
+	@Override
+	public void offerLocally(AssetAdministrationShell shell) {
 	}
 }

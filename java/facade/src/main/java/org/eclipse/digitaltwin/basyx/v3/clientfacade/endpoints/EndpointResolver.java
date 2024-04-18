@@ -25,17 +25,24 @@
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
+import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public interface EndpointResolver {
 	
-	public AssetAdministrationShell resolveShell(ObjectMapper mapper, List<Endpoint> endpoints);
+	public Optional<AssetAdministrationShell> resolveShell(ObjectMapper mapper, List<Endpoint> endpoints, IdentifiableResolver<AssetAdministrationShell> shellResolver);
 	
-	public Submodel resolveSubmodel(ObjectMapper mapper, List<Endpoint> endpoints);
+	public Optional<Submodel> resolveSubmodel(ObjectMapper mapper, List<Endpoint> endpoints, IdentifiableResolver<Submodel> submodelResolver);
 	
+	@FunctionalInterface
+	public static interface IdentifiableResolver<T extends Identifiable> {
+		
+		Optional<T> resolve(String serverUrl, String id);
+	}
 }

@@ -27,57 +27,47 @@ package org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
-import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.ProtocolInformation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
-import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRepositoryApi;
-import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRepositoryApi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractEndpointResolver implements EndpointResolver {
 
 	@Override
-	public AssetAdministrationShell resolveShell(ObjectMapper mapper, List<Endpoint> endpoints) {
-		return resolve(mapper, endpoints, this::resolveShellInstance);
-	}
-	
-	@Override
-	public Submodel resolveSubmodel(ObjectMapper mapper, List<Endpoint> endpoints) {
-		return resolve(mapper, endpoints, this::resolveSubmodelInstance);
-	}
-
-	private <T extends Identifiable> T resolve(ObjectMapper mapper, List<Endpoint> endpoints, BiFunction<ObjectMapper, Endpoint, T> resolver) {
+	public Optional<AssetAdministrationShell> resolveShell(ObjectMapper mapper, List<Endpoint> endpoints, IdentifiableResolver<AssetAdministrationShell> shellResolver) {
 		if (endpoints == null || endpoints.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 		Endpoint endpoint = chooseEndpoint(endpoints);
 		if (endpoint == null) {
-			return null;
+			return Optional.empty();
 		}
-		return resolver.apply(mapper, endpoint);
+		EndpointParser parser = EndpointParser.forShells();
+		EndpointParser.EndpointInfo info = parser.parse(endpoint);	
+		return shellResolver.resolve(info.getServerPart(), info.getIdPartDecoded());
+	}
+	
+	@Override
+	public Optional<Submodel> resolveSubmodel(ObjectMapper mapper, List<Endpoint> endpoints, IdentifiableResolver<Submodel> submodelResolver) {
+		if (endpoints == null || endpoints.isEmpty()) {
+			return Optional.empty();
+		}
+		Endpoint endpoint = chooseEndpoint(endpoints);
+		if (endpoint == null) {
+			return Optional.empty();
+		}
+		EndpointParser parser = EndpointParser.forSubmodels();
+		EndpointParser.EndpointInfo info = parser.parse(endpoint);	
+		return submodelResolver.resolve(info.getServerPart(), info.getIdPartDecoded());
 	}
 	
 	abstract Endpoint chooseEndpoint(List<Endpoint> endpoints);
-
-	protected AssetAdministrationShell resolveShellInstance(ObjectMapper mapper, Endpoint endpoint) {
-		EndpointParser parser = EndpointParser.forShells();
-		EndpointParser.EndpointInfo info = parser.parse(endpoint);		
-		AssetAdministrationShellRepositoryApi repoApi = new AssetAdministrationShellRepositoryApi(mapper, info.getServerPart());
-		return repoApi.getAssetAdministrationShellById(info.getIdPartDecoded());
-	}
-	
-	protected Submodel resolveSubmodelInstance(ObjectMapper mapper, Endpoint endpoint) {
-		EndpointParser parser = EndpointParser.forSubmodels();
-		EndpointParser.EndpointInfo info = parser.parse(endpoint);		
-		SubmodelRepositoryApi repoApi = new SubmodelRepositoryApi(mapper, info.getServerPart());
-		return repoApi.getSubmodelById(info.getIdPartDecoded(), null, null);
-	}
 		
 	private static class EndpointParser {
 		

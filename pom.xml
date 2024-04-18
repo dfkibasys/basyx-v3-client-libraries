@@ -17,6 +17,11 @@
 	<packaging>pom</packaging>
 	<version>0.2.0-SNAPSHOT</version>
 
+	<modules>
+		<module>csharp-unity</module>
+		<!--<module>java</module>
+				<module>java/aggregator</module>-->
+	</modules>
 
 	<properties>
 		<iterator-maven-plugin.version>0.5.1</iterator-maven-plugin.version>
@@ -43,11 +48,6 @@
 		<openapi.generator.config.name>config</openapi.generator.config.name>
 		<openapi.generator.config.path>${project.basedir}/${openapi.generator.config.name}</openapi.generator.config.path>
 	</properties>
-	<modules>
-		<module>java</module>
-		<module>java/aggregator</module>
-		<module>csharp-unity</module>
-	</modules>
 	<developers>
 		<developer>
 			<name>Gerhard Sonnenberg</name>
@@ -59,6 +59,38 @@
 			</roles>
 		</developer>
 	</developers>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>clean</phase>
+					</execution>
+				</executions>
+				<configuration>
+
+					<filesets>
+						<fileset>
+							<directory>${openapi.output.folder}</directory>
+							<excludes>
+								<exclude>**/.gitkeep</exclude>
+							</excludes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+						<fileset>
+							<directory>${gensrc.output.folder}</directory>
+							<excludes>
+								<exclude>.openapi-generator-ignore</exclude>
+								<exclude>pom.xml</exclude>
+							</excludes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<profiles>
 		<profile>
 			<id>generate-openapi</id>
@@ -69,35 +101,6 @@
 			</activation>
 			<build>
 				<plugins>
-					<plugin>
-						<artifactId>maven-clean-plugin</artifactId>
-						<executions>
-							<execution>
-								<phase>clean</phase>
-							</execution>
-						</executions>	
-						<configuration>
-							
-							<filesets>
-								<fileset>
-									<directory>${openapi.output.folder}</directory>
-									<excludes>
-										<exclude>**/.gitkeep</exclude>
-									</excludes>
-									<followSymlinks>false</followSymlinks>
-								</fileset>
-								<fileset>
-									<directory>${gensrc.output.folder}</directory>
-									<excludes>
-										<exclude>.openapi-generator-ignore</exclude>
-										<exclude>pom.xml</exclude>
-									</excludes>
-									<followSymlinks>false</followSymlinks>
-								</fileset>
-							</filesets>
-						</configuration>
-					</plugin>
-					
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>properties-maven-plugin</artifactId>
