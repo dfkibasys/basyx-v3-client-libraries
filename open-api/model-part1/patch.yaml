@@ -1,0 +1,232 @@
+- op: replace
+  path: /components/schemas/Extension/allOf/1/properties/name/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: replace
+  path: /components/schemas/Key/properties/value/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: add
+  path: /components/schemas/LangStringNameType/allOf/1/required
+  value:
+  - text
+- op: add
+  path: /components/schemas/LangStringNameType/allOf/1/properties/text/minLength
+  value: 1    
+- op: add
+  path: /components/schemas/LangStringNameType/allOf/1/properties/text/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: add
+  path: /components/schemas/LangStringNameType/allOf/1/properties/text/type
+  value: string
+- op: add
+  path: /components/schemas/LangStringDefinitionTypeIec61360/allOf/1/required
+  value: 
+  - text
+- op: add
+  path: /components/schemas/LangStringDefinitionTypeIec61360/allOf/1/properties/text/minLength
+  value: 1    
+- op: add
+  path: /components/schemas/LangStringDefinitionTypeIec61360/allOf/1/properties/text/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: add
+  path: /components/schemas/LangStringDefinitionTypeIec61360/allOf/1/properties/text/type
+  value: string
+- op: add
+  path: /components/schemas/LangStringPreferredNameTypeIec61360/allOf/1/required
+  value: 
+  - text
+- op: add
+  path: /components/schemas/LangStringPreferredNameTypeIec61360/allOf/1/properties/text/minLength
+  value: 1
+- op: add
+  path: /components/schemas/LangStringPreferredNameTypeIec61360/allOf/1/properties/text/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: add
+  path: /components/schemas/LangStringPreferredNameTypeIec61360/allOf/1/properties/text/type
+  value: string
+- op: add
+  path: /components/schemas/LangStringShortNameTypeIec61360/allOf/1/required
+  value: 
+  - text
+- op: add
+  path: /components/schemas/LangStringShortNameTypeIec61360/allOf/1/properties/text/minLength
+  value: 1
+- op: add
+  path: /components/schemas/LangStringShortNameTypeIec61360/allOf/1/properties/text/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: add
+  path: /components/schemas/LangStringShortNameTypeIec61360/allOf/1/properties/text/type
+  value: string
+- op: remove
+  path: /components/schemas/AdministrativeInformation/allOf/1/properties/version/allOf
+- op: add
+  path: /components/schemas/AdministrativeInformation/allOf/1/properties/version/pattern
+  value: "^(0|[1-9][0-9]{0,3})$"
+- op: remove
+  path: /components/schemas/AdministrativeInformation/allOf/1/properties/revision/allOf
+- op: add
+  path: /components/schemas/AdministrativeInformation/allOf/1/properties/revision/pattern
+  value: "^(0|[1-9][0-9]{0,3})$"
+- op: replace
+  path: /components/schemas/AdministrativeInformation/allOf/1/properties/templateId/pattern
+  value: "^([\\t\\n\\r \\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: replace
+  path: /components/schemas/EmbeddedDataSpecification/properties/dataSpecificationContent/$ref
+  value: "#/components/schemas/DataSpecificationContent"
+- op: remove  
+  path: /components/schemas/DataSpecificationContent_choice
+- op: remove  
+  path: /components/schemas/DataSpecificationContent/properties
+- op: add  
+  path: /components/schemas/DataSpecificationContent/oneOf
+  value:
+  - $ref: "#/components/schemas/DataSpecificationIec61360"
+- op: add  
+  path: /components/schemas/DataSpecificationContent/discriminator
+  value:
+    propertyName: "modelType"
+- op: add
+  path: /components/schemas/DataSpecificationIec61360/type
+  value: object
+- op: move
+  from: /components/schemas/DataSpecificationIec61360/allOf/1/required
+  path: /components/schemas/DataSpecificationIec61360/required
+- op: add
+  path: /components/schemas/DataSpecificationIec61360/required/1
+  value: modelType
+- op: move
+  from: /components/schemas/DataSpecificationIec61360/allOf/1/properties
+  path: /components/schemas/DataSpecificationIec61360/properties
+- op: remove
+  path: /components/schemas/DataSpecificationIec61360/allOf
+- op: remove
+  path: /components/schemas/DataSpecificationIec61360/properties/modelType/pattern
+- op: add
+  path: /components/schemas/DataSpecificationIec61360/properties/modelType/default      
+  value: "DataSpecificationIec61360"
+- op: replace
+  path: /components/schemas/DataSpecificationIec61360/properties/value/pattern      
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: replace
+  path: /components/schemas/DataSpecificationIec61360/properties/valueFormat/pattern      
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: replace
+  path: /components/schemas/DataSpecificationIec61360/properties/symbol/pattern      
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: replace
+  path: /components/schemas/DataSpecificationIec61360/properties/sourceOfDefinition/pattern      
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: replace
+  path: /components/schemas/DataSpecificationIec61360/properties/unit/pattern      
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+
+- op: replace
+  path: /components/schemas/ValueReferencePair/properties/value/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: replace
+  path: /components/schemas/SpecificAssetId/allOf/1/properties/name/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: replace
+  path: /components/schemas/SpecificAssetId/allOf/1/properties/value/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: add
+  path: /components/schemas/LangStringTextType/allOf/1/required
+  value:  
+  - text
+- op: add
+  path: /components/schemas/LangStringTextType/allOf/1/properties/text/minLength
+  value: 1
+- op: add
+  path: /components/schemas/LangStringTextType/allOf/1/properties/text/type
+  value: "string"
+- op: add
+  path: /components/schemas/LangStringTextType/allOf/1/properties/text/pattern
+  value: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+- op: remove
+  path: /components/schemas/AbstractLangString/required/1 
+- op: remove
+  path: /components/schemas/AbstractLangString/properties/text
+- op: copy
+  from: /components/schemas/Referable/allOf/1/properties/idShort/allOf/0/minLength
+  path: /components/schemas/Referable/allOf/1/properties/idShort/minLength
+- op: copy
+  from: /components/schemas/Referable/allOf/1/properties/idShort/allOf/0/maxLength
+  path: /components/schemas/Referable/allOf/1/properties/idShort/maxLength
+- op: copy
+  from: /components/schemas/Referable/allOf/1/properties/idShort/allOf/2/pattern
+  path: /components/schemas/Referable/allOf/1/properties/idShort/pattern
+- op: remove
+  path: /components/schemas/Referable/allOf/1/properties/idShort/allOf
+  
+- op: add
+  path: /paths
+  value: {}
+
+- op: add
+  path: /components/schemas/SubmodelElement_choice/discriminator
+  value:
+    propertyName: modelType
+#     # mapping:
+#     #   RelationshipElement: '#/components/schemas/RelationshipElement'
+#     #   AnnotatedRelationshipElement: '#/components/schemas/AnnotatedRelationshipElement'
+#     #   BasicEventElement: '#/components/schemas/BasicEventElement'
+#     #   Blob: '#/components/schemas/Blob'
+#     #   Capability: '#/components/schemas/Capability'
+#     #   Entity: '#/components/schemas/Entity'
+#     #   File: '#/components/schemas/File'
+#     #   MultiLanguageProperty: '#/components/schemas/MultiLanguageProperty'
+#     #   Operation: '#/components/schemas/Operation'
+#     #   Property: '#/components/schemas/Property'
+#     #   Range: '#/components/schemas/Range'
+#     #   ReferenceElement: '#/components/schemas/ReferenceElement'
+#     #   SubmodelElementCollection: '#/components/schemas/SubmodelElementCollection'
+#     #   SubmodelElementList: '#/components/schemas/SubmodelElementList'
+
+# # Remove patterns pattern because of entity in yaml patch plugin
+
+- op: remove
+  path: /components/schemas/BasicEventElement/allOf/1/properties/messageTopic/pattern
+- op: remove 
+  path: /components/schemas/Blob/allOf/1/properties/contentType/allOf
+- op: remove
+  path: /components/schemas/Entity/allOf/1/properties/globalAssetId/pattern
+- op: remove
+  path: /components/schemas/EventPayload/properties/topic/pattern
+- op: remove
+  path: /components/schemas/File/allOf/1/properties/value/allOf
+- op: remove
+  path: /components/schemas/File/allOf/1/properties/contentType/allOf
+- op: remove
+  path: /components/schemas/Identifiable/allOf/1/properties/id/pattern
+- op: remove
+  path: /components/schemas/Key/properties/value/pattern
+- op: remove
+  path: /components/schemas/Qualifier/allOf/1/properties/type/pattern
+- op: remove
+  path: /components/schemas/Referable/allOf/1/properties/category/pattern
+- op: remove
+  path: /components/schemas/Resource/properties/path/allOf/1
+- op: remove
+  path: /components/schemas/Resource/properties/contentType/allOf/1
+
+- op: copy
+  from: /components/schemas/Resource/properties/path/allOf/0/minLength
+  path: /components/schemas/Resource/properties/path/minLength
+- op: copy
+  from: /components/schemas/Resource/properties/path/allOf/0/maxLength
+  path: /components/schemas/Resource/properties/path/maxLength
+- op: copy
+  from: /components/schemas/Resource/properties/path/allOf/1/pattern
+  path: /components/schemas/Resource/properties/path/pattern
+- op: remove
+  path: /components/schemas/Resource/properties/path/allOf
+- op: copy
+  from: /components/schemas/Resource/properties/contentType/allOf/0/minLength
+  path: /components/schemas/Resource/properties/contentType/minLength
+- op: copy
+  from: /components/schemas/Resource/properties/contentType/allOf/0/maxLength
+  path: /components/schemas/Resource/properties/contentType/maxLength
+- op: copy
+  from: /components/schemas/Resource/properties/contentType/allOf/1/pattern
+  path: /components/schemas/Resource/properties/contentType/pattern
+- op: remove
+  path: /components/schemas/Resource/properties/contentType/allOf

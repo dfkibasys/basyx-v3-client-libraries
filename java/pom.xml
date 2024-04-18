@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.eclipse.digitaltwin.basyx.v3.clients</groupId>
+		<artifactId>clients-v3</artifactId>
+		<version>0.2.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+
+	<artifactId>java-clients-v3.0.1-build</artifactId>
+	<name>java-clients-v3.0.1-build</name>
+	<packaging>pom</packaging>
+	<properties>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<build.java>true</build.java>		
+	</properties>
+
+
+
+</project>

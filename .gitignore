@@ -1,0 +1,7 @@
+.openapi-generator
+/**/.settings
+/**/.classpath
+/**/.project
+
+/python/build
+/python/release

@@ -1,0 +1,91 @@
+
+- op: remove
+  path: /components/schemas/AssetAdministrationShellDescriptor/example
+- op: replace
+  path: /components/schemas/AssetAdministrationShellDescriptor/allOf/1/properties/assetType/pattern
+  value: "^[\\x09\\x0A\\x0D\\x20-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFFF]*$"
+- op: replace
+  path: /components/schemas/AssetAdministrationShellDescriptor/allOf/1/properties/globalAssetId/pattern
+  value: "^[\\x09\\x0A\\x0D\\x20-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFFF]*$"
+- op: replace
+  path: /components/schemas/AssetAdministrationShellDescriptor/allOf/1/properties/id/pattern
+  value: "^[\\x09\\x0A\\x0D\\x20-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFFF]*$"
+- op: remove
+  path: /components/schemas/Descriptor/example
+- op: add
+  path: /components/schemas/SubmodelDescriptor/allOf/1
+  value: {}
+- op: move
+  from: /components/schemas/SubmodelDescriptor/type
+  path: /components/schemas/SubmodelDescriptor/allOf/1/type
+- op: move
+  from: /components/schemas/SubmodelDescriptor/properties
+  path: /components/schemas/SubmodelDescriptor/allOf/1/properties
+- op: remove
+  path: /components/schemas/SubmodelDescriptor/example  
+- op: replace
+  path: /components/schemas/SubmodelDescriptor/allOf/1/properties/id/pattern  
+  value: "^[\\x09\\x0A\\x0D\\x20-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFFF]*$"
+- op: move
+  from: /components/schemas/SubmodelDescriptor/allOf/1/properties/endpoints  
+  path: /components/schemas/SubmodelDescriptor/allOf/1/properties/tmp
+- op: move
+  from: /components/schemas/SubmodelDescriptor/allOf/1/properties/tmp  
+  path: /components/schemas/SubmodelDescriptor/allOf/1/properties/endpoints
+
+# Do we really need this TODO
+- op: add
+  path: /components/schemas/Endpoint/properties/interface/x-field-extra-annotation
+  value: '@JsonProperty("interface")'
+
+# rewrite paging metadata
+- op: copy
+  from: /components/schemas/PagedResult/properties/paging_metadata
+  path: /components/schemas/PagedResultPagingMetadata
+- op: replace
+  path: /components/schemas/PagedResult/properties/paging_metadata
+  value:
+    $ref: '#/components/schemas/PagedResultPagingMetadata'
+# rewrite protocolinformation
+- op: copy
+  from: /components/schemas/ProtocolInformation/properties/securityAttributes/items
+  path: /components/schemas/ProtocolInformationSecurityAttributes
+- op: replace
+  path: /components/schemas/ProtocolInformation/properties/securityAttributes/items
+  value:
+    $ref: '#/components/schemas/ProtocolInformationSecurityAttributes'
+# just for the generator to work
+- op: add
+  path: /paths
+  value: {}
+
+# remove this for now, TODO include it again (add discriminator or write own serializer in java,c# ....)
+- op: remove
+  path: /components/schemas/SubmodelElementValue/oneOf/11
+
+# we need a choice here -> can't use submodelelement at this position
+- op: replace
+  path: /components/schemas/GetSubmodelElementsResult/allOf/1/properties/result/items/$ref
+  value: "https://api.swaggerhub.com/domains/Plattform_i40/Part1-MetaModel-Schemas/V3.0.1#/components/schemas/SubmodelElement_choice"
+
+
+# # add url encode hints
+- op: add
+  path: /components/parameters/AssetIds/x-utf8-base64-url-encoded-as-string
+  value: true 
+- op: add
+  path: /components/parameters/AssetAdministrationShellIdentifier/x-utf8-base64-url-encoded-as-string
+  value: true
+- op: add
+  path: /components/parameters/SubmodelIdentifier/x-utf8-base64-url-encoded-as-string
+  value: true
+- op: add
+  path: /components/parameters/HandleId/x-utf8-base64-url-encoded-as-string
+  value: true
+
+
+
+# # # due to the bug in yaml patch just remove the patterns here
+# # # - op: remove
+# # #   path: /components/parameters/AssetInformation/properties/assetType/pattern
+# # #   path: /components/schemas/Key/properties/value/pattern

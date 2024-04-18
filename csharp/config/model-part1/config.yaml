@@ -1,0 +1,11 @@
+templateDir: ../templates
+additionalProperties:
+  packageAuthors: Gerhard Sonnenberg
+  packageCompany: DFKI GmbH
+  packageTitle: Basys-Clients-V3
+  packageCopyright: DFKI GmbH
+  licenseId: MIT
+  packageVersion: 1.1.1
+  supportsAsync: false
+  netCoreProjectFile: true
+  targetFramework: net8.0
