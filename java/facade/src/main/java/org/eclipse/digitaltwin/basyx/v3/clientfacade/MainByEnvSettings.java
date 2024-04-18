@@ -8,19 +8,14 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Entity;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell.Builder;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEntity;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.Aas4jObjectMapperFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.CaffeineBasyxClientCache;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolvers;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.MissingIdentifierException;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementPathsIterable;
-import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortDirection;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

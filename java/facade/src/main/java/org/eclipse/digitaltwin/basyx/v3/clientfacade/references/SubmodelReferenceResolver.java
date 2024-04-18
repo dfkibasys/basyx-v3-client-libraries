@@ -29,14 +29,13 @@ import java.util.Optional;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
-public interface SubmodelDescriptorResolver {
+public interface SubmodelReferenceResolver {
 	
-	Optional<Submodel> resolveSubmodel(Reference ref, SubmodelFetcher submodelFetcher);
+	Optional<Submodel> resolveSubmodel(Reference ref, SubmodelResolver submodelResolver);
 	
 	@FunctionalInterface
-	public interface SubmodelFetcher {
+	public static interface SubmodelResolver {
 		
-		Optional<Submodel> fetchSubmodelById(String id);
-		
+		Optional<Submodel> getSubmodelById(String id); 
 	}
 }

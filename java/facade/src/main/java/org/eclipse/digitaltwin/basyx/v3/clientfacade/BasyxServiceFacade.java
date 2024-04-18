@@ -32,7 +32,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolver;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SubmodelDescriptorResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SubmodelReferenceResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortDirection;
 
@@ -68,7 +68,7 @@ public interface BasyxServiceFacade {
 
 	<T extends SubmodelElement> Optional<T> getSubmodelElementByIdShortPath(Submodel sm, String idShortPath, Class<T> resultCls);
 
-	BasyxServiceFacade withSubmodelResolver(SubmodelDescriptorResolver smReferenceResolver);
+	BasyxServiceFacade withSubmodelResolver(SubmodelReferenceResolver smReferenceResolver);
 
 	BasyxServiceFacade withEndpointResolver(EndpointResolver endpointResolverStrategy);
 

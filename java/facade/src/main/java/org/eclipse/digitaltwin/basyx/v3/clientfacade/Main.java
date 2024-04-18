@@ -11,13 +11,11 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxServiceCo
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxUpdateConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolvers;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.MissingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SimpleSubmodelReferenceResolver;
 
 public class Main {
 
 	public static void main(String[] args) throws ConflictingIdentifierException {
-		
 		
 		BasyxConnectionManager manager = new DefaultBasyxConnectionManager();
 		

@@ -45,7 +45,7 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.EnvironmentBasedBasy
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.FirstEndpointResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SimpleSubmodelReferenceResolver;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SubmodelDescriptorResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SubmodelReferenceResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxCollectionIterable;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxResult;
@@ -80,7 +80,7 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 	private final ObjectMapper mapper;
 	private final BasyxRegistryApis registryApis;
 	private EndpointResolver endpointResolver;
-	private SubmodelDescriptorResolver smReferenceResolver;
+	private SubmodelReferenceResolver smReferenceResolver;
 	private BasyxClientCache clientCache;
 	private final Integer limit;
 
@@ -112,7 +112,7 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 	}
 
 	@Override
-	public DefaultBasyxServiceFacade withSubmodelResolver(SubmodelDescriptorResolver smReferenceResolver) {
+	public DefaultBasyxServiceFacade withSubmodelResolver(SubmodelReferenceResolver smReferenceResolver) {
 		this.smReferenceResolver = smReferenceResolver;
 		return this;
 	}

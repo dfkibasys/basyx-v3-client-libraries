@@ -29,7 +29,6 @@ import java.util.Optional;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
-import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,9 +39,4 @@ public interface EndpointResolver {
 	
 	public Optional<Submodel> resolveSubmodel(ObjectMapper mapper, List<Endpoint> endpoints, IdentifiableResolver<Submodel> submodelResolver);
 	
-	@FunctionalInterface
-	public static interface IdentifiableResolver<T extends Identifiable> {
-		
-		Optional<T> resolve(String serverUrl, String id);
-	}
 }

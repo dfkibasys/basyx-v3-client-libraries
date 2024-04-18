@@ -31,17 +31,17 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Key;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
-public class SimpleSubmodelReferenceResolver implements SubmodelDescriptorResolver {
+public class SimpleSubmodelReferenceResolver implements SubmodelReferenceResolver {
 	
 	@Override
-	public Optional<Submodel> resolveSubmodel(Reference ref, SubmodelFetcher submodelFetcher) {
+	public Optional<Submodel> resolveSubmodel(Reference ref, SubmodelResolver submodelFetcher) {
 		List<Key> keys =  ref.getKeys();
 		if (keys == null  || keys.isEmpty()) {
 			return null;
 		}
 		Key key = keys.get(0);
 		String id = key.getValue();
-		return submodelFetcher.fetchSubmodelById(id);
+		return submodelFetcher.getSubmodelById(id);
 	}
 
 }

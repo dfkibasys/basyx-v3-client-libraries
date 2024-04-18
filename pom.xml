@@ -20,7 +20,7 @@
 	<modules>
 		<module>csharp-unity</module>
 		<!--<module>java</module>
-				<module>java/aggregator</module>-->
+		<module>java/aggregator</module>-->
 	</modules>
 
 	<properties>
@@ -245,5 +245,12 @@
 
 		</profile>
 	</profiles>
+
+	<scm>
+		<url>https://github.com/dfkibasys</url>
+		<connection>${gitUrl}/basyx-v3-client-libraries.git</connection>
+		<developerConnection>${gitUrl}/basyx-v3-client-libraries.git</developerConnection>
+	  <tag>HEAD</tag>
+   </scm>
 
 </project>
