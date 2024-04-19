@@ -7,11 +7,3 @@ additionalProperties:
   legacyDiscriminatorBehavior: false
   disallowAdditionalPropertiesIfNotPresent: false
   supportUrlQuery: false
-  groupId: org.eclipse.digitaltwin.basyx.v3.clients
-  artifactId: basyx-java-clients
-  artifactVersion: 0.2.0-SNAPSHOT
-  licenseName: MIT
-  develperName: Gerhard Sonnenberg
-  developerEmail: gerhard.sonnenberg@dfki.de
-  developerOrganization: DFKI GmbH
-  developerOrganizationUrl: https://www.dfki.de
