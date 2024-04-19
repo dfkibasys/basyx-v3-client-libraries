@@ -4,7 +4,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-
 	<groupId>org.eclipse.digitaltwin.basyx.v3.clients</groupId>
 	<artifactId>clients-v3</artifactId>
 	<packaging>pom</packaging>
@@ -13,7 +12,9 @@
 	<modules>
 		<module>csharp-unity</module>
 		<module>java</module>
-		<module>java/aggregator</module>
+ 		<module>java/parent</module>
+ 		<module>java/build/generated/project</module>
+    	<module>java/facade</module>
 	</modules>
 
 	<properties>
@@ -40,6 +41,7 @@
 		<openapi.output.path>${openapi.output.folder}/${openapi.output.name}</openapi.output.path>
 		<openapi.generator.config.name>config</openapi.generator.config.name>
 		<openapi.generator.config.path>${project.basedir}/${openapi.generator.config.name}</openapi.generator.config.path>
+  
 	</properties>
 	<developers>
 		<developer>
@@ -62,7 +64,6 @@
 					</execution>
 				</executions>
 				<configuration>
-
 					<filesets>
 						<fileset>
 							<directory>${openapi.output.folder}</directory>
@@ -238,5 +239,12 @@
 
 		</profile>
 	</profiles>
+
+	<scm>
+		<url>https://github.com/dfkibasys</url>
+		<connection>${gitUrl}/basys/basyx-v3-client-libraries.git</connection>
+		<developerConnection>${gitUrl}/basys/basyx-v3-client-libraries.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
 
 </project>

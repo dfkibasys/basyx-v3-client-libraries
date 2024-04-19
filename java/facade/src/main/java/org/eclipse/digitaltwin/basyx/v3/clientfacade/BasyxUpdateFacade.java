@@ -50,6 +50,5 @@ public interface BasyxUpdateFacade {
 
 	void deleteShell(String id) throws IdentifiableNotFoundException;
 	
-	void deleteShell(AssetAdministrationShell shell) throws IdentifiableNotFoundException;
-	
+	void deleteShell(AssetAdministrationShell shell) throws IdentifiableNotFoundException;	
 }
