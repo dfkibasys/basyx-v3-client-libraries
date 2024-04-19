@@ -76,7 +76,11 @@ public class DefaultBasyxConnectionManager implements BasyxConnectionManager {
 	}
 	
 	@Override
-	public String toJsonPretty(Object object) throws JsonProcessingException {
-		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+	public String toJsonPretty(Object object) {
+		try {
+			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+		} catch (JsonProcessingException e) {
+			return null;
+		}
 	}	
 }

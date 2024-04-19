@@ -42,5 +42,5 @@ public interface BasyxConnectionManager {
 
 	BasyxUpdateFacade newUpdateFacade();
 	
-	String toJsonPretty(Object object) throws JsonProcessingException;
+	String toJsonPretty(Object object);
 }

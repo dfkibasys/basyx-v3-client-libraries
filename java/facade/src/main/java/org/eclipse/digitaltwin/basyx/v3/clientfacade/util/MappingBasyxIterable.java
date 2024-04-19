@@ -33,7 +33,7 @@ import java.util.stream.StreamSupport;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 
-public class MappingBasyxIterable<I, T extends Identifiable> implements BasyxIterable<T> {
+class MappingBasyxIterable<I, T extends Identifiable> implements BasyxIterable<T> {
 
 	private final Iterator<I> input;
 	private final Function<I, Optional<T>> mapper;

@@ -46,17 +46,13 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.FirstEndpointResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SimpleSubmodelReferenceResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SubmodelReferenceResolver;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxCollectionIterable;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterables;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxResult;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.FetchingBasyxIterable;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.MappingBasyxIterable;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.ResultResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementElementResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementHierarchyResolver;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementPathsIterable;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementWalker;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementsIterable;
 import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRegistryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRepositoryApi;
@@ -130,19 +126,19 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 	@Override
 	public BasyxIterable<AssetAdministrationShell> getAllShells(AssetKind assetKind, String assetType) throws ApiException {
 		ResultResolver<String, AssetAdministrationShell> resolver = cursor -> fetchShells(cursor, assetKind, assetType);
-		return new FetchingBasyxIterable<>(resolver);
+		return BasyxIterables.fetchingIterable(resolver);
 	}
 
 	@Override
 	public BasyxIterable<Submodel> getAllSubmodels(AssetAdministrationShell shell) {
 		if (shell == null) {
-			return BasyxCollectionIterable.empty();
+			return BasyxIterables.empty();
 		}
 		List<Reference> submodelRefs = shell.getSubmodels();
 		if (submodelRefs == null) {
-			return BasyxCollectionIterable.empty();
+			return BasyxIterables.empty();
 		}
-		return new MappingBasyxIterable<>(submodelRefs.iterator(), this::getSubmodelByReference);
+		return BasyxIterables.getMappingIterable(submodelRefs.iterator(), this::getSubmodelByReference);
 	}
 	
 	@Override
@@ -153,19 +149,24 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 	@Override
 	public BasyxIterable<Submodel> getAllSubmodels() {
 		ResultResolver<String, Submodel> resolver = cursor -> fetchSubmodels(cursor);
-		return new FetchingBasyxIterable<>(resolver);
+		return BasyxIterables.fetchingIterable(resolver);
 	}
 
 	@Override
 	public BasyxIterable<SubmodelElement> getAllSubmodelElements(Submodel sm) {
-		return new SubmodelElementsIterable(sm);
+		return BasyxIterables.getSubmodelElementsIterable(sm);
 	}
 
 	@Override
 	public BasyxIterable<String> getAllSubmodelElementPaths(Submodel sm) {
-		return new SubmodelElementPathsIterable(sm);
+		return BasyxIterables.getPathIterable(sm);
 	}
-
+	
+	@Override
+	public BasyxIterable<Reference> getAllSubmodelElementReferences(Submodel sm) {
+		return BasyxIterables.getReferenceIterable(sm);
+	}
+	
 	@Override
 	public Optional<SubmodelElement> getSubmodelElementByIdShortPath(Submodel sm, String idShortPath) {
 		SubmodelElementElementResolver finder = new SubmodelElementElementResolver(idShortPath);
@@ -211,7 +212,7 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 
 	private BasyxIterable<AssetAdministrationShell> findShellsByIdShort(String idShort, Sorting sorting, QueryTypeEnum queryType) {
 		ResultResolver<Integer, AssetAdministrationShell> resultResolver = index -> searchShellsByIdShort(idShort, index, sorting, queryType);
-		return new FetchingBasyxIterable<>(resultResolver);
+		return BasyxIterables.fetchingIterable(resultResolver);
 	}
 
 	private Optional<Submodel> fetchSubmodelById(String id) {

@@ -29,7 +29,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class FetchingBasyxIterable<C, T> implements BasyxIterable<T> {
+class FetchingBasyxIterable<C, T> implements BasyxIterable<T> {
 
 	private final ResultResolver<C, T> resultResolver;
 
