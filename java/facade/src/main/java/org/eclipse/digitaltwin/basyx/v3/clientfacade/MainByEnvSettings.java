@@ -1,6 +1,7 @@
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
@@ -16,6 +17,8 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.CaffeineBasyxClientCache;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolvers;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterables;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -48,7 +51,11 @@ public class MainByEnvSettings {
 		
 		for (Submodel eachSm : facade.getAllSubmodels()) {
 			System.out.println(eachSm.getId());
+			
 		}
+		
+		facade.getSubmodelById("http://sm.test.org/technical/9/6").map(facade::getAllSubmodelElementReferences).stream().flatMap(BasyxIterable::stream).map(manager::toJsonPretty).forEach(System.out::println);
+		
 		updateFacade.deleteAllShells();
 		updateFacade.deleteAllSubmodels();
 		

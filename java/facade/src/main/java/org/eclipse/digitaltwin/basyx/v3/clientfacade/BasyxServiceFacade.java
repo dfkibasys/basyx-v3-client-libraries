@@ -47,6 +47,8 @@ public interface BasyxServiceFacade {
 	BasyxIterable<SubmodelElement> getAllSubmodelElements(Submodel sm);
 	
 	BasyxIterable<String> getAllSubmodelElementPaths(Submodel sm);
+	
+	BasyxIterable<Reference> getAllSubmodelElementReferences(Submodel sm);
 
 	BasyxIterable<Submodel> getAllSubmodels();
 
@@ -71,5 +73,6 @@ public interface BasyxServiceFacade {
 	BasyxServiceFacade withSubmodelResolver(SubmodelReferenceResolver smReferenceResolver);
 
 	BasyxServiceFacade withEndpointResolver(EndpointResolver endpointResolverStrategy);
+	
 
 }

@@ -29,39 +29,52 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
-public class SubmodelElementsIterable implements BasyxIterable<SubmodelElement> {
-	
+class SubmodelElementsIterable<T> implements BasyxIterable<T> {
+
 	private final Submodel submodel;
-	
-	public SubmodelElementsIterable (Submodel submodel) {
+	private final Mapper<T> mapper;
+
+	public SubmodelElementsIterable(Submodel submodel, Mapper<T> mapper) {
 		this.submodel = submodel;
+		this.mapper = mapper;
 	}
 	
 	@Override
-	public Iterator<SubmodelElement> iterator() {
-		return new SubmodelElementIterator(submodel);
+	public Iterator<T> iterator() {
+		return new SubmodelElementIterator<>(submodel, mapper);
 	}
 
 	@Override
-	public Stream<SubmodelElement> stream() {
+	public Stream<T> stream() {
 		return StreamSupport.stream(spliterator(), false);
 	}
 	
-	public static class SubmodelElementIterator implements Iterator<SubmodelElement> {
+	@FunctionalInterface
+	static interface Mapper<T> {
+		public T map(String path, Submodel parent, SubmodelElement elem);
+	}
 
-		private Deque<Iterator<? extends SubmodelElement>> iterators = new ArrayDeque<Iterator<? extends SubmodelElement>>();
-		private SubmodelElementHierarchyResolver resolver = new SubmodelElementHierarchyResolver();
+	static class SubmodelElementIterator<T> implements Iterator<T> {
 
-		public SubmodelElementIterator(Submodel submodel) {
+		private final Deque<Iterator<? extends SubmodelElement>> iterators = new ArrayDeque<Iterator<? extends SubmodelElement>>();
+		private final Deque<String> idPathStack = new ArrayDeque<>();
+		private final SubmodelElementHierarchyResolver resolver = new SubmodelElementHierarchyResolver();
+		private final Mapper<T> mapper;
+		private final Submodel submodel;
+
+		public SubmodelElementIterator(Submodel submodel, Mapper<T> mapper) {
+			this.mapper = mapper;
+			this.submodel = submodel;
 			List<SubmodelElement> elements = submodel.getSubmodelElements();
 			if (elements != null) {
-				iterators.add(submodel.getSubmodelElements().iterator());
+				iterators.push(submodel.getSubmodelElements().iterator());
 			}
 		}
 
@@ -69,30 +82,45 @@ public class SubmodelElementsIterable implements BasyxIterable<SubmodelElement> 
 		public boolean hasNext() {
 			while (!iterators.isEmpty()) {
 				Iterator<?> iter = iterators.peek();
-				if (!iter.hasNext()) {
-					iterators.pop();
-				} else {
+				if (iter.hasNext()) {
 					return true;
+				}
+				iterators.pop();
+				if (!iterators.isEmpty()) 
+				{
+					idPathStack.removeLast();
 				}
 			}
 			return false;
 		}
 
 		@Override
-		public SubmodelElement next() {
+		public T next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
 			SubmodelElement elem = iterators.peek().next();
-			offerIterator(elem);
-			return elem;
+			String idShort = elem.getIdShort();
+			if (idShort == null) {
+				idShort = "";
+			}
+			idPathStack.offerLast(idShort);
+			
+			String path = idPathStack.stream().collect(Collectors.joining(".")); 
+			boolean added = offerIterator(elem);
+			if (!added) {
+				idPathStack.removeLast();
+			}
+			return mapper.map(path, submodel, elem);
 		}
 
-		private void offerIterator(SubmodelElement elem) {
+		private boolean offerIterator(SubmodelElement elem) {
 			List<? extends SubmodelElement> elements = resolver.getChildren(elem);
-			if (elements != null && ! elements.isEmpty()) {
-				this.iterators.add(elements.iterator());
+			if (elements != null && !elements.isEmpty()) {
+				this.iterators.push(elements.iterator());
+				return true;
 			}
+			return false;
 		}
 	}
 }
