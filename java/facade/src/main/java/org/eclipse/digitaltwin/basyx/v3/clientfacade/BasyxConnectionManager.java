@@ -28,8 +28,6 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 public interface BasyxConnectionManager {
 
 	BasyxConnectionManager withClientCache(BasyxClientCache cache);
