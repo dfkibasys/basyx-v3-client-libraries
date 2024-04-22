@@ -52,6 +52,7 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxResult;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.ResultResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementElementResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementHierarchyResolver;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementInfo;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementWalker;
 import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRegistryApi;
@@ -129,6 +130,12 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 		return BasyxIterables.fetchingIterable(resolver);
 	}
 
+	
+	@Override
+	public BasyxIterable<SubmodelElementInfo> getAllSubmodelInfo(Submodel sm) {
+		return BasyxIterables.getElementInfoIterable(sm);
+	}
+	
 	@Override
 	public BasyxIterable<Submodel> getAllSubmodels(AssetAdministrationShell shell) {
 		if (shell == null) {
@@ -138,7 +145,7 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 		if (submodelRefs == null) {
 			return BasyxIterables.empty();
 		}
-		return BasyxIterables.getMappingIterable(submodelRefs.iterator(), this::getSubmodelByReference);
+		return BasyxIterables.getMappingNonEmptyIterable(submodelRefs.iterator(), this::getSubmodelByReference);
 	}
 	
 	@Override
@@ -154,17 +161,17 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 
 	@Override
 	public BasyxIterable<SubmodelElement> getAllSubmodelElements(Submodel sm) {
-		return BasyxIterables.getSubmodelElementsIterable(sm);
+		return BasyxIterables.getMappingIterable(BasyxIterables.getElementInfoIterable(sm).iterator(), SubmodelElementInfo::get);
 	}
 
 	@Override
 	public BasyxIterable<String> getAllSubmodelElementPaths(Submodel sm) {
-		return BasyxIterables.getPathIterable(sm);
+		return BasyxIterables.getMappingIterable(BasyxIterables.getElementInfoIterable(sm).iterator(), SubmodelElementInfo::getPath);
 	}
 	
 	@Override
 	public BasyxIterable<Reference> getAllSubmodelElementReferences(Submodel sm) {
-		return BasyxIterables.getReferenceIterable(sm);
+		return BasyxIterables.getMappingIterable(BasyxIterables.getElementInfoIterable(sm).iterator(), SubmodelElementInfo::getReference);
 	}
 	
 	@Override

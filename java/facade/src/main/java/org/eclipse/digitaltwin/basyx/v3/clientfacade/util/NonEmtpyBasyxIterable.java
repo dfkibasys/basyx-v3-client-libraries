@@ -26,23 +26,23 @@ package org.eclipse.digitaltwin.basyx.v3.clientfacade.util;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
+import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-class MappingBasyxIterable<I, T> implements BasyxIterable<T> {
+import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 
-	private final Iterator<I> input;
-	private final Function<I, T> mapper;
+class NonEmtpyBasyxIterable<T extends Identifiable> implements BasyxIterable<T> {
+
+	private final Iterator<Optional<T>> input;
 	
-	public MappingBasyxIterable(Iterator<I> input, Function<I, T> mapper) {
+	public NonEmtpyBasyxIterable(Iterator<Optional<T>> input) {
 		this.input = input;
-		this.mapper = mapper;
 	}
 	
 	@Override
 	public Iterator<T> iterator() {
-		return new MappingBasyxIterator<>(input, mapper);
+		return new OptionalBasyxIterator<>(input);
 	}
 
 	@Override
@@ -50,16 +50,14 @@ class MappingBasyxIterable<I, T> implements BasyxIterable<T> {
 		return StreamSupport.stream(spliterator(), false);
 	}
 	
-	private static final class MappingBasyxIterator<I, T> implements Iterator<T> {
+	private static final class OptionalBasyxIterator<T extends Identifiable> implements Iterator<T> {
 
-		private final Iterator<I> input;
-		private final Function<I, T> mapper;
+		private final Iterator<Optional<T>> input;
 		
 		private T next;
 		
-		public MappingBasyxIterator(Iterator<I> input, Function<I, T> mapper) {
+		public OptionalBasyxIterator(Iterator<Optional<T>> input) {
 			this.input = input;
-			this.mapper = mapper;
 		}
 		
 		@Override
@@ -71,9 +69,12 @@ class MappingBasyxIterable<I, T> implements BasyxIterable<T> {
 		}
 
 		private void resolveNext() {
-			if (input.hasNext()) {
-				I item = input.next();
-				next = mapper.apply(item);
+			while (input.hasNext()) {
+				Optional<T> item = input.next();
+				if (item.isPresent()) {
+					next = item.get();
+					return;
+				}
 			}
 		}
 

@@ -36,41 +36,32 @@ import java.util.stream.StreamSupport;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
-class SubmodelElementsIterable<T> implements BasyxIterable<T> {
+class SubmodelElementInfoIterable implements BasyxIterable<SubmodelElementInfo> {
 
 	private final Submodel submodel;
-	private final Mapper<T> mapper;
 
-	public SubmodelElementsIterable(Submodel submodel, Mapper<T> mapper) {
+	public SubmodelElementInfoIterable(Submodel submodel) {
 		this.submodel = submodel;
-		this.mapper = mapper;
 	}
 	
 	@Override
-	public Iterator<T> iterator() {
-		return new SubmodelElementIterator<>(submodel, mapper);
+	public Iterator<SubmodelElementInfo> iterator() {
+		return new SubmodelElementIterator(submodel);
 	}
 
 	@Override
-	public Stream<T> stream() {
+	public Stream<SubmodelElementInfo> stream() {
 		return StreamSupport.stream(spliterator(), false);
 	}
-	
-	@FunctionalInterface
-	static interface Mapper<T> {
-		public T map(String path, Submodel parent, SubmodelElement elem);
-	}
 
-	static class SubmodelElementIterator<T> implements Iterator<T> {
+	static class SubmodelElementIterator implements Iterator<SubmodelElementInfo> {
 
 		private final Deque<Iterator<? extends SubmodelElement>> iterators = new ArrayDeque<Iterator<? extends SubmodelElement>>();
 		private final Deque<String> idPathStack = new ArrayDeque<>();
 		private final SubmodelElementHierarchyResolver resolver = new SubmodelElementHierarchyResolver();
-		private final Mapper<T> mapper;
 		private final Submodel submodel;
 
-		public SubmodelElementIterator(Submodel submodel, Mapper<T> mapper) {
-			this.mapper = mapper;
+		public SubmodelElementIterator(Submodel submodel) {
 			this.submodel = submodel;
 			List<SubmodelElement> elements = submodel.getSubmodelElements();
 			if (elements != null) {
@@ -95,7 +86,7 @@ class SubmodelElementsIterable<T> implements BasyxIterable<T> {
 		}
 
 		@Override
-		public T next() {
+		public SubmodelElementInfo next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
@@ -111,7 +102,7 @@ class SubmodelElementsIterable<T> implements BasyxIterable<T> {
 			if (!added) {
 				idPathStack.removeLast();
 			}
-			return mapper.map(path, submodel, elem);
+			return new DefaultSubmodelElementInfo(submodel, elem, path);
 		}
 
 		private boolean offerIterator(SubmodelElement elem) {

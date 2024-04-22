@@ -5,44 +5,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 
 public class BasyxIterables {
 
 	private BasyxIterables() {		
 	}
-	
-	public static <I, T extends Identifiable> BasyxIterable<T> getMappingIterable(Iterator<I> input, Function<I, Optional<T>> mapper) {
+
+	public static <I, T> BasyxIterable<T> getMappingIterable(Iterator<I> input, Function<I, T> mapper) {		
 		return new MappingBasyxIterable<>(input, mapper);
 	}
 	
-	public static BasyxIterable<String> getPathIterable(Submodel sm) {
-		return new SubmodelElementsIterable<String>(sm, BasyxIterables::getPath);
+	public static <I, T extends Identifiable> BasyxIterable<T> getMappingNonEmptyIterable(Iterator<I> input, Function<I, Optional<T>> mapper) {		
+		MappingBasyxIterable<I, Optional<T>> mappingIterable = new MappingBasyxIterable<>(input, mapper);		
+		return new NonEmtpyBasyxIterable<T>(mappingIterable.iterator());		
 	}
 	
-	private static String getPath(String path, Submodel parent, SubmodelElement sme) {
-		return path;
-	}
-	
-	public static BasyxIterable<SubmodelElement> getSubmodelElementsIterable(Submodel sm) {
-		return new SubmodelElementsIterable<SubmodelElement>(sm, BasyxIterables::getSubmodel);
-	}
-	
-	private static SubmodelElement getSubmodel(String path, Submodel parent, SubmodelElement sme) {
-		return sme;
-	}
-	
-	public static BasyxIterable<Reference> getReferenceIterable(Submodel sm) {
-		return new SubmodelElementsIterable<Reference>(sm, BasyxIterables::getReference);
-	}
-	
-	private static Reference getReference(String path, Submodel parent, SubmodelElement sme) {
-		Reference parentRef = AasUtils.toReference(parent);
-		return AasUtils.toReference(parentRef, sme);
+	public static BasyxIterable<SubmodelElementInfo> getElementInfoIterable(Submodel sm) {
+		return new SubmodelElementInfoIterable(sm);
 	}
 	
 	public static <T> BasyxCollectionIterable<T> empty() {
