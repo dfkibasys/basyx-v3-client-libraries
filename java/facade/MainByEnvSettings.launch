@@ -9,9 +9,9 @@
     </listAttribute>
     <mapAttribute key="org.eclipse.debug.core.environmentVariables">
         <mapEntry key="BASYX_AASREGISTRY" value="http://127.0.0.1:8083"/>
+        <mapEntry key="BASYX_AASREPOSITORY" value="http://127.0.0.1:8081"/>
         <mapEntry key="BASYX_FETCH_LIMIT" value="4"/>
         <mapEntry key="BASYX_SUBMODELREGISTRY" value="http://127.0.0.1:8082"/>
-        <mapEntry key="BASYX_AASREPOSITORY" value="http://127.0.0.1:8081"/>
         <mapEntry key="BASYX_SUBMODELREPOSITORY" value="http://127.0.0.1:8081"/>
     </mapAttribute>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
