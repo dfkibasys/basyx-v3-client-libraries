@@ -1,0 +1,18 @@
+[
+  {
+    "role": "read-only",
+    "action": "READ",
+    "targetInformation": {
+      "@type": "aas",
+      "aasId": "*"
+    }
+  },
+  {
+    "role": "full",
+    "action": ["CREATE", "READ", "UPDATE", "DELETE"],
+    "targetInformation": {
+      "@type": "aas",
+      "aasId": "*"
+    }
+  }
+]

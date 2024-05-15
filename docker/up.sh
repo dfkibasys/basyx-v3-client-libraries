@@ -14,11 +14,12 @@ echo ""
 echo "=== services services  ==="
 echo ""
 
-echo "Portainer:         http://locahost:8084 (admin / $PORTAINER_PWD)"
+echo "Portainer:         http://localhost:8084 (admin / $PORTAINER_PWD)"
 echo "Aas Registry:      http://localhost:8083" 
 echo "Submodel Registry: http://localhost:8082" 
 echo "AasRepo:           http://localhost:8081/shells" 
 echo "SmRepo:            http://localhost:8081/submodels" 
 echo "CdRepo:            http://localhost:8081/concept-descriptions" 
+echo "CdRepo:            http://localhost:8085 (keycloak / keycloak-admin)" 
 echo "AasGui:            http://localhost:3000/"
 
