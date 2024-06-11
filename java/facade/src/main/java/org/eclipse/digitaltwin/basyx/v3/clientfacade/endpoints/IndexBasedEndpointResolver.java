@@ -43,7 +43,4 @@ public class IndexBasedEndpointResolver extends AbstractEndpointResolver {
 		}
 		return null;
 	}
-	
-	
-
 }

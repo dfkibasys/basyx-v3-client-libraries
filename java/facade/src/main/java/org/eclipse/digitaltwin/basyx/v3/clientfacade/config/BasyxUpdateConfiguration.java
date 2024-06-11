@@ -24,9 +24,14 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
 
-public interface BasyxUpdateConfiguration {
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.registration.config.AutoRegistrationConfig;
+
+public interface BasyxUpdateConfiguration extends BasyxRegistryServiceConfiguration{
 	
 	String getAasRepositoryUrl();
 	
 	String getSubmodelRepositoryUrl();
+		
+	AutoRegistrationConfig getAutoRegistrationConfig();
+	
 }

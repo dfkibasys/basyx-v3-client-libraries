@@ -32,14 +32,13 @@ import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.BasyxEnvironmentApis;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.PassThroughBasyxClientCache;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.BasyxApiFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.IdentifiableNotFoundException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.MissingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRepositoryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRepositoryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetAssetAdministrationShellsResult;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetSubmodelsResult;
@@ -50,21 +49,23 @@ import com.google.common.base.Strings;
 
 class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 
-	private BasyxClientCache clientCache;
-	private final BasyxEnvironmentApis environmentApis;
+	private final AssetAdministrationShellRepositoryApi shellRepositoryApi;
+	private final SubmodelRepositoryApi smRepositoryApi;
+	private BasyxUpdateConfiguration config;
+	private BasyxUpdateListener listener = BasyxUpdateListener.NULL;
 
-	DefaultBasyxUpdateFacade(BasyxEnvironmentApis environmentApis) {
-		this.clientCache = new PassThroughBasyxClientCache();
-		this.environmentApis = environmentApis;
+	DefaultBasyxUpdateFacade(ObjectMapper mapper, BasyxApiFactory apiFactory, BasyxUpdateConfiguration config) {
+		shellRepositoryApi = apiFactory.newShellRepositoryApi(mapper, config.getAasRepositoryUrl());
+		smRepositoryApi = apiFactory.newSubmodelRepositoryApi(mapper, config.getSubmodelRepositoryUrl());
+		this.config = config;
 	}
-
-	DefaultBasyxUpdateFacade(ObjectMapper mapper, BasyxUpdateConfiguration config) {
-		this(new BasyxEnvironmentApis(mapper, config));
+	
+	public void setListener(BasyxUpdateListener listener) {
+		this.listener = listener;
 	}
-
-	DefaultBasyxUpdateFacade withClientCache(BasyxClientCache cache) {
-		this.clientCache = cache;
-		return this;
+	
+	public void setListeners(BasyxUpdateListener... listeners) {
+		this.listener = new MultiUpdateListenerAdapter(listeners);
 	}
 
 	@Override
@@ -72,7 +73,7 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 		long total = 0;
 		String cursor = null;
 		do {
-			GetAssetAdministrationShellsResult result = this.environmentApis.getShellRepoApi().getAllAssetAdministrationShells(null, null, 10, cursor);
+			GetAssetAdministrationShellsResult result = shellRepositoryApi.getAllAssetAdministrationShells(null, null, config.getFetchLimit(), cursor);
 			PagedResultPagingMetadata meta = result.getPagingMetadata();
 			if (meta != null) {
 				cursor = meta.getCursor();
@@ -81,31 +82,32 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 			if (shells != null) {
 				for (AssetAdministrationShell eachShell : shells) {
 					deleteShell(eachShell);
-					clientCache.invalidateShell(eachShell.getId());
+					listener.onDeleteShell(eachShell);
 					total++;
 				}
 			}
 		} while (cursor != null);
 		return total;
 	}
+	
 
 	@Override
-	public void deleteShell(AssetAdministrationShell eachShell) {
-		this.environmentApis.getShellRepoApi().deleteAssetAdministrationShellById(eachShell.getId());
+	public void deleteShell(AssetAdministrationShell shell) {
+		deleteShell(shell.getId());
 	}
-	
+
 	@Override
 	public void deleteShell(String id) {
-		this.environmentApis.getShellRepoApi().deleteAssetAdministrationShellById(id);
+		shellRepositoryApi.deleteAssetAdministrationShellById(id);
 	}
 
 	@Override
 	public long deleteAllSubmodels() {
 		long total = 0;
 		String cursor = null;
-		SubmodelRepositoryApi repoApi = environmentApis.getSubmodelRepoApi();
+		
 		do {
-			GetSubmodelsResult result = repoApi.getAllSubmodels(null, null, 10, cursor, null, null);
+			GetSubmodelsResult result = smRepositoryApi.getAllSubmodels(null, null, 10, cursor, null, null);
 			PagedResultPagingMetadata meta = result.getPagingMetadata();
 			if (meta != null) {
 				cursor = meta.getCursor();
@@ -118,7 +120,7 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 				try {
 					deleteSubmodel(eachSm);
 					total++;
-				} catch (IdentifiableNotFoundException ex) {	
+				} catch (IdentifiableNotFoundException ex) {
 				}
 			}
 		} while (cursor != null);
@@ -134,8 +136,8 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 	public void deleteSubmodel(String id) throws MissingIdentifierException, IdentifiableNotFoundException {
 		checkId(id);
 		try {
-			this.environmentApis.getSubmodelRepoApi().deleteSubmodelById(id);
-			clientCache.invalidateSubmodel(id);
+			this.smRepositoryApi.deleteSubmodelById(id);
+			listener.onDeleteSubmodel(id);
 		} catch (ApiException ex) {
 			if (ex.getCode() == HttpStatus.SC_NOT_FOUND) {
 				throw new IdentifiableNotFoundException(id);
@@ -148,9 +150,9 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 	public Reference postShell(AssetAdministrationShell shell) throws ConflictingIdentifierException, MissingIdentifierException {
 		checkId(shell);
 		try {
-			AssetAdministrationShell posted = this.environmentApis.getShellRepoApi().postAssetAdministrationShell(shell);
-			clientCache.offerLocally(posted);
-			return AasUtils.toReference(posted);
+			shellRepositoryApi.postAssetAdministrationShell(shell);
+			listener.onPostShell(shell);
+			return AasUtils.toReference(shell);
 		} catch (ApiException ex) {
 			if (ex.getCode() == HttpStatus.SC_CONFLICT) {
 				throw new ConflictingIdentifierException(shell.getId());
@@ -162,8 +164,8 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 	@Override
 	public Reference updateShell(AssetAdministrationShell shell) throws MissingIdentifierException {
 		checkId(shell);
-		environmentApis.getShellRepoApi().putAssetAdministrationShellById(shell.getId(), shell);
-		clientCache.invalidateShell(shell.getId());
+		shellRepositoryApi.putAssetAdministrationShellById(shell.getId(), shell);
+		listener.onUpdateShell(shell);
 		return AasUtils.toReference(shell);
 	}
 
@@ -171,9 +173,9 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 	public Reference postSubmodel(Submodel submodel) throws ConflictingIdentifierException, MissingIdentifierException {
 		checkId(submodel);
 		try {
-			Submodel sm = environmentApis.getSubmodelRepoApi().postSubmodel(submodel);
-			Reference ref = AasUtils.toReference(sm);
-			clientCache.offerLocally(submodel);
+			smRepositoryApi.postSubmodel(submodel);
+			listener.onPostSubmodel(submodel);
+			Reference ref = AasUtils.toReference(submodel);
 			return ref;
 		} catch (ApiException ex) {
 			if (ex.getCode() == HttpStatus.SC_CONFLICT) {
@@ -187,8 +189,8 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 	public Reference updateSubmodel(Submodel submodel) throws MissingIdentifierException {
 		checkId(submodel);
 		Reference ref = AasUtils.toReference(submodel);
-		environmentApis.getSubmodelRepoApi().putSubmodelById(submodel.getId(), submodel);
-		clientCache.offerLocally(submodel);
+		smRepositoryApi.putSubmodelById(submodel.getId(), submodel);
+		listener.onUpdateSubmodel(submodel);
 		return ref;
 	}
 

@@ -33,6 +33,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.CaffeineSpec;
 
 public class CaffeineBasyxClientCache implements BasyxClientCache {
 
@@ -43,6 +44,14 @@ public class CaffeineBasyxClientCache implements BasyxClientCache {
 		this(Caffeine.newBuilder().maximumSize(200).initialCapacity(20).weakValues().expireAfterWrite(Duration.ofMinutes(5)));
 	}
 
+	public CaffeineBasyxClientCache(String spec) {
+		this(CaffeineSpec.parse(spec));
+	}
+	
+	public CaffeineBasyxClientCache(CaffeineSpec spec) {
+		this(Caffeine.from(spec));
+	}
+	
 	private CaffeineBasyxClientCache(Caffeine<Object, Object> cacheBuilder) {
 		this(cacheBuilder, cacheBuilder);
 	}

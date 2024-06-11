@@ -1,0 +1,35 @@
+additionalProperties:
+  npmName: "@basyx/v3-client-fetch"
+  npmVersion: 0.2.0
+  snapshot: true
+  prefixParameterInterfaces: true
+  supportsES6: true
+  stringEnums: true
+  classFilenames: 
+  - AssetAdministrationShellBasicDiscoveryApi
+  - AssetAdministrationShellRegistryApi
+  - AssetAdministrationShellRepositoryApi
+  - AssetAdministrationShellServiceApi
+  - ConceptDescriptionRepositoryApi
+  - SubmodelRegistryApi
+  - SubmodelRepositoryApi
+  - SubmodelServiceApi
+  modelFilenames:
+  - Page
+  - ShellDescriptorQuery
+  - ShellDescriptorSearchRequest
+  - ShellDescriptorSearchResponse
+  - SortDirection
+  - Sorting
+  - SortingPath
+
+# {{#apis}}
+# {{#operations}}
+# export * from './{{ classFilename }}{{importFileExtension}}';
+# {{#useSagaAndRecords}}
+# export * from './{{{ classFilename }}}Sagas{{importFileExtension}}';
+# {{/useSagaAndRecords}}
+# {{/operations}}
+# {{/apis}}
+# {{/apiInfo}}
+ 

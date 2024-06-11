@@ -19,11 +19,12 @@
 
 
 	<modules>
-		<module>csharp-unity</module>
+		<!--<module>csharp-unity</module>-->
 		<module>java</module>
  		<module>java/parent</module>
  		<module>java/build/generated/project</module>
     	<module>java/facade</module>
+	<!--	<module>typescript</module>-->
 	</modules>
 
 	<properties>
@@ -31,7 +32,7 @@
 		<maven-plugin-plugin.version>3.9.0</maven-plugin-plugin.version>
 		<jsonpatch-maven-plugin.version>0.5.1</jsonpatch-maven-plugin.version>
 		<find-and-replace-maven-plugin.version>1.1.0</find-and-replace-maven-plugin.version>
-		<openapi-generator-maven-plugin.version>7.3.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.4.0</openapi-generator-maven-plugin.version>
 		<properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
 		<openapi.parentFolder.name>open-api</openapi.parentFolder.name>
 		<openapi.parentFolder.path>${project.basedir}/../${openapi.parentFolder.name}</openapi.parentFolder.path>
@@ -73,14 +74,14 @@
 					</execution>
 				</executions>
 				<configuration>
-					<filesets>
+					<filesets><!--
 						<fileset>
 							<directory>${openapi.output.folder}</directory>
 							<excludes>
 								<exclude>**/.gitkeep</exclude>
 							</excludes>
 							<followSymlinks>false</followSymlinks>
-						</fileset>
+						</fileset>-->
 						<fileset>
 							<directory>${gensrc.output.folder}</directory>
 							<excludes>
@@ -172,7 +173,10 @@
 									<goal>iterator</goal>
 								</goals>
 								<configuration>
-									<folder>${openapi.parentFolder.path}</folder>
+								<folder>${openapi.parentFolder.path}</folder>
+								<!--	<content>aas-discoveryservice,aas-repository</content>-->
+									<!--<content>model-part1,model-part2,aas-service</content>-->
+
 
 									<pluginExecutors>
 										<pluginExecutor>

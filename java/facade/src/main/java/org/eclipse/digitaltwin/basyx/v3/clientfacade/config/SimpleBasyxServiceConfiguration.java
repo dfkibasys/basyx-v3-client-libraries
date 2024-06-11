@@ -59,5 +59,4 @@ public class SimpleBasyxServiceConfiguration implements BasyxRegistryServiceConf
 	public Integer getFetchLimit() {
 		return fetchLimit;
 	}
-
 }

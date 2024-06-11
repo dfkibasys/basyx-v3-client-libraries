@@ -59,7 +59,7 @@ public interface BasyxServiceFacade {
 	
 	Optional<Submodel> getSubmodelByReference(Reference ref);
 	
-	BasyxIterable<SubmodelElementInfo> getAllSubmodelInfo(Submodel sm);
+	BasyxIterable<SubmodelElementInfo> getAllSubmodelElementInfo(Submodel sm);
 
 	BasyxIterable<AssetAdministrationShell> findShellsByIdShort(String idShort);
 
