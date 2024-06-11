@@ -41,4 +41,6 @@ public interface BasyxConnectionManager {
 	BasyxUpdateFacade newUpdateFacade();
 	
 	String toJsonPretty(Object object);
+
+	
 }

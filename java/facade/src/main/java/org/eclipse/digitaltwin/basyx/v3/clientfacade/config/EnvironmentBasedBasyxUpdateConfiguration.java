@@ -24,19 +24,26 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
 
-public class EnvironmentBasedBasyxUpdateConfiguration implements BasyxUpdateConfiguration {
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.registration.config.AutoRegistrationConfig;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.registration.config.EnvironmentBasedAutoRegistrationConfig;
 
-	private static final String ENV_AASREPOSITORY_URL = "BASYX_AASREPOSITORY";
-	private static final String ENV_SUBMODELREPOSITORY_URL = "BASYX_SUBMODELREPOSITORY";
+public class EnvironmentBasedBasyxUpdateConfiguration extends EnvironmentBasedBasyxServiceConfiguration implements BasyxUpdateConfiguration {
+
+	private static final String ENV_AASREPOSITORY_URL = "BASYX_CLIENT_AASREPOSITORY";
+	private static final String ENV_SUBMODELREPOSITORY_URL = "BASYX_CLIENT_SUBMODELREPOSITORY";
 	
 	@Override
 	public String getAasRepositoryUrl() {
-		return System.getenv(ENV_AASREPOSITORY_URL);
+		return EnvironmentVars.getOrThrow(ENV_AASREPOSITORY_URL);
+	}
+
+	@Override
+	public String getSubmodelRepositoryUrl() {
+		return EnvironmentVars.getOrThrow(ENV_SUBMODELREPOSITORY_URL);
 	}
 	
 	@Override
-	public String getSubmodelRepositoryUrl() {
-		return System.getenv(ENV_SUBMODELREPOSITORY_URL);
+	public AutoRegistrationConfig getAutoRegistrationConfig() {
+		return new EnvironmentBasedAutoRegistrationConfig();
 	}
-
 }

@@ -34,5 +34,4 @@ public interface BasyxRegistryServiceConfiguration {
 
 	Integer getFetchLimit();
 	
-	
 }

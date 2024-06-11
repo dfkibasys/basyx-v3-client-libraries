@@ -22,39 +22,14 @@
  * 
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
-package org.eclipse.digitaltwin.basyx.v3.clientfacade.api;
+package org.eclipse.digitaltwin.basyx.v3.clientfacade.security;
 
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
-import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRepositoryApi;
-import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRepositoryApi;
+import java.time.Instant;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+public interface JwtTokenInfo {
 
-public class BasyxEnvironmentApis {
-
-	private final AssetAdministrationShellRepositoryApi shellRepoApi;
-	private final SubmodelRepositoryApi smRepoApi;
-
-	private BasyxEnvironmentApis(AssetAdministrationShellRepositoryApi shellRepoApi, SubmodelRepositoryApi smRepoApi) {
-		this.shellRepoApi = shellRepoApi;
-		this.smRepoApi = smRepoApi;
-	}
+	String getToken();
 	
-	public BasyxEnvironmentApis(ObjectMapper mapper, BasyxUpdateConfiguration conf) {
-		this(mapper, conf.getAasRepositoryUrl(), conf.getSubmodelRepositoryUrl());
-	}
-	
-	private BasyxEnvironmentApis(ObjectMapper mapper, String aasRepositoryUrl, String submodelRepositoryUrl) {
-		this(new AssetAdministrationShellRepositoryApi(mapper, aasRepositoryUrl), new SubmodelRepositoryApi(mapper, submodelRepositoryUrl));
-	}
-	
-	public AssetAdministrationShellRepositoryApi getShellRepoApi() {
-		return shellRepoApi;
-	}
-	
-	public SubmodelRepositoryApi getSubmodelRepoApi() {
-		return smRepoApi;
-	}
-
+	Instant expiresAt();
 	
 }

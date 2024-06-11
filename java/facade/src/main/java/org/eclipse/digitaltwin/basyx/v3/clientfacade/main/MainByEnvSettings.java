@@ -1,4 +1,28 @@
-package org.eclipse.digitaltwin.basyx.v3.clientfacade;
+/*******************************************************************************
+ * Copyright (C) 2024 DFKI GmbH (https://www.dfki.de/en/web)
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * SPDX-License-Identifier: MIT
+ ******************************************************************************/
+package org.eclipse.digitaltwin.basyx.v3.clientfacade.main;
 
 import java.util.List;
 
@@ -13,7 +37,10 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShe
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEntity;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.CaffeineBasyxClientCache;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxConnectionManager;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxServiceFacade;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxUpdateFacade;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.DefaultBasyxConnectionManager;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolvers;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
@@ -25,15 +52,14 @@ public class MainByEnvSettings {
 	public static void main(String[] args) throws JsonProcessingException, ConflictingIdentifierException {
 				
 		BasyxConnectionManager manager = new DefaultBasyxConnectionManager();
-		manager.withClientCache(new CaffeineBasyxClientCache());
-		
 		BasyxUpdateFacade updateFacade = manager.newUpdateFacade();
+		
 		updateFacade.deleteAllShells();
 		updateFacade.deleteAllSubmodels();
+		
 		postShells(updateFacade);
 		
-		BasyxServiceFacade facade = manager.newServiceFacade()
-				.withEndpointResolver(EndpointResolvers.firstWithAddress("127.0.0.1:8081"));
+		BasyxServiceFacade facade = manager.newServiceFacade();
 
 		AssetAdministrationShell shell = facade.getShellById("http://aas.test.org/robot/5").get();
 		System.out.println(shell.getIdShort());
@@ -44,7 +70,8 @@ public class MainByEnvSettings {
 
 		}
 		facade.getAllSubmodels(shell).stream().map(Submodel::getKind).forEach(System.err::println);
-
+		System.out.println(facade.getAllShells().stream().count());
+		facade.getAllShells().stream().map(AssetAdministrationShell::getIdShort).forEach(System.out::println);
 		facade.findShellsByIdShortRegex("^robot-.*[3|4|5]$").stream().map(AssetAdministrationShell::getId).forEach(System.out::println);
 		
 		for (Submodel eachSm : facade.getAllSubmodels()) {

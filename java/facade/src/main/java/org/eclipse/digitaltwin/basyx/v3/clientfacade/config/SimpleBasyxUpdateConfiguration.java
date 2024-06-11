@@ -24,18 +24,26 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
 
-public class SimpleBasyxUpdateConfiguration implements BasyxUpdateConfiguration {
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.registration.config.AutoRegistrationConfig;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.registration.config.SimpleAutoRegistrationConfig;
+
+public class SimpleBasyxUpdateConfiguration extends SimpleBasyxServiceConfiguration implements BasyxUpdateConfiguration {
 
 	private String aasRepoUrl;
 	private String submodelRepoUrl;
+	
+	public static final SimpleBasyxUpdateConfiguration forEnvironmentUrl(String url) {
+		return new SimpleBasyxUpdateConfiguration().withAasRepositoryUrl(url).withSubmodelRepositoryUrl(url);
+	}
 	
 	public SimpleBasyxUpdateConfiguration withAasRepositoryUrl(String url) {
 		this.aasRepoUrl = url;
 		return this;
 	}
-	
-	public static final SimpleBasyxUpdateConfiguration forEnvironmentUrl(String url) {
-		return new SimpleBasyxUpdateConfiguration().withAasRepositoryUrl(url).withSubmodelRepositoryUrl(url);
+
+	@Override
+	public String getAasRepositoryUrl() {
+		return aasRepoUrl;
 	}
 	
 	public SimpleBasyxUpdateConfiguration withSubmodelRepositoryUrl(String url) {
@@ -44,12 +52,16 @@ public class SimpleBasyxUpdateConfiguration implements BasyxUpdateConfiguration 
 	}
 	
 	@Override
-	public String getAasRepositoryUrl() {
-		return aasRepoUrl;
+	public String getSubmodelRepositoryUrl() {
+		return submodelRepoUrl;
+	}
+	
+	public void setSubmodelRepoUrl(String submodelRepoUrl) {
+		this.submodelRepoUrl = submodelRepoUrl;
 	}
 	
 	@Override
-	public String getSubmodelRepositoryUrl() {
-		return submodelRepoUrl;
+	public AutoRegistrationConfig getAutoRegistrationConfig() {
+		return new SimpleAutoRegistrationConfig();
 	}
 }

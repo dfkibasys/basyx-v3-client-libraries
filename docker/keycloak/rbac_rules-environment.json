@@ -4,7 +4,7 @@
     "action": "READ",
     "targetInformation": {
       "@type": "aas",
-      "aasId": "*"
+      "aasIds": "*"
     }
   },
   {
@@ -12,7 +12,25 @@
     "action": ["CREATE", "READ", "UPDATE", "DELETE"],
     "targetInformation": {
       "@type": "aas",
-      "aasId": "*"
+      "aasIds": "*"
+    }
+  },
+  {
+    "role": "read-only",
+    "action": "READ",
+    "targetInformation": {
+      "@type": "submodel",
+      "submodelIds": "*",
+      "submodelElementIdShortPaths":"*"
+    }
+  },
+  {
+    "role": "full",
+    "action": ["CREATE", "READ", "UPDATE", "DELETE"],
+    "targetInformation": {
+      "@type": "submodel",
+      "submodelIds": "*",
+      "submodelElementIdShortPaths":"*"
     }
   }
 ]

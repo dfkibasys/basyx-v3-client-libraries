@@ -84,6 +84,8 @@
   path: /components/schemas/DataSpecificationContent/discriminator
   value:
     propertyName: "modelType"
+    mapping: 
+      DataSpecificationIec61360: "#/components/schemas/DataSpecificationIec61360"
 - op: add
   path: /components/schemas/DataSpecificationIec61360/type
   value: object
@@ -165,21 +167,21 @@
   path: /components/schemas/SubmodelElement_choice/discriminator
   value:
     propertyName: modelType
-#     # mapping:
-#     #   RelationshipElement: '#/components/schemas/RelationshipElement'
-#     #   AnnotatedRelationshipElement: '#/components/schemas/AnnotatedRelationshipElement'
-#     #   BasicEventElement: '#/components/schemas/BasicEventElement'
-#     #   Blob: '#/components/schemas/Blob'
-#     #   Capability: '#/components/schemas/Capability'
-#     #   Entity: '#/components/schemas/Entity'
-#     #   File: '#/components/schemas/File'
-#     #   MultiLanguageProperty: '#/components/schemas/MultiLanguageProperty'
-#     #   Operation: '#/components/schemas/Operation'
-#     #   Property: '#/components/schemas/Property'
-#     #   Range: '#/components/schemas/Range'
-#     #   ReferenceElement: '#/components/schemas/ReferenceElement'
-#     #   SubmodelElementCollection: '#/components/schemas/SubmodelElementCollection'
-#     #   SubmodelElementList: '#/components/schemas/SubmodelElementList'
+    mapping:
+      RelationshipElement: '#/components/schemas/RelationshipElement'
+      AnnotatedRelationshipElement: '#/components/schemas/AnnotatedRelationshipElement'
+      BasicEventElement: '#/components/schemas/BasicEventElement'
+      Blob: '#/components/schemas/Blob'
+      Capability: '#/components/schemas/Capability'
+      Entity: '#/components/schemas/Entity'
+      File: '#/components/schemas/File'
+      MultiLanguageProperty: '#/components/schemas/MultiLanguageProperty'
+      Operation: '#/components/schemas/Operation'
+      Property: '#/components/schemas/Property'
+      Range: '#/components/schemas/Range'
+      ReferenceElement: '#/components/schemas/ReferenceElement'
+      SubmodelElementCollection: '#/components/schemas/SubmodelElementCollection'
+      SubmodelElementList: '#/components/schemas/SubmodelElementList'
 
 # # Remove patterns pattern because of entity in yaml patch plugin
 

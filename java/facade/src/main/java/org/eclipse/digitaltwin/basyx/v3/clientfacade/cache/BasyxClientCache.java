@@ -47,4 +47,5 @@ public interface BasyxClientCache {
 
 	void offerLocally(AssetAdministrationShell shell);	
 	
+	
 }
