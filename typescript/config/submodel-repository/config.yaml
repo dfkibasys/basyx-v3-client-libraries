@@ -1,0 +1,8 @@
+additionalProperties:
+  npmName: "@basyx/v3-client-fetch"
+  npmVersion: 0.2.0
+  snapshot: true
+  prefixParameterInterfaces: true
+  supportsES6: true
+  stringEnums: true
+  useSingleRequestParameter: false

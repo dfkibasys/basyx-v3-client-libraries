@@ -1,0 +1,6 @@
+/* tslint:disable */
+/* eslint-disable */
+
+{{#classFilenames}}
+export * from './{{ . }}';
+{{/classFilenames}}
