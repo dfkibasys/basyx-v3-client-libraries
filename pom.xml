@@ -19,7 +19,7 @@
 
 
 	<modules>
-		<!--<module>csharp-unity</module>-->
+		<module>csharp-unity</module>
 		<module>java</module>
  		<module>java/parent</module>
  		<module>java/build/generated/project</module>

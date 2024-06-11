@@ -8,3 +8,4 @@ additionalProperties:
   supportsAsync: true
   netCoreProjectFile: true
   targetFramework: net8.0
+  useOneOfDiscriminatorLookup: true
