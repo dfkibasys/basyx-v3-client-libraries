@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\repo\\i4.0\\basys\\basyx-v3-client-libraries\\csharp\\test\\test.csproj": {}
+    "C:\\repo\\i4.0\\basys\\v3-client-libraries\\csharp-unity\\test\\test.csproj": {}
   },
   "projects": {
-    "C:\\repo\\i4.0\\basys\\basyx-v3-client-libraries\\csharp\\test\\test.csproj": {
+    "C:\\repo\\i4.0\\basys\\v3-client-libraries\\csharp-unity\\test\\test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\repo\\i4.0\\basys\\basyx-v3-client-libraries\\csharp\\test\\test.csproj",
+        "projectUniqueName": "C:\\repo\\i4.0\\basys\\v3-client-libraries\\csharp-unity\\test\\test.csproj",
         "projectName": "test",
-        "projectPath": "C:\\repo\\i4.0\\basys\\basyx-v3-client-libraries\\csharp\\test\\test.csproj",
+        "projectPath": "C:\\repo\\i4.0\\basys\\v3-client-libraries\\csharp-unity\\test\\test.csproj",
         "packagesPath": "C:\\Users\\geso02\\.nuget\\packages\\",
-        "outputPath": "C:\\repo\\i4.0\\basys\\basyx-v3-client-libraries\\csharp\\test\\obj\\",
+        "outputPath": "C:\\repo\\i4.0\\basys\\v3-client-libraries\\csharp-unity\\test\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\geso02\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -20,6 +20,7 @@
           "net8.0"
         ],
         "sources": {
+          "C:\\repo\\i4.0\\basys\\basyx-v3-client-libraries\\csharp-unity\\release": {},
           "C:\\repo\\i4.0\\basys\\basyx-v3-client-libraries\\csharp\\release": {},
           "C:\\repo\\i4.0\\twinficient\\heating-analytics\\csharp\\localrepo": {},
           "https://api.nuget.org/v3/index.json": {}

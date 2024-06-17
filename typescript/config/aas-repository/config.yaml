@@ -1,7 +1,60 @@
 additionalProperties:
-  npmName: "@basyx/v3-client-fetch"
+  npmName: "@basyx/v3-client-ts"
   npmVersion: 0.2.0
   snapshot: true
   prefixParameterInterfaces: true
   supportsES6: true
   stringEnums: true
+  importMappings:
+  - name: SubmodelElement
+    prefix: part1
+  - name: Submodel
+    prefix: part1
+  - name: AssetInformation
+    prefix: part1
+  - name: AssetAdministrationShell
+    prefix: part1
+  - name: Reference
+    prefix: part1
+  - name: SubmodelElementValue
+    prefix: part2
+  - name: SubmodelElementMetadata
+    prefix: part2
+  - name: SubmodelValue
+    prefix: part2
+  - name: SubmodelMetadata
+    prefix: part2
+  - name: OperationResultValueOnly
+    prefix: part2
+  - name: OperationRequestValueOnly
+    prefix: part2
+  - name: OperationRequest
+    prefix: part2
+  - name: OperationResult
+    prefix: part2
+  - name: BaseOperationResult
+    prefix: part2
+  - name: ServiceDescription
+    prefix: part2
+  - name: GetReferencesResult
+    prefix: part2
+  - name: GetSubmodelElementsValueResult
+    prefix: part2
+  - name: GetSubmodelElementsResult
+    prefix: part2
+  - name: GetPathItemsResult
+    prefix: part2
+  - name: GetSubmodelElementsMetadataResult
+    prefix: part2
+  - name: GetAssetAdministrationShellsResult
+    prefix: part2
+files:
+  types/ObjectParamAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/aasrepo/ObjectParamAPI.ts
+  types/ObservableAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/aasrepo/ObservableAPI.ts
+  types/PromiseAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/aasrepo/PromiseAPI.ts

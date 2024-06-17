@@ -1,7 +1,24 @@
 additionalProperties:
-  npmName: "@basyx/v3-client-fetch"
+  npmName: "@basyx/v3-client-ts"
   npmVersion: 0.2.0
   snapshot: true
   prefixParameterInterfaces: true
   supportsES6: true
   stringEnums: true
+  importMappings:
+  - name: SubmodelDescriptor
+    prefix: part2
+  - name: ServiceDescription
+    prefix: part2
+  - name: GetSubmodelDescriptorsResult
+    prefix: part2
+files:
+  types/ObjectParamAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/smregistry/ObjectParamAPI.ts
+  types/ObservableAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/smregistry/ObservableAPI.ts
+  types/PromiseAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/smregistry/PromiseAPI.ts

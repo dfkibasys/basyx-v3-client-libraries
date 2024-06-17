@@ -1,7 +1,31 @@
 additionalProperties: 
-  npmName: "@basyx/v3-client-fetch"
+  npmName: "@basyx/v3-client-ts"
   npmVersion: 0.2.0
   snapshot: true
   prefixParameterInterfaces: true
   supportsES6: true
   stringEnums: true
+  modelPrefix: discovery
+  usedModels:
+  - discovery
+  importMappings:
+  - name: SpecificAssetId
+    prefix: part1
+  - name: ServiceDescription
+    prefix: part2
+files:
+  model/index.mustache:
+    templateType: SupportingFiles
+    destinationFilename: models/discovery/index.ts
+  model/ObjectSerializerDefs.mustache:
+    templateType: SupportingFiles
+    destinationFilename: models/discovery/ObjectSerializerDefs.ts
+  types/ObjectParamAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/discovery/ObjectParamAPI.ts
+  types/ObservableAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/discovery/ObservableAPI.ts
+  types/PromiseAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/discovery/PromiseAPI.ts

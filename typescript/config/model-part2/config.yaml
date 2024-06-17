@@ -1,7 +1,15 @@
 additionalProperties:
-  npmName: "@basyx/v3-client-fetch"
+  npmName: "@basyx/v3-client-ts"
   npmVersion: 0.2.0
   snapshot: true
   prefixParameterInterfaces: true
   supportsES6: true
   stringEnums: true
+  modelPrefix: "part2"
+files:
+  model/index.mustache:
+    templateType: SupportingFiles
+    destinationFilename: models/part2/index.ts
+  model/ObjectSerializerDefs.mustache:
+    templateType: SupportingFiles
+    destinationFilename: models/part2/ObjectSerializerDefs.ts
