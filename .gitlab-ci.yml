@@ -63,6 +63,7 @@ mvn-compile:
 
 npm-build:
   stage: build-npm
+  image: node:22-alpine
   tags: 
     - basys
     - maven
