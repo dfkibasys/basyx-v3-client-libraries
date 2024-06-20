@@ -32,18 +32,33 @@ mvn-validate:
   script:
     - mvn -V $MAVEN_CLI_OPTS validate  
 
-mvn-compile:
+mvn-generate-sources:
   stage: build-mvn
   tags:
     - basys
     - maven
   script:
     - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
+  actifacts:
+    paths:
+    - $BUILD_FOLDER
+    expire_in: 3 hour
+
+mvn-compile:
+  stage: build-mvn
+  tags:
+  - basys
+  - maven
+  script:
+  - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true -Dmaven.generate-sources.skip=true
   artifacts:
     paths:
     - $MAVEN_TARGET_CLASSES
     - $BUILD_FOLDER
     expire_in: 3 hour    
+  dependencies:
+  - mvn-generate-sources
+
 
 npm-build:
   stage: build-npm
