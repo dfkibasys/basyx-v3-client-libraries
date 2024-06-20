@@ -1,15 +1,18 @@
 {
-  "name": "test",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "name": "aas-v3-client-test",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "tsc main.ts && node main.js && exit 1"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "postinstall": "cd node_modules/@basys/v3-client-ts && npm install"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vite": "^5.3.1"
+  },
   "dependencies": {
-    "@basyx/v3-client-ts": "file:../build/generated/project"
+    "@basys/v3-client-ts": "file:../build/generated/project"
   }
 }
