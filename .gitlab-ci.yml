@@ -7,7 +7,7 @@ variables:
   # MAVEN_TARGET_JARS: '${CI_PROJECT_DIR}/**/target/*.jar'
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode"
-  TYPESCRIPT_FOLDER: ${CI_PROJECT_DIR}/typescript/build/generated/project
+  TYPESCRIPT_FOLDER: ${CI_PROJECT_DIR}/typescript/build/generated/project/**
   # NPM_REPO: ${MAVEN_REPO_URL}/npm-hosted/  # same as for maven but with npm-hosted suffix
   NPM_REPO: ${MAVEN_REPO_URL}/npm-hosted/
   NPM_REPO_URL: https://${NPM_REPO}
