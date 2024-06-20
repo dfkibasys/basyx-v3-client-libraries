@@ -38,7 +38,7 @@ mvn-generate-sources:
     - basys
     - maven
   script:
-    - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
+    - mvn $MAVEN_CLI_OPTS generate-sources -Dmaven.validate.skip=true
   artifacts:
     paths:
     - $BUILD_FOLDER
