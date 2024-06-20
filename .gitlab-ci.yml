@@ -39,7 +39,7 @@ mvn-generate-sources:
     - maven
   script:
     - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
-  actifacts:
+  artifacts:
     paths:
     - $BUILD_FOLDER
     expire_in: 3 hour
