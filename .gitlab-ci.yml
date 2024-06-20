@@ -1,9 +1,105 @@
-include:
-    - project: i40/administration
-      file: gitlab-ci-maven.yml
-      ref: main
+image: maven:3.9.3-eclipse-temurin-11-alpine
 
 variables:
-  MVN_FORBID_SNAPSHOT_DEPENDENCIES_DISABLED : "true"
-  MAVEN_DEPLOY_FROM_UNPROTECTED_DISABLED: "true"
-  MAVEN_DEPLOY_ENABLED: "true"
+
+  MAVEN_TARGET_CLASSES: '${CI_PROJECT_DIR}/**/target/classes'
+  BUILD_FOLDER: '${CI_PROJECT_DIR}/**/build/generated'
+  # MAVEN_TARGET_JARS: '${CI_PROJECT_DIR}/**/target/*.jar'
+  MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
+  MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode -Pgitlab"
+  TYPESCRIPT_FOLDER: ${CI_PROJECT_DIR}/typescript/build/generated/project
+  # NPM_REPO: ${MAVEN_REPO_URL}/npm-hosted/  # same as for maven but with npm-hosted suffix
+  NPM_REPO: ${MAVEN_REPO_URL}/npm-hosted/
+  NPM_REPO_URL: https://${NPM_REPO}
+
+cache:
+  paths:
+    - .m2/repository/
+    
+stages:
+  - validate
+  - build-mvn
+  - build-npm
+  - test
+  - install
+  - deploy
+    
+mvn-validate:
+  stage: validate
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn -V $MAVEN_CLI_OPTS validate  
+
+mvn-compile:
+  stage: build-mvn
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS compile -Dmaven.validate.skip=true
+  artifacts:
+    paths:
+    - $MAVEN_TARGET_CLASSES
+    - $BUILD_FOLDER
+    expire_in: 3 hour    
+
+npm-build:
+  stage: build-npm
+  tags: 
+    - basys
+    - maven
+  script:
+    - npm install
+    - npm prune
+    - npm run build
+  dependencies:
+    - mvn-compile
+  artifacts:
+    paths:
+      - $TYPESCRIPT_FOLDER
+    expire_in: 3 hour
+
+mvn-test:
+  stage: test 
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS test -Dmaven.validate.skip=true -Dmaven.compile.skip=true
+  dependencies:
+    - mvn-compile
+
+mvn-deploy:
+  stage: deploy
+  tags:
+    - basys
+    - maven
+  script:
+    - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true
+  dependencies:
+    - mvn-build-plugin
+    - mvn-docker-install
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop'
+
+npm-deploy:
+  image: node:22-alpine
+  stage: deploy
+  tags:
+  - basys
+  dependencies:
+  - npm-build
+  script:
+  - cd $TYPESCRIPT_FOLDER
+  - npm config set strict-ssl false
+  - npm config set @basys:registry $NPM_REPO_URL
+  - npm config set email basys-admin@dfki.de
+  - TOKEN=$(echo -n ${MAVEN_REPO_USER}:${MAVEN_REPO_PASS} | base64)
+  - npm config set ${NPM_REPO}:_auth ${TOKEN} 
+  - npm publish  # deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_COMMIT_BRANCH == 'develop' # for now to test

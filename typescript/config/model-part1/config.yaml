@@ -1,5 +1,5 @@
 additionalProperties:
-  npmName: "@basyx/v3-client-ts"
+  npmName: "@basys/v3-client-ts"
   npmVersion: 0.2.0
   snapshot: true
   prefixParameterInterfaces: true
