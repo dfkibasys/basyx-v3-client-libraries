@@ -18,6 +18,7 @@ cache:
     
 stages:
   - validate
+  - generate-sources
   - build-mvn
   - build-npm
   - test
@@ -33,7 +34,7 @@ mvn-validate:
     - mvn -V $MAVEN_CLI_OPTS validate  
 
 mvn-generate-sources:
-  stage: build-mvn
+  stage: generate-sources
   tags:
     - basys
     - maven
