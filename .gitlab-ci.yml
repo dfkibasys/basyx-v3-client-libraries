@@ -79,8 +79,7 @@ mvn-deploy:
   script:
     - mvn $MAVEN_CLI_OPTS deploy -Dmaven.validate.skip=true  -Dmaven.test.skip=true -Dmaven.compile.skip=true -Dmaven.install.skip=true
   dependencies:
-    - mvn-build-plugin
-    - mvn-docker-install
+    - mvn-test
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop'
