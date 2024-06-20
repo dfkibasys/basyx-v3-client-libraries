@@ -27,8 +27,7 @@ let primitives = [
                     "any"
                  ];
 
-let enumsMap = { {{#usedModels}}...{{.}}EnumsMap{{^-last}}, {{/-last}}{{/usedModels}} }
-
+let enumsMap: Set<string> = new Set([ {{#usedModels}}...{{.}}EnumsMap{{^-last}}, {{/-last}}{{/usedModels}}]);
 
 let typeMap = { {{#usedModels}}...{{.}}TypeMap{{^-last}}, {{/-last}}{{/usedModels}} }
 
