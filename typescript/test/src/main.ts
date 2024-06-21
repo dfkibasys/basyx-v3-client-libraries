@@ -2,7 +2,7 @@ import {createConfiguration, AssetAdministrationShellRegistryApi, ServerConfigur
 
 function main(): void {
   let conf = {
-    baseServer: new ServerConfiguration<{  }>("http://aas-registry-v3.local.lan", {  })
+    baseServer: new ServerConfiguration<{  }>("http://localhost:8083", {  })
   }
 
   const configuration = createConfiguration(conf);
