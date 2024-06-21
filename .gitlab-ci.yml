@@ -8,6 +8,7 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode"
   TYPESCRIPT_FOLDER: ${CI_PROJECT_DIR}/typescript/build/generated/project/
+  NPM_REPO: ${MAVEN_REPO_URL}/npm-hosted/
 
 cache:
   paths:
@@ -60,7 +61,7 @@ mvn-compile:
 
 npm-build:
   stage: build-npm
-  image: node:22-alpine
+  image: node:14-alpine
   tags: 
     - basys
     - maven
@@ -100,7 +101,7 @@ mvn-deploy:
     - if: $CI_COMMIT_BRANCH == 'develop'
 
 npm-deploy:
-  image: node:22-alpine
+  image: node:14-alpine
   stage: deploy
   tags:
   - basys
@@ -109,11 +110,11 @@ npm-deploy:
   script:
   - cd $TYPESCRIPT_FOLDER
   - npm config set strict-ssl false
-  - npm config set @basys:registry $NPM_REPO_URL
+  - npm config set @basys:registry $[NPM_REPO}
   - npm config set email basys-admin@dfki.de
   - TOKEN=$(echo -n ${MAVEN_REPO_USER}:${MAVEN_REPO_PASS} | base64)
-  - npm config set ${NPM_REPO}:_auth ${TOKEN} 
-  - npm config list
+  - npm config set ${NPM_REPO}:_auth ${TOKEN}
+  - npm config set always-auth true
   - npm publish  # deploy 
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
