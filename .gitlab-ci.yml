@@ -68,6 +68,7 @@ npm-build:
     - basys
     - maven
   script:
+    - cd $TYPESCRIPT_FOLDER
     - npm install
     - npm prune
     - npm run build
