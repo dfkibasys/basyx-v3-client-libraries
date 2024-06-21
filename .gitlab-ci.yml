@@ -116,6 +116,10 @@ npm-deploy:
   - TOKEN=$(echo -n ${MAVEN_REPO_USER}:${MAVEN_REPO_PASS} | base64)
   - npm config set ${NPM_REPO}:_auth ${TOKEN} 
   - npm publish  # deploy
+  artifacts:
+    paths:
+    - ~/.npmrc
+    expire_in: 3 hour  
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_COMMIT_BRANCH == 'develop' # for now to test
