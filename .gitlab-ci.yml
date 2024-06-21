@@ -8,7 +8,6 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=${CI_PROJECT_DIR}/.m2/repository"
   MAVEN_CLI_OPTS: "-s ${CI_PROJECT_DIR}/.m2/settings.xml --batch-mode"
   TYPESCRIPT_FOLDER: ${CI_PROJECT_DIR}/typescript/build/generated/project/
-  # NPM_REPO: ${MAVEN_REPO_URL}/npm-hosted/  # same as for maven but with npm-hosted suffix
 
 cache:
   paths:
@@ -109,6 +108,8 @@ npm-deploy:
   - npm-build
   script:
   - cd $TYPESCRIPT_FOLDER
+  - echo $NPM_REPO_URL
+  - echo $NPM_REPO
   - npm config set strict-ssl false
   - npm config set @basys:registry $NPM_REPO_URL
   - npm config set email basys-admin@dfki.de
