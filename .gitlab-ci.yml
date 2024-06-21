@@ -115,7 +115,7 @@ npm-deploy:
   - npm config set email basys-admin@dfki.de
   - TOKEN=$(echo -n ${MAVEN_REPO_USER}:${MAVEN_REPO_PASS} | base64)
   - npm config set ${NPM_REPO}:_auth ${TOKEN} 
-  - npm publish  # deploy
+  #- npm publish  # deploy
   artifacts:
     paths:
     - ~/.npmrc
