@@ -1,0 +1,40 @@
+# coding: utf-8
+
+# flake8: noqa
+
+{{>partial_header}}
+
+__version__ = "{{packageVersion}}"
+
+# import apis into sdk package
+from basyxclients.api.asset_administration_shell_basic_discovery_api import AssetAdministrationShellBasicDiscoveryApi
+from basyxclients.api.asset_administration_shell_registry_api import AssetAdministrationShellRegistryApi
+from basyxclients.api.asset_administration_shell_repository_api import AssetAdministrationShellRepositoryApi
+from basyxclients.api.asset_administration_shell_service_api import AssetAdministrationShellServiceApi
+from basyxclients.api.concept_description_repository_api import ConceptDescriptionRepositoryApi
+from basyxclients.api.submodel_registry_api import SubmodelRegistryApi
+from basyxclients.api.submodel_repository_api import SubmodelRepositoryApi
+from basyxclients.api.submodel_service_api import SubmodelServiceApi
+
+# import ApiClient
+from {{packageName}}.api_response import ApiResponse
+from {{packageName}}.api_client import ApiClient
+from {{packageName}}.configuration import Configuration
+from {{packageName}}.exceptions import OpenApiException
+from {{packageName}}.exceptions import ApiTypeError
+from {{packageName}}.exceptions import ApiValueError
+from {{packageName}}.exceptions import ApiKeyError
+from {{packageName}}.exceptions import ApiAttributeError
+from {{packageName}}.exceptions import ApiException
+{{#hasHttpSignatureMethods}}
+from {{packageName}}.signing import HttpSigningConfiguration
+{{/hasHttpSignatureMethods}}
+
+# import models into sdk package
+from basyxclients.models import discovery
+from basyxclients.models import search
+from basyxclients.models import part1
+from basyxclients.models import part2
+{{#recursionLimit}}
+__import__('sys').setrecursionlimit({{{.}}})
+{{/recursionLimit}}

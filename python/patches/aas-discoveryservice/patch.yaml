@@ -1,0 +1,4 @@
+- op: add
+  path: /components/schemas/PagedResultOrStringItems/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata

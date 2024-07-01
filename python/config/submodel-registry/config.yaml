@@ -1,0 +1,5 @@
+additionalProperties: 
+  imports:
+  - import: from basyxclients.models.part2.get_submodel_descriptors_result import GetSubmodelDescriptorsResult
+  - import: from basyxclients.models.part2.service_description import ServiceDescription
+  - import: from basyxclients.models.part2.submodel_descriptor import SubmodelDescriptor

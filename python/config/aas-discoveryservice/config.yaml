@@ -1,0 +1,5 @@
+additionalProperties:  
+  imports:
+    - import: from basyxclients.models.discovery.paged_result_or_string_items import PagedResultOrStringItems
+    - import: from basyxclients.models.part2.service_description import ServiceDescription
+    - import: from basyxclients.models.part1.specific_asset_id import SpecificAssetId

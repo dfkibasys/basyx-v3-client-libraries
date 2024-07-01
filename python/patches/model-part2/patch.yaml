@@ -1,0 +1,327 @@
+- op: add
+  path: /components/schemas/AnnotatedRelationshipElementValue/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.reference_value import ReferenceValue
+- op: add
+  path: /components/schemas/AssetAdministrationShellDescriptor/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.administrative_information import AdministrativeInformation
+  - from basyxclients.models.part1.asset_kind import AssetKind
+  - from basyxclients.models.part2.endpoint import Endpoint
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.specific_asset_id import SpecificAssetId
+  - from basyxclients.models.part2.submodel_descriptor import SubmodelDescriptor
+- op: add
+  path: /components/schemas/AssetAdministrationShellMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.administrative_information import AdministrativeInformation
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/BaseOperationResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.execution_state import ExecutionState
+  - from basyxclients.models.part2.message import Message
+- op: add
+  path: /components/schemas/BasicEventElementMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.direction import Direction
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+  - from basyxclients.models.part1.state_of_event import StateOfEvent
+- op: add
+  path: /components/schemas/BasicEventElementValue/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.reference_value import ReferenceValue
+- op: add
+  path: /components/schemas/Endpoint/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.protocol_information import ProtocolInformation
+- op: add
+  path: /components/schemas/EntityMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/FileMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/GetAssetAdministrationShellDescriptorsResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.asset_administration_shell_descriptor import AssetAdministrationShellDescriptor
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+- op: add
+  path: /components/schemas/GetAssetAdministrationShellsMetadataResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.asset_administration_shell_metadata import AssetAdministrationShellMetadata
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+- op: add
+  path: /components/schemas/GetAssetAdministrationShellsResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.asset_administration_shell import AssetAdministrationShell
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+- op: add
+  path: /components/schemas/GetConceptDescriptionsResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.concept_description import ConceptDescription
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+- op: add
+  path: /components/schemas/GetPackageDescriptionsResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.package_description import PackageDescription
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+- op: add
+  path: /components/schemas/GetPathItemsResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+- op: add
+  path: /components/schemas/GetReferencesResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/GetSubmodelDescriptorsResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+  - from basyxclients.models.part2.submodel_descriptor import SubmodelDescriptor
+- op: add
+  path: /components/schemas/GetSubmodelElementsMetadataResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+  - from basyxclients.models.part2.submodel_element_metadata import SubmodelElementMetadata
+- op: add
+  path: /components/schemas/GetSubmodelElementsResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+  - from basyxclients.models.part1.submodel_element_choice import SubmodelElementChoice
+- op: add
+  path: /components/schemas/GetSubmodelElementsValueResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+  - from basyxclients.models.part2.submodel_element_value import SubmodelElementValue
+- op: add
+  path: /components/schemas/GetSubmodelsMetadataResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+  - from basyxclients.models.part2.submodel_metadata import SubmodelMetadata
+- op: add
+  path: /components/schemas/GetSubmodelsResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+  - from basyxclients.models.part1.submodel import Submodel
+- op: add
+  path: /components/schemas/GetSubmodelsValueResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+  - from basyxclients.models.part2.submodel_value import SubmodelValue
+- op: add
+  path: /components/schemas/MultiLanguagePropertyMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/OperationMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/OperationResultValueOnly/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.execution_state import ExecutionState
+  - from basyxclients.models.part2.message import Message
+- op: add
+  path: /components/schemas/OperationResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.execution_state import ExecutionState
+  - from basyxclients.models.part2.message import Message
+  - from basyxclients.models.part1.operation_variable import OperationVariable
+- op: add
+  path: /components/schemas/PagedResult/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+- op: add
+  path: /components/schemas/PropertyMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/ProtocolInformation/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.protocol_information_security_attributes import ProtocolInformationSecurityAttributes
+- op: add
+  path: /components/schemas/RangeMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/ReferenceElementMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/RelationshipElementMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/RelationshipElementValue/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.reference_value import ReferenceValue
+- op: add
+  path: /components/schemas/Result/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.message import Message
+- op: add
+  path: /components/schemas/SubmodelDescriptor/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.administrative_information import AdministrativeInformation
+  - from basyxclients.models.part2.endpoint import Endpoint
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/SubmodelElementAttributes/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/SubmodelElementCollectionMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/SubmodelElementListMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/SubmodelElementMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.basic_event_element_metadata import BasicEventElementMetadata
+  - from basyxclients.models.part2.entity_metadata import EntityMetadata
+  - from basyxclients.models.part2.file_metadata import FileMetadata
+  - from basyxclients.models.part2.multi_language_property_metadata import MultiLanguagePropertyMetadata
+  - from basyxclients.models.part2.operation_metadata import OperationMetadata
+  - from basyxclients.models.part2.property_metadata import PropertyMetadata
+  - from basyxclients.models.part2.range_metadata import RangeMetadata
+  - from basyxclients.models.part2.reference_element_metadata import ReferenceElementMetadata
+  - from basyxclients.models.part2.relationship_element_metadata import RelationshipElementMetadata
+  - from basyxclients.models.part2.submodel_element_attributes import SubmodelElementAttributes
+  - from basyxclients.models.part2.submodel_element_collection_metadata import SubmodelElementCollectionMetadata
+  - from basyxclients.models.part2.submodel_element_list_metadata import SubmodelElementListMetadata
+- op: add
+  path: /components/schemas/SubmodelElementValue/x-py-model-imports
+  value: 
+  - from basyxclients.models.part2.annotated_relationship_element_value import AnnotatedRelationshipElementValue
+  - from basyxclients.models.part2.basic_event_element_value import BasicEventElementValue
+  - from basyxclients.models.part2.blob_value import BlobValue
+  - from basyxclients.models.part2.entity_value import EntityValue
+  - from basyxclients.models.part2.file_value import FileValue
+  - from basyxclients.models.part2.property_value import PropertyValue
+  - from basyxclients.models.part2.range_value import RangeValue
+  - from basyxclients.models.part2.reference_value import ReferenceValue
+  - from basyxclients.models.part2.relationship_element_value import RelationshipElementValue
+- op: add
+  path: /components/schemas/SubmodelMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.administrative_information import AdministrativeInformation
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference
+- op: add
+  path: /components/schemas/CapabilityMetadata/x-py-model-imports
+  value: 
+  - from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+  - from basyxclients.models.part1.extension import Extension
+  - from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+  - from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+  - from basyxclients.models.part1.model_type import ModelType
+  - from basyxclients.models.part1.modelling_kind import ModellingKind
+  - from basyxclients.models.part1.qualifier import Qualifier
+  - from basyxclients.models.part1.reference import Reference

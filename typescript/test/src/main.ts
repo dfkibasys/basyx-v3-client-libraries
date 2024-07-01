@@ -10,7 +10,11 @@ function main(): void {
 
   apiInstance.getAllAssetAdministrationShellDescriptors( ).then((data:any) => {
     console.log('API called successfully. Returned data: ', data);
+    
+
+
   }).catch((error:any) => console.error(error));
+
 }
 
 main();
