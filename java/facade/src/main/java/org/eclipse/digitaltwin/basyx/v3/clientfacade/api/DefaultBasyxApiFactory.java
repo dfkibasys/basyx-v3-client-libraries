@@ -28,6 +28,7 @@ import java.net.http.HttpClient;
 
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.intercept.BasyxTransferInterceptor;
 import org.eclipse.digitaltwin.basyx.v3.clients.ApiClient;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.AasxFileServerApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRegistryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRepositoryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRegistryApi;
@@ -61,6 +62,11 @@ public class DefaultBasyxApiFactory implements BasyxApiFactory {
 	@Override
 	public SubmodelRepositoryApi newSubmodelRepositoryApi(ObjectMapper mapper, String baseUrl) {
 		return new SubmodelRepositoryApi(newClient(mapper, baseUrl));
+	}
+	
+	@Override
+	public AasxFileServerApi newAasxFileServerApi(ObjectMapper mapper, String baseUrl) {
+		return new AasxFileServerApi(newClient(mapper, baseUrl));
 	}
 	
 	private ApiClient newClient(ObjectMapper mapper, String url) {

@@ -20,6 +20,7 @@ echo "Submodel Registry: http://localhost:8082"
 echo "AasRepo:           http://localhost:8081/shells" 
 echo "SmRepo:            http://localhost:8081/submodels" 
 echo "CdRepo:            http://localhost:8081/concept-descriptions" 
+echo "AasxFileServer:    http://localhost:8086/packages"
 echo "Keycloak:          http://localhost:8085 (keycloak / keycloak-admin)" 
 echo "AasGui:            http://localhost:3000/"
 

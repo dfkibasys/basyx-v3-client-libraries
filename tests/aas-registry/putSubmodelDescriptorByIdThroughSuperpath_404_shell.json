@@ -1,0 +1,72 @@
+{
+    "name": "shell not found - 404",
+    "initialState": {
+        "shellDescriptors": [
+            {
+                "administration": {
+                    "revision": "22"
+                },
+                "assetKind": "Type",
+                "assetType": "tp",
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "identification_7"
+                    }
+                ],
+                "id": "identification_7",
+                "idShort": "identification_7",
+                "submodelDescriptors": [
+                    {
+                        "description": [
+                            {
+                                "language": "de-DE",
+                                "text": "G1"
+                            }
+                        ],
+                        "endpoints": [
+                            {
+                                "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003",
+                                "protocolInformation": {
+                                    "endpointProtocol": "HTTP",
+                                    "href": "http://127.0.0.1:8099/submodel",
+                                    "subprotocol": "AAS"
+                                }
+                            }
+                        ],
+                        "id": "submodel_0",
+                        "idShort": "submodel_0"
+                    }
+                ]
+            }
+        ]
+    },
+    "comment": "Add en-US description.",
+    "invocation": {
+        "args": {
+            "aasIdentifier": "identification_unknown",
+            "submodelIdentifier": "submodel_0",
+            "submodelDescriptor": {
+                "idShort": "submodel_0",
+                "id": "submodel_0",
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "G1"
+                    }
+                ],
+                "endpoints": [
+                    {
+                        "protocolInformation": {
+                            "href": "http://127.0.0.1:8099/submodel",
+                            "endpointProtocol": "HTTP",
+                            "subprotocol": "AAS"
+                        },
+                        "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
+                    }
+                ]
+            }
+        }
+    },
+    "expectedErrorStatusCode": 404
+}

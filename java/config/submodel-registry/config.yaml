@@ -7,3 +7,4 @@ additionalProperties:
   disallowAdditionalPropertiesIfNotPresent: false
   supportUrlQuery: false
   artifactVersion: 0.0.1-SNAPSHOT
+  testIdentifier: submodel-registry

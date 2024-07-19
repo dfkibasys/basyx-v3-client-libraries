@@ -6,3 +6,4 @@ additionalProperties:
   legacyDiscriminatorBehavior: false
   disallowAdditionalPropertiesIfNotPresent: false
   supportUrlQuery: false
+  testIdentifier: aas-repository

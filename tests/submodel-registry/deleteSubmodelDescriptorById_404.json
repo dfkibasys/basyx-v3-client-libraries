@@ -1,0 +1,117 @@
+{
+    "name": "not-found (404)",
+    "initialState": {
+        "submodelDescriptors": [
+            {
+                "idShort": "sm0",
+                "id": "submodel_0",
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "G0"
+                    }
+                ],
+                "endpoints": [
+                    {
+                        "protocolInformation": {
+                            "href": "http://127.0.0.1:8099/submodel",
+                            "endpointProtocol": "HTTP",
+                            "subprotocol": "AAS"
+                        },
+                        "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
+                    }
+                ]
+            },
+            {
+                "idShort": "sm1",
+                "id": "submodel_1",
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "G1"
+                    }
+                ],
+                "endpoints": [
+                    {
+                        "protocolInformation": {
+                            "href": "http://127.0.0.1:8099/submodel",
+                            "endpointProtocol": "HTTP",
+                            "subprotocol": "AAS"
+                        },
+                        "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
+                    }
+                ]
+            },
+            {
+                "idShort": "sm2",
+                "id": "submodel_2",
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "G1"
+                    }
+                ],
+                "endpoints": [
+                    {
+                        "protocolInformation": {
+                            "href": "http://127.0.0.1:8099/submodel",
+                            "endpointProtocol": "HTTP",
+                            "subprotocol": "AAS"
+                        },
+                        "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
+                    }
+                ]
+            }
+        ]
+    },
+    "invocation": {
+        "args": {
+            "submodelIdentifier": "submodel_1"
+        }
+    },
+    "expectedState": {
+        "submodelDescriptors": [
+            {
+                "idShort": "sm0",
+                "id": "submodel_0",
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "G0"
+                    }
+                ],
+                "endpoints": [
+                    {
+                        "protocolInformation": {
+                            "href": "http://127.0.0.1:8099/submodel",
+                            "endpointProtocol": "HTTP",
+                            "subprotocol": "AAS"
+                        },
+                        "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
+                    }
+                ]
+            },
+            {
+                "idShort": "sm2",
+                "id": "submodel_2",
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "G1"
+                    }
+                ],
+                "endpoints": [
+                    {
+                        "protocolInformation": {
+                            "href": "http://127.0.0.1:8099/submodel",
+                            "endpointProtocol": "HTTP",
+                            "subprotocol": "AAS"
+                        },
+                        "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
+                    }
+                ]
+            }
+        ]
+    },
+    "expectedErrorStatusCode" : 404
+}

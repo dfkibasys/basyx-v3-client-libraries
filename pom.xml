@@ -89,6 +89,11 @@
 							<excludes>
 								<exclude>.openapi-generator-ignore</exclude>
 								<exclude>pom.xml</exclude>
+								<exclude>.project</exclude>
+								<exclude>.classpath</exclude>
+								<exclude>**/*.launch</exclude>
+								<exclude>**/*BasyxTest*</exclude>
+								<exclude>**/logback.xml</exclude>
 							</excludes>
 							<followSymlinks>false</followSymlinks>
 						</fileset>

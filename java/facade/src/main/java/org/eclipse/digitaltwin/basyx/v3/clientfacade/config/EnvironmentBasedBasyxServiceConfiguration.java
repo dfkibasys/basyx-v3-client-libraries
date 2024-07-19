@@ -24,11 +24,10 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
 
-public class EnvironmentBasedBasyxServiceConfiguration implements BasyxRegistryServiceConfiguration {
+public class EnvironmentBasedBasyxServiceConfiguration extends AbstractEnvironmentBasedServiceConfiguration implements BasyxRegistryServiceConfiguration {
 
 	private static final String ENV_BASYX_AASREGISTRY_URL = "BASYX_CLIENT_AASREGISTRY";
 	private static final String ENV_BASYX_SUBMODELREGISTRY_URL = "BASYX_CLIENT_SUBMODELREGISTRY";
-	private static final String ENV_BASYX_FETCH_LIMIT = "BASYX_CLIENT_FETCH_LIMIT";
 	
 	@Override
 	public String getAasRegistryUrl() {
@@ -40,8 +39,4 @@ public class EnvironmentBasedBasyxServiceConfiguration implements BasyxRegistryS
 		return EnvironmentVars.getOrThrow(ENV_BASYX_SUBMODELREGISTRY_URL);
 	}
 
-	@Override
-	public Integer getFetchLimit() {
-		return EnvironmentVars.getIntOrDefault(ENV_BASYX_FETCH_LIMIT, DEFAULT_FETCH_LIMIT);
-	}
 }

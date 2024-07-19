@@ -74,6 +74,9 @@
   path: /components/parameters/AssetIds/x-utf8-base64-url-encoded-as-string
   value: true 
 - op: add
+  path: /components/parameters/AssetType/x-utf8-base64-url-encoded-as-string
+  value: true 
+- op: add
   path: /components/parameters/AssetAdministrationShellIdentifier/x-utf8-base64-url-encoded-as-string
   value: true
 - op: add

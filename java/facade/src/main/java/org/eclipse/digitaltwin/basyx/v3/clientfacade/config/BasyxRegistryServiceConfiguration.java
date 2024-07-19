@@ -24,14 +24,10 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
 
-public interface BasyxRegistryServiceConfiguration {
-
-	Integer DEFAULT_FETCH_LIMIT = 100;
+public interface BasyxRegistryServiceConfiguration extends BaseServiceConfiguration {
 	
 	String getAasRegistryUrl();
 	
 	String getSubmodelRegistrUrl();
-
-	Integer getFetchLimit();
 	
 }

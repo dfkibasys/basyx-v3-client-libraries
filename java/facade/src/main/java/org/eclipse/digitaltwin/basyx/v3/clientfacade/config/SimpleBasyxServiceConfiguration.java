@@ -24,11 +24,10 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.config;
 
-public class SimpleBasyxServiceConfiguration implements BasyxRegistryServiceConfiguration {
+public class SimpleBasyxServiceConfiguration extends AbstractSimpleBasyxServiceConfiguration implements BasyxRegistryServiceConfiguration {
 
 	private String aasRegistryUrl;
 	private String submodelRegistryUrl;
-	private Integer fetchLimit;
 	
 	public SimpleBasyxServiceConfiguration withAasRegistryUrl(String aasRegistryUrl) {
 		this.aasRegistryUrl = aasRegistryUrl;
@@ -48,15 +47,5 @@ public class SimpleBasyxServiceConfiguration implements BasyxRegistryServiceConf
 	@Override
 	public String getSubmodelRegistrUrl() {
 		return submodelRegistryUrl;
-	}
-	
-	public SimpleBasyxServiceConfiguration withFetchLimit(int fetchLimit) {
-		this.fetchLimit = fetchLimit;
-		return this;
-	}
-	
-	@Override
-	public Integer getFetchLimit() {
-		return fetchLimit;
 	}
 }

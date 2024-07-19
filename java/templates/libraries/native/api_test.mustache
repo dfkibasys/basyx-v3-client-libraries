@@ -1,12 +1,19 @@
 {{>licenseInfo}}
-
 package {{package}};
 
 import {{invokerPackage}}.ApiException;
 {{#imports}}import {{import}};
 {{/imports}}
 import org.junit.Test;
-import org.junit.Ignore;
+import org.junit.Before;
+import org.junit.After;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.junit.jupiter.Container;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import java.nio.file.Path;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,44 +21,143 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.digitaltwin.basyx.v3.clients.api.BasyxTestRunner.BasyxFunctionalTestDefinition;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.BasyxTestRunner.BasyxListTestDefinition;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.BasyxTestRunner.BasyxVoidTestDefinition;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.BasyxTestRunner.BasyxTestValues;
+import org.eclipse.digitaltwin.aas4j.v3.dataformat.json.JsonMapperFactory;
+import org.eclipse.digitaltwin.aas4j.v3.dataformat.json.SimpleAbstractTypeResolverFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
+
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
+
 {{#asyncNative}}
 import java.util.concurrent.CompletableFuture;
 {{/asyncNative}}
 
+{{#useBeanValidation}}
+import jakarta.validation.constraints.*;
+import jakarta.validation.Valid;
+
+{{/useBeanValidation}}
 /**
  * API tests for {{classname}}
  */
-@Ignore
 public class {{classname}}Test {
 
-    private final {{classname}} api = new {{classname}}();
+
+    public {{classname}}Test() {
+    }
+
+    private static String getPropertyOrThrow(String propName) {
+    	String prop = System.getProperty(propName);
+	    if (prop == null) {
+	    	throw new IllegalArgumentException("Property '" + propName + "' not set.");
+	    }
+	    return prop;
+    }
 
     {{#operations}}{{#operation}}
-    /**
-     * {{summary}}
-     *
-     * {{notes}}
-     *
-     * @throws ApiException
-     *          if the Api call fails
-     */
-    @Test
-    public void {{operationId}}Test() throws ApiException {
-        {{#allParams}}
-        {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}} = null;
-        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        {{{dataType}}} {{paramName}} = null;
-        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        
-        {{/allParams}}
-       
-        {{#returnType}}{{{returnType}}} response = {{/returnType}}
-        {{^returnType}}{{/returnType}}api.{{operationId}}({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
-       
+    @RunWith(Parameterized.class)
+    public static class {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Test extends AbstractBasyxTest {
 
-        // TODO: test validations
+        private {{classname}} api;
+        private final BasyxTestRunner runner;
+        private final Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{classname}}{{operationId}}Values{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}> def;
+
+        public {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Test(String testName, Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{classname}}{{operationId}}Values{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}> def, BasyxTestRunner runner) {
+            this.runner = runner;
+            this.def = def;
+        }
+
+        @Before
+        public void init() {
+            this.api = new {{classname}}(MAPPER, ENVIRONMENT.get{{#lambda.titlecase}}{{#lambda.camelcase}}{{{testIdentifier}}}{{/lambda.camelcase}}{{/lambda.titlecase}}Url());            
+        }
+
+        @Parameters(name="{0}")
+        public static List<Object[]> initialize() {
+            Path testFolder = Path.of(getPropertyOrThrow("basyxtest.folder"), "{{{testIdentifier}}}");
+            ArrayList<Object[]> config = new ArrayList<>();
+            BasyxTestRunner runner = new BasyxTestRunner(ENVIRONMENT, MAPPER, testFolder);
+            List<Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{classname}}{{operationId}}Values{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}>> defs = runner.load{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition("{{operationId}}", {{classname}}{{operationId}}Values.class{{#returnBaseType}}, {{{returnBaseType}}}.class{{/returnBaseType}});
+            for (Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{classname}}{{operationId}}Values{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}> eachDef : defs) {            
+        	    config.add(new Object[] {eachDef.getName(), eachDef, runner});
+            }            
+        	return config;
+        }
+
+        /**
+        * {{summary}}
+        *
+        * {{notes}}
+        *
+        */
+        @Test
+        public void {{operationId}}Test() throws ApiException {                
+           runner.runAndAssertWith{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}Result(def, this::{{operationId}});            
+        }
+        
+        private {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{classname}}{{operationId}}Values args) throws ApiException {
+            {{#returnType}}return {{/returnType}}api.{{operationId}}({{#allParams}}args.get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(){{^-last}}, {{/-last}}{{/allParams}});
+        }
     }
-    {{/operation}}{{/operations}}
-}
+    {{/operation}}
+    {{/operations}}
+}    
+{{#operations}}
+{{#operation}}
+class  {{classname}}{{operationId}}Values implements BasyxTestValues {
+
+    {{#returnType}}private {{{returnType}}} resultValue;{{/returnType}}
+
+    {{#allParams}}
+    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    private {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}};
+    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    private {{{dataType}}} {{paramName}};
+    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+
+    {{/allParams}}
+    {{#returnType}}
+    public {{{returnType}}} getReturnValue() {
+        return resultValue;
+    }
+
+    public void setReturnValue({{{returnType}}} resultValue) {
+        this.resultValue = resultValue;
+    }
+    {{/returnType}}
+
+    {{#allParams}}
+    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}}) {
+        this.{{paramName}} = {{paramName}};
+    }
+    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{{dataType}}} {{paramName}}) {
+        this.{{paramName}} = {{paramName}};
+    }
+    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    {{/allParams}}
+    
+    {{#allParams}}        
+    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    public {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}() {
+        return this.{{paramName}};
+    }
+    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    public {{{dataType}}} get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}() {
+        return this.{{paramName}};
+    }
+    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+    {{/allParams}}
+}    
+
+{{/operation}}
+{{/operations}}

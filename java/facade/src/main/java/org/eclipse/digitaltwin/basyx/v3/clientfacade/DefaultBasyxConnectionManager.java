@@ -34,8 +34,10 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.CacheUpdateHandler;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.DefaultBasyxClientCacheFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.config.EnvironmentBasedBasyxCacheConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.AasxFileServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.EnvironmentBasedAasxFileServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.EnvironmentBasedBasyxServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.EnvironmentBasedBasyxUpdateConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.intercept.BasyxTransferInterceptor;
@@ -50,6 +52,7 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.security.NullBasyxAuthorize
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.security.ServiceAccountAuthorizer;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.security.ServiceAccountAuthorizerConfigurationFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.security.config.EnvironmentBasedAuthorizerConfigProvider;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.AasxFileServerApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRegistryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRegistryApi;
 
@@ -109,6 +112,16 @@ public class DefaultBasyxConnectionManager implements BasyxConnectionManager {
 		return new DefaultBasyxServiceFacade(mapper, apiFactory, conf).withClientCache(cache);
 	}
 	
+	@Override
+	public AasxFileServerFacade newAasxFileServiceFacade() {
+		return newAasxFileServiceFacade(new EnvironmentBasedAasxFileServiceConfiguration());
+	}
+	
+	@Override
+	public AasxFileServerFacade newAasxFileServiceFacade(AasxFileServiceConfiguration conf) {
+		AasxFileServerApi api = apiFactory.newAasxFileServerApi(mapper, conf.getAasxFileServerUrl());
+		return new DefaultAasxFileServerFacade(api, conf.getFetchLimit());
+	}
 
 	@Override
 	public BasyxUpdateFacade newUpdateFacade(BasyxUpdateConfiguration conf) {
