@@ -1,5 +1,5 @@
 {
-    "name": "assetkind-test",
+    "name": "success-test",
     "initialState": {
         "shells": [
             {
@@ -204,9 +204,7 @@
         "submodels": []
     },
     "invocation": {
-        "args": {
-            "assetKind": "Type"
-        }
+        "args": {}
     },
     "expectedState": {
         "shells": [
@@ -410,27 +408,14 @@
             }
         ]
     },
-    "comment": "Due to implementation details a cursor is returned here, even than no limit is given via arguments!",
     "expectedReturnValue": {
-        "paging_metadata": {
-            "cursor": "aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWFuZGF0b3J5"
-        },
-        "result": [
-            {
-                "assetKind": "Type",
-                "endpoints": [
-                    {
-                        "protocolInformation": {
-                            "endpointProtocol": "http",
-                            "href": "http://aas-environment:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGwyX01hbmRhdG9yeQ"
-                        },
-                        "interface": "AAS-3.0"
-                    }
-                ],
-                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
-                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory",
-                "idShort": "Test_AssetAdministrationShell2_Mandatory"
-            }
-        ]
-    }
+        "profiles" : [ 
+            "https://admin-shell.io/aas/API/3/0/AssetAdministrationShellRepositoryServiceSpecification/SSP-001", 
+            "https://admin-shell.io/aas/API/3/0/AssetAdministrationShellRepositoryServiceSpecification/SSP-002", 
+            "https://admin-shell.io/aas/API/3/0/SubmodelRepositoryServiceSpecification/SSP-001", 
+            "https://admin-shell.io/aas/API/3/0/SubmodelRepositoryServiceSpecification/SSP-002", 
+            "https://admin-shell.io/aas/API/3/0/SubmodelRepositoryServiceSpecification/SSP-003", 
+            "https://admin-shell.io/aas/API/3/0/SubmodelRepositoryServiceSpecification/SSP-004", 
+            "https://admin-shell.io/aas/API/3/0/ConceptDescriptionServiceSpecification/SSP-001" ]
+      }
 }

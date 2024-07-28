@@ -1,5 +1,5 @@
 {
-    "name": "assetkind-test",
+    "name": "not-found-test (404)",
     "initialState": {
         "shells": [
             {
@@ -205,7 +205,27 @@
     },
     "invocation": {
         "args": {
-            "assetKind": "Type"
+            "aasIdentifier" : "https://example.com/ids/sm/Unknown",
+            "assetAdministrationShell" :             {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://htw-berlin.de/ids/asset/1090_7160_0132_8069"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://example.com/ids/sm/2411_7160_0132_4523"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "id": "https://example.com/ids/sm/Unknown",
+                "idShort": "UpdatedIdShort"
+            }
         }
     },
     "expectedState": {
@@ -408,29 +428,8 @@
                 ],
                 "idShort": "DemoAASV3"
             }
-        ]
+        ],
+        "submodels": []
     },
-    "comment": "Due to implementation details a cursor is returned here, even than no limit is given via arguments!",
-    "expectedReturnValue": {
-        "paging_metadata": {
-            "cursor": "aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWFuZGF0b3J5"
-        },
-        "result": [
-            {
-                "assetKind": "Type",
-                "endpoints": [
-                    {
-                        "protocolInformation": {
-                            "endpointProtocol": "http",
-                            "href": "http://aas-environment:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGwyX01hbmRhdG9yeQ"
-                        },
-                        "interface": "AAS-3.0"
-                    }
-                ],
-                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
-                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory",
-                "idShort": "Test_AssetAdministrationShell2_Mandatory"
-            }
-        ]
-    }
+    "expectedErrorStatusCode" : 404
 }

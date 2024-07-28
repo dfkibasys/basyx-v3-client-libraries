@@ -1,0 +1,91 @@
+{
+    "name": "success-test",
+    "initialState": {
+        "shells": [
+            {
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset"
+                },
+                "derivedFrom": {
+                    "keys": [
+                        {
+                            "type": "AssetAdministrationShell",
+                            "value": "https://acplt.org/TestAssetAdministrationShell2"
+                        }
+                    ],
+                    "type": "ExternalReference"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://acplt.org/Test_Submodel"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    },
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    },
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "http://acplt.org/Submodels/Assets/TestAsset/Identification"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    },
+                    {
+                        "id" : "http://example.com/newSm",
+                        "idShort" : "oldSm",
+                        "submodelElements" : []
+                    }
+                ],
+                "administration": {
+                    "revision": "9",
+                    "version": "0"
+                },
+                "id": "https://acplt.org/Test_AssetAdministrationShell",
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "idShort": "TestAssetAdministrationShell"
+            }
+        ],
+        "submodels": []
+    },
+    "invocation": {
+        "args": {
+            "aasIdentifier": "https://acplt.org/Test_AssetAdministrationShell",
+            "submodelIdentifier": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+            "submodel": 
+                {
+                    "kind" : "Instance",
+                    "id" : "http://example.com/newSm",
+                    "idShort" : "newSm",
+                    "submodelElements" : []
+                }
+            
+        }
+    },
+    "expectedState": {
+        "shells": [
+        ]
+    }
+}

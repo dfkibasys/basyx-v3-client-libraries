@@ -155,11 +155,12 @@
             }
         ]
     },
-    "invocation" : {
-    "args": {
-        "aasIdentifier": "identification_5",
-        "submodelIdentifier" : "submodel_unknown"
-    }},
+    "invocation": {
+        "args": {
+            "aasIdentifier": "identification_5",
+            "submodelIdentifier": "submodel_unknown"
+        }
+    },
     "expectedState": {
         "shellDescriptors": [
             {

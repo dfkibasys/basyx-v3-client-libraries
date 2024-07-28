@@ -1,5 +1,5 @@
 {
-    "name": "assetkind-test",
+    "name": "limit-test",
     "initialState": {
         "shells": [
             {
@@ -205,7 +205,8 @@
     },
     "invocation": {
         "args": {
-            "assetKind": "Type"
+            "aasIdentifier": "https://acplt.org/Test_AssetAdministrationShell",
+            "limit": 2
         }
     },
     "expectedState": {
@@ -410,26 +411,28 @@
             }
         ]
     },
-    "comment": "Due to implementation details a cursor is returned here, even than no limit is given via arguments!",
     "expectedReturnValue": {
         "paging_metadata": {
-            "cursor": "aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWFuZGF0b3J5"
+            "cursor": "aHR0cDovL2FjcGx0Lm9yZy9TdWJtb2RlbHMvQXNzZXRzL1Rlc3RBc3NldC9JZGVudGlmaWNhdGlvbg"
         },
         "result": [
             {
-                "assetKind": "Type",
-                "endpoints": [
+                "keys": [
                     {
-                        "protocolInformation": {
-                            "endpointProtocol": "http",
-                            "href": "http://aas-environment:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGwyX01hbmRhdG9yeQ"
-                        },
-                        "interface": "AAS-3.0"
+                        "type": "Submodel",
+                        "value": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
                     }
                 ],
-                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
-                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory",
-                "idShort": "Test_AssetAdministrationShell2_Mandatory"
+                "type": "ExternalReference"
+            },
+            {
+                "keys": [
+                    {
+                        "type": "Submodel",
+                        "value": "http://acplt.org/Submodels/Assets/TestAsset/Identification"
+                    }
+                ],
+                "type": "ExternalReference"
             }
         ]
     }

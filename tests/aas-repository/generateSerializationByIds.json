@@ -1,6 +1,10 @@
 {
-    "name": "assetkind-test",
+    "name": "success-test",
     "initialState": {
+        "thumbnails" :  {
+            "https://acplt.org/Test_AssetAdministrationShell" : "$PROPERTY(basyxtest.folder)/basyx_thumbnail.png",
+            "https://acplt.org/Test_AssetAdministrationShell2_Mandatory" : "$PROPERTY(basyxtest.folder)/basyx_thumbnail_colored.png"            
+        },
         "shells": [
             {
                 "modelType": "AssetAdministrationShell",
@@ -205,7 +209,6 @@
     },
     "invocation": {
         "args": {
-            "assetKind": "Type"
         }
     },
     "expectedState": {
@@ -410,27 +413,5 @@
             }
         ]
     },
-    "comment": "Due to implementation details a cursor is returned here, even than no limit is given via arguments!",
-    "expectedReturnValue": {
-        "paging_metadata": {
-            "cursor": "aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWFuZGF0b3J5"
-        },
-        "result": [
-            {
-                "assetKind": "Type",
-                "endpoints": [
-                    {
-                        "protocolInformation": {
-                            "endpointProtocol": "http",
-                            "href": "http://aas-environment:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGwyX01hbmRhdG9yeQ"
-                        },
-                        "interface": "AAS-3.0"
-                    }
-                ],
-                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
-                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory",
-                "idShort": "Test_AssetAdministrationShell2_Mandatory"
-            }
-        ]
-    }
+    "expectedReturnValue": "$PROPERTY(basyxtest.folder)/basyx_thumbnail.png"
 }

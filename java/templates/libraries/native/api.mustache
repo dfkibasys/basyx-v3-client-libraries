@@ -169,9 +169,8 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
-  public {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
-
-    {{#returnType}}ApiResponse<{{{.}}}> localVarResponse = {{/returnType}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
+  public {{#vendorExtensions.x-return-byte-stream}}InputStream{{/vendorExtensions.x-return-byte-stream}}{{^vendorExtensions.x-return-byte-stream}}{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}{{/vendorExtensions.x-return-byte-stream}} {{operationId}}({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+    {{#vendorExtensions.x-return-byte-stream}}ApiResponse<InputStream> localVarResponse ={{/vendorExtensions.x-return-byte-stream}}{{^vendorExtensions.x-return-byte-stream}}{{#returnType}}ApiResponse<{{{.}}}> localVarResponse = {{/returnType}}{{/vendorExtensions.x-return-byte-stream}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
     {{#returnType}}
     return localVarResponse.getData();
     {{/returnType}}
@@ -196,7 +195,7 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
- public ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfo({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+ public ApiResponse<{{#vendorExtensions.x-return-byte-stream}}InputStream{{/vendorExtensions.x-return-byte-stream}}{{^vendorExtensions.x-return-byte-stream}}{{{returnType}}}{{^returnType}}Void{{/returnType}}{{/vendorExtensions.x-return-byte-stream}}> {{operationId}}WithHttpInfo({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
  	{{#allParams}}
     {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
     {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}}AsBytes = ApiClient.base64UrlEncode({{paramName}});
@@ -226,7 +225,7 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
-  public ApiResponse<{{{returnType}}}{{^returnType}}Void{{/returnType}}> {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+  public ApiResponse<{{#vendorExtensions.x-return-byte-stream}}InputStream{{/vendorExtensions.x-return-byte-stream}}{{^vendorExtensions.x-return-byte-stream}}{{{returnType}}}{{^returnType}}Void{{/returnType}}{{/vendorExtensions.x-return-byte-stream}}> {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = {{operationId}}RequestBuilder({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -239,6 +238,11 @@ public class {{classname}} {
         if (localVarResponse.statusCode()/ 100 != 2) {
           throw getApiException("{{operationId}}", localVarResponse);
         }
+        {{#vendorExtensions.x-return-byte-stream}}
+        return new ApiResponse<InputStream>(localVarResponse.statusCode(), localVarResponse.headers().map(),
+				localVarResponse.body() == null ? new ByteArrayInputStream(new byte[0]) : localVarResponse.body());
+        {{/vendorExtensions.x-return-byte-stream}}
+        {{^vendorExtensions.x-return-byte-stream}}
         {{#vendorExtensions.x-java-text-plain-string}}
         // for plain text response
         if (localVarResponse.headers().map().containsKey("Content-Type") &&
@@ -259,6 +263,7 @@ public class {{classname}} {
           localVarResponse.statusCode(),
           localVarResponse.headers().map(),
           {{#returnType}}
+          
           localVarResponse.body() == null ? null : memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<{{{returnType}}}>() {}) // closes the InputStream
           {{/returnType}}
           {{^returnType}}
@@ -266,6 +271,7 @@ public class {{classname}} {
           {{/returnType}}
         );
         {{/vendorExtensions.x-java-text-plain-string}}
+        {{/vendorExtensions.x-return-byte-stream}}
       } finally {
         {{^returnType}}
         // Drain the InputStream

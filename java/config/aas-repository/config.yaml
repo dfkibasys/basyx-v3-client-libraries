@@ -7,3 +7,4 @@ additionalProperties:
   disallowAdditionalPropertiesIfNotPresent: false
   supportUrlQuery: false
   testIdentifier: aas-repository
+  

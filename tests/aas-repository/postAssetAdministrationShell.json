@@ -1,5 +1,5 @@
 {
-    "name": "assetkind-test",
+    "name": "success-test",
     "initialState": {
         "shells": [
             {
@@ -154,8 +154,14 @@
                 ],
                 "id": "https://example.com/ids/sm/2411_7160_0132_4523",
                 "idShort": "SecondAAS"
-            },
-            {
+            }
+
+        ],
+        "submodels": []
+    },
+    "invocation": {
+        "args": {
+            "assetAdministrationShell" : {
                 "modelType": "AssetAdministrationShell",
                 "assetInformation": {
                     "assetKind": "Instance",
@@ -200,12 +206,6 @@
                 ],
                 "idShort": "DemoAASV3"
             }
-        ],
-        "submodels": []
-    },
-    "invocation": {
-        "args": {
-            "assetKind": "Type"
         }
     },
     "expectedState": {
@@ -410,27 +410,49 @@
             }
         ]
     },
-    "comment": "Due to implementation details a cursor is returned here, even than no limit is given via arguments!",
     "expectedReturnValue": {
-        "paging_metadata": {
-            "cursor": "aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWFuZGF0b3J5"
+        "modelType": "AssetAdministrationShell",
+        "assetInformation": {
+            "assetKind": "Instance",
+            "assetType": "DemoAsset",
+            "defaultThumbnail": {
+                "contentType": "image/png",
+                "path": "OPC2AAS_Logo.png"
+            },
+            "globalAssetId": "https://htw-berlin.de/ids/asset/2450_7160_0132_1843"
         },
-        "result": [
+        "submodels": [
             {
-                "assetKind": "Type",
-                "endpoints": [
+                "keys": [
                     {
-                        "protocolInformation": {
-                            "endpointProtocol": "http",
-                            "href": "http://aas-environment:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGwyX01hbmRhdG9yeQ"
-                        },
-                        "interface": "AAS-3.0"
+                        "type": "Submodel",
+                        "value": "https://htw-berlin.de/ids/sm/demosubmodelv3"
                     }
                 ],
-                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
-                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory",
-                "idShort": "Test_AssetAdministrationShell2_Mandatory"
+                "type": "ExternalReference"
             }
-        ]
+        ],
+        "id": "https://htw-berlin.de/ids/aas/demoaasv3",
+        "description": [
+            {
+                "language": "de",
+                "text": "Verwaltungsschale zur Demonstration in dem BaSyx AAS Web UI"
+            },
+            {
+                "language": "en",
+                "text": "Asset Administration Shell for demonstration use of the BaSyx AAS Web UI"
+            }
+        ],
+        "displayName": [
+            {
+                "language": "de",
+                "text": "Demo VWS V3"
+            },
+            {
+                "language": "en",
+                "text": "Demo AAS V3"
+            }
+        ],
+        "idShort": "DemoAASV3"
     }
 }

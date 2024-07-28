@@ -8,22 +8,20 @@
         <listEntry value="1"/>
     </listAttribute>
     <mapAttribute key="org.eclipse.debug.core.environmentVariables">
-    	<mapEntry key="BASYX_CLIENT_AASREGISTRY" value="http://localhost:8083"/>
-    	<mapEntry key="BASYX_CLIENT_SUBMODELREGISTRY" value="http://localhost:8082"/>
-        <mapEntry key="BASYX_CLIENT_AUTO_REGISTRATION_ENABLED" value="true"/>
+        <mapEntry key="BASYX_CLIENT_AASREGISTRY" value="http://localhost:8083"/>
+        <mapEntry key="BASYX_CLIENT_AASREPOSITORY" value="http://localhost:8081"/>
+        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_CLIENT_ID" value="basyx-read-write-client"/>
+        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_CLIENT_SECRET" value="286wnJUizJBSjRfQwb8fbCFqTMqG9lu3"/>
+        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_ISSUER_URL" value="http://localhost:8085"/>
+        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_REALM" value="EclipseBaSyx"/>
+        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_TYPE" value="service-account"/>
         <mapEntry key="BASYX_CLIENT_AUTO_REGISTRATION_AAS_ENDPOINTS" value="http://aas-registry:8081/shells,http://localhost:8081/shells"/>
+        <mapEntry key="BASYX_CLIENT_AUTO_REGISTRATION_ENABLED" value="true"/>
         <mapEntry key="BASYX_CLIENT_AUTO_REGISTRATION_SUBMODEL_ENDPOINTS" value="http://aas-registry:8081/submodels,http://localhost:8081/submodels"/>
         <mapEntry key="BASYX_CLIENT_CACHE_CONFIG" value="maximumSize=250,expireAfterWrite=5m,initialCapacity=20"/>
         <mapEntry key="BASYX_CLIENT_CACHE_TYPE" value="caffeine"/>
-        <mapEntry key="BASYX_CLIENT_AASREPOSITORY" value="http://localhost:8081"/>
+        <mapEntry key="BASYX_CLIENT_SUBMODELREGISTRY" value="http://localhost:8082"/>
         <mapEntry key="BASYX_CLIENT_SUBMODELREPOSITORY" value="http://localhost:8081"/>
-        
-        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_TYPE" value="service-account"/>
-        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_ISSUER_URL" value="http://localhost:8085" />
-        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_CLIENT_ID" value="basyx-read-write-client"/>
-        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_REALM" value="EclipseBaSyx"/>
-        <mapEntry key="BASYX_CLIENT_AUTH_DEFAULT_CLIENT_SECRET" value="286wnJUizJBSjRfQwb8fbCFqTMqG9lu3"/>
-        
     </mapAttribute>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>

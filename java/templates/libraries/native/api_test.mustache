@@ -61,13 +61,13 @@ public class {{classname}}Test {
 
     {{#operations}}{{#operation}}
     @RunWith(Parameterized.class)
-    public static class {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Test extends AbstractBasyxTest {
+    public static class {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}} extends AbstractBasyxTest {
 
         private {{classname}} api;
         private final BasyxTestRunner runner;
-        private final Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{classname}}{{operationId}}Values{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}> def;
+        private final Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Params{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}> def;
 
-        public {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Test(String testName, Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{classname}}{{operationId}}Values{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}> def, BasyxTestRunner runner) {
+        public {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}(String testName, Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Params{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}> def, BasyxTestRunner runner) {
             this.runner = runner;
             this.def = def;
         }
@@ -82,8 +82,8 @@ public class {{classname}}Test {
             Path testFolder = Path.of(getPropertyOrThrow("basyxtest.folder"), "{{{testIdentifier}}}");
             ArrayList<Object[]> config = new ArrayList<>();
             BasyxTestRunner runner = new BasyxTestRunner(ENVIRONMENT, MAPPER, testFolder);
-            List<Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{classname}}{{operationId}}Values{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}>> defs = runner.load{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition("{{operationId}}", {{classname}}{{operationId}}Values.class{{#returnBaseType}}, {{{returnBaseType}}}.class{{/returnBaseType}});
-            for (Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{classname}}{{operationId}}Values{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}> eachDef : defs) {            
+            List<Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Params{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}>> defs = runner.load{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition("{{operationId}}", {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Params.class{{#returnBaseType}}, {{{returnBaseType}}}.class{{/returnBaseType}});
+            for (Basyx{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}TestDefinition<{{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Params{{#returnBaseType}}, {{{returnBaseType}}}{{/returnBaseType}}> eachDef : defs) {            
         	    config.add(new Object[] {eachDef.getName(), eachDef, runner});
             }            
         	return config;
@@ -100,64 +100,65 @@ public class {{classname}}Test {
            runner.runAndAssertWith{{#returnType}}{{#isArray}}List{{/isArray}}{{^isArray}}Functional{{/isArray}}{{/returnType}}{{^returnType}}Void{{/returnType}}Result(def, this::{{operationId}});            
         }
         
-        private {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{classname}}{{operationId}}Values args) throws ApiException {
-            {{#returnType}}return {{/returnType}}api.{{operationId}}({{#allParams}}args.get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(){{^-last}}, {{/-last}}{{/allParams}});
+        private {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}} {{operationId}}({{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Params params) throws ApiException {
+            {{#vendorExtensions.x-return-byte-stream}}
+            java.io.InputStream in = api.{{operationId}}({{#allParams}}params.get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(){{^-last}}, {{/-last}}{{/allParams}});
+            try {
+				Path temp = java.nio.file.Files.createTempFile("{{operationId}}", ".tmp");
+				java.nio.file.Files.copy(in, temp, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+				return temp.toFile();
+			} catch (java.io.IOException e) {
+				throw new ApiException(e);
+			}            
+            {{/vendorExtensions.x-return-byte-stream}}
+            {{^vendorExtensions.x-return-byte-stream}}
+            {{#returnType}}return {{/returnType}}api.{{operationId}}({{#allParams}}params.get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}(){{^-last}}, {{/-last}}{{/allParams}});
+            {{/vendorExtensions.x-return-byte-stream}}            
         }
     }
     {{/operation}}
     {{/operations}}
+    {{#operations}}
+    {{#operation}}
+    private static class {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Params implements BasyxTestValues {
+
+        {{#allParams}}
+        {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        private {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}};
+        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        private {{{dataType}}} {{paramName}};
+        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        {{/allParams}}
+        {{#allParams}}
+
+        {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        @SuppressWarnings("unused")
+        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}}) {
+            this.{{paramName}} = {{paramName}};
+        }
+        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        @SuppressWarnings("unused")
+        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{{dataType}}} {{paramName}}) {
+            this.{{paramName}} = {{paramName}};
+        }
+        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        {{/allParams}}
+        {{#allParams}}
+
+        {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        public {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}() {
+            return this.{{paramName}};
+        }
+        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        public {{{dataType}}} get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}() {
+            return this.{{paramName}};
+        }
+        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        {{/allParams}}
+    }  
+    {{/operation}}
+    {{/operations}}
 }    
-{{#operations}}
-{{#operation}}
-class  {{classname}}{{operationId}}Values implements BasyxTestValues {
-
-    {{#returnType}}private {{{returnType}}} resultValue;{{/returnType}}
-
-    {{#allParams}}
-    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    private {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}};
-    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    private {{{dataType}}} {{paramName}};
-    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-
-    {{/allParams}}
-    {{#returnType}}
-    public {{{returnType}}} getReturnValue() {
-        return resultValue;
-    }
-
-    public void setReturnValue({{{returnType}}} resultValue) {
-        this.resultValue = resultValue;
-    }
-    {{/returnType}}
-
-    {{#allParams}}
-    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}}) {
-        this.{{paramName}} = {{paramName}};
-    }
-    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{{dataType}}} {{paramName}}) {
-        this.{{paramName}} = {{paramName}};
-    }
-    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    {{/allParams}}
-    
-    {{#allParams}}        
-    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    public {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}() {
-        return this.{{paramName}};
-    }
-    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    public {{{dataType}}} get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}() {
-        return this.{{paramName}};
-    }
-    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    {{/allParams}}
-}    
-
-{{/operation}}
-{{/operations}}
