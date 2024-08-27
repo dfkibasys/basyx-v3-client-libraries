@@ -1,0 +1,430 @@
+---
+openapi: "3.0.3"
+info:
+  title: "DotAAS Part 2 | HTTP/REST | Asset Administration Shell Registry Service\
+    \ Specification"
+  description: "The Full Profile of the Asset Administration Shell Registry Service\
+    \ Specification as part of the [Specification of the Asset Administration Shell:\
+    \ Part 2](http://industrialdigitaltwin.org/en/content-hub).  \nPublisher: Industrial\
+    \ Digital Twin Association (IDTA) 2023"
+  contact:
+    name: "Industrial Digital Twin Association (IDTA)"
+    email: "info@idtwin.org"
+  license:
+    name: "CC BY 4.0"
+    url: "https://creativecommons.org/licenses/by/4.0/"
+  version: "V3.0.1_SSP-001"
+servers: []
+paths:
+  /shell-descriptors:
+    get:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Returns all Asset Administration Shell Descriptors"
+      operationId: "GetAllAssetAdministrationShellDescriptors"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptors/3/0"
+      - "https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptorsByAssetKind/3/0"
+      - "https://admin-shell.io/aas/API/GetAllAssetAdministrationShellDescriptorsByAssetType/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/Limit"
+      - $ref: "./model-part2.yaml#/components/parameters/Cursor"
+      - $ref: "./model-part2.yaml#/components/parameters/AssetKind"
+      - $ref: "./model-part2.yaml#/components/parameters/AssetType"
+      responses:
+        "200":
+          description: "Requested Asset Administration Shell Descriptors"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/GetAssetAdministrationShellDescriptorsResult"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+      x-testfile-input-path: "getAllShellDescriptorsTest.yaml"
+    post:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Creates a new Asset Administration Shell Descriptor, i.e. registers\
+        \ an AAS"
+      operationId: "PostAssetAdministrationShellDescriptor"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PostAssetAdministrationShellDescriptor/3/0"
+      requestBody:
+        description: "Asset Administration Shell Descriptor object"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part2.yaml#/components/schemas/AssetAdministrationShellDescriptor"
+        required: true
+      responses:
+        "201":
+          description: "Asset Administration Shell Descriptor created successfully"
+          headers:
+            Location:
+              description: "URL of the newly created resource"
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/AssetAdministrationShellDescriptor"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "409":
+          $ref: "./model-part2.yaml#/components/responses/conflict"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /shell-descriptors/{aasIdentifier}:
+    get:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Returns a specific Asset Administration Shell Descriptor"
+      operationId: "GetAssetAdministrationShellDescriptorById"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetAssetAdministrationShellDescriptorById/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/AssetAdministrationShellIdentifier"
+      responses:
+        "200":
+          description: "Requested Asset Administration Shell Descriptor"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/AssetAdministrationShellDescriptor"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    put:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Updates an existing Asset Administration Shell Descriptor"
+      operationId: "PutAssetAdministrationShellDescriptorById"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PutAssetAdministrationShellDescriptorById/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/AssetAdministrationShellIdentifier"
+      requestBody:
+        description: "Asset Administration Shell Descriptor object"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part2.yaml#/components/schemas/AssetAdministrationShellDescriptor"
+        required: true
+      responses:
+        "204":
+          description: "Asset Administration Shell Descriptor updated successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    delete:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Deletes an Asset Administration Shell Descriptor, i.e. de-registers\
+        \ an AAS"
+      operationId: "DeleteAssetAdministrationShellDescriptorById"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/DeleteAssetAdministrationShellDescriptorById/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/AssetAdministrationShellIdentifier"
+      responses:
+        "204":
+          description: "Asset Administration Shell Descriptor deleted successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /shell-descriptors/{aasIdentifier}/submodel-descriptors:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/AssetAdministrationShellIdentifier"
+    get:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Returns all Submodel Descriptors"
+      operationId: "GetAllSubmodelDescriptorsThroughSuperpath"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetAllSubmodelDescriptors/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/Limit"
+      - $ref: "./model-part2.yaml#/components/parameters/Cursor"
+      responses:
+        "200":
+          description: "Requested Submodel Descriptors"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/GetSubmodelDescriptorsResult"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    post:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Creates a new Submodel Descriptor, i.e. registers a submodel"
+      operationId: "PostSubmodelDescriptor-ThroughSuperpath"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PostSubmodelDescriptor/3/0"
+      requestBody:
+        description: "Submodel Descriptor object"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part2.yaml#/components/schemas/SubmodelDescriptor"
+        required: true
+      responses:
+        "201":
+          description: "Submodel Descriptor created successfully"
+          headers:
+            Location:
+              description: "URL of the newly created resource"
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/SubmodelDescriptor"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "409":
+          $ref: "./model-part2.yaml#/components/responses/conflict"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /shell-descriptors/{aasIdentifier}/submodel-descriptors/{submodelIdentifier}:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/AssetAdministrationShellIdentifier"
+    - $ref: "./model-part2.yaml#/components/parameters/SubmodelIdentifier"
+    get:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Returns a specific Submodel Descriptor"
+      operationId: "GetSubmodelDescriptorByIdThroughSuperpath"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetSubmodelDescriptorById/3/0"
+      responses:
+        "200":
+          description: "Requested Submodel Descriptor"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/SubmodelDescriptor"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    put:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Updates an existing Submodel Descriptor"
+      operationId: "PutSubmodelDescriptorByIdThroughSuperpath"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PutSubmodelDescriptorById/3/0"
+      requestBody:
+        description: "Submodel Descriptor object"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part2.yaml#/components/schemas/SubmodelDescriptor"
+        required: true
+      responses:
+        "204":
+          description: "Submodel Descriptor updated successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    delete:
+      tags:
+      - "Asset Administration Shell Registry API"
+      summary: "Deletes a Submodel Descriptor, i.e. de-registers a submodel"
+      operationId: "DeleteSubmodelDescriptorByIdThroughSuperpath"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/DeleteSubmodelDescriptorById/3/0"
+      responses:
+        "204":
+          description: "Submodel Descriptor deleted successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /description:
+    get:
+      tags:
+      - "Description API"
+      summary: "Returns the self-describing information of a network resource (ServiceDescription)"
+      operationId: "GetDescription"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/Descriptor/GetDescription/3/0"
+      responses:
+        "200":
+          description: "Requested Description"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/ServiceDescription"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /search:
+    post:
+      operationId: "SearchShellDescriptors"
+      tags:
+      - "Registry and Discovery Interface"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShellDescriptorSearchRequest"
+        required: true
+      responses:
+        "200":
+          description: "Search response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShellDescriptorSearchResponse"
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/Result"
+components:
+  schemas:
+    ShellDescriptorSearchRequest:
+      type: "object"
+      properties:
+        page:
+          $ref: "#/components/schemas/Page"
+        sortBy:
+          $ref: "#/components/schemas/Sorting"
+        query:
+          $ref: "#/components/schemas/ShellDescriptorQuery"
+    ShellDescriptorQuery:
+      required:
+      - "path"
+      - "value"
+      properties:
+        path:
+          type: "string"
+        value:
+          type: "string"
+        extensionName:
+          type: "string"
+          description: "If this property is set, the query applies only to the extension\
+            \ of this name. In this case,\nthe path must reference the value property\
+            \ of the extension object.\n"
+        queryType:
+          type: "string"
+          enum:
+          - "match"
+          - "regex"
+          default: "match"
+        combinedWith:
+          $ref: "#/components/schemas/ShellDescriptorQuery"
+    Page:
+      type: "object"
+      required:
+      - "index"
+      - "size"
+      properties:
+        index:
+          type: "integer"
+          minimum: 0
+        size:
+          type: "integer"
+          minimum: 1
+          maximum: 10000
+    Sorting:
+      type: "object"
+      required:
+      - "path"
+      properties:
+        direction:
+          $ref: "#/components/schemas/SortDirection"
+        path:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SortingPath"
+    SortingPath:
+      type: "string"
+      enum:
+      - "idShort"
+      - "id"
+      - "administration.revision"
+      - "administration.version"
+    SortDirection:
+      type: "string"
+      enum:
+      - "ASC"
+      - "DESC"
+    ShellDescriptorSearchResponse:
+      type: "object"
+      required:
+      - "hits"
+      - "total"
+      properties:
+        total:
+          type: "integer"
+          format: "int64"
+          minimum: 0
+        hits:
+          type: "array"
+          items:
+            $ref: "./model-part2.yaml#/components/schemas/AssetAdministrationShellDescriptor"

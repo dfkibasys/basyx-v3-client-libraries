@@ -1,0 +1,59 @@
+{
+    "name": "success-test (integer)",
+    "initialState": {
+        "submodels": [
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40",
+                "submodelElements": [{
+                        "modelType": "Property",
+                        "value": "12",
+                        "valueType": "xs:integer",
+                        "idShort": "prop"
+                    }
+                ]
+            }
+        ]
+    },
+    "invocation": {
+        "args": {
+            "submodelIdentifier": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+            "idShortPath": "prop",
+            "submodelElementValue": 13
+        }
+    },
+    "expectedState": {
+        "submodels": [
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40",
+                "submodelElements": [
+                    {
+                        "modelType": "Property",
+                        "value": "13",
+                        "valueType": "xs:integer",
+                        "idShort": "prop"
+                    }
+                ]
+            }
+        ]
+    }
+}

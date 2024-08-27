@@ -255,6 +255,26 @@
 		    <version>1.5.3</version>
 		    <scope>test</scope>
 		</dependency>
+<dependency>
+    <groupId>org.wiremock.integrations.testcontainers</groupId>
+    <artifactId>wiremock-testcontainers-module</artifactId>
+    <version>1.0-alpha-14</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.wiremock</groupId>
+    <artifactId>wiremock</artifactId>
+    <version>3.9.1</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.assertj</groupId>
+    <artifactId>assertj-core</artifactId>
+    <version>3.24.2</version>
+    <scope>test</scope>
+</dependency>
+
+
     </dependencies>
 
 </project>

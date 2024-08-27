@@ -2,3 +2,84 @@
 - op: replace
   path: /servers
   value: []
+# remove endpoints that are not supported by the backend right-now
+- op: remove
+  path: /paths/~1submodels~1$metadata
+- op: remove
+  path: /paths/~1submodels~1$value
+- op: remove
+  path: /paths/~1submodels~1$reference
+- op: remove
+  path: /paths/~1submodels~1$path
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}/patch
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1$reference
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1$path
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1$reference
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1$metadata
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/patch
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$metadata/patch
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$reference
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1invoke-async
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1invoke-async~1$value
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1operation-status~1{handleId}
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}~1$value
+# - op: remove
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}~1$path
+- op: remove
+  path: /paths/~1serialization
+  # for now we just support the value-only representation for elements not for the hole submodel
+- op: remove
+  path: /paths/~1submodels~1{submodelIdentifier}~1$value
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/get/operationId
+  value: GetSubmodelElementByPath
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/delete/operationId
+  value: DeleteSubmodelElementByPath
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements/post/operationId
+  value: postSubmodelElement
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/post/operationId
+  value: postSubmodelElementByPath
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/get/operationId
+  value: getSubmodelElementByPath
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$value/get/operationId
+  value: getSubmodelElementByPathValueOnly
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/put/operationId
+  value: putSubmodelElementByPath  
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$value/patch/operationId
+  value: patchSubmodelElementByPathValueOnly 
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1invoke/post/operationId
+  value: invokeOperation 
+- op: replace
+  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1attachment/put/operationId
+  value: putFileByPath
+
+
+# set to submodel element choice  
+
+
+# Do we want to remove parameters, because they are not supported right now?
+#- op: remove
+#  path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/get/parameters
+

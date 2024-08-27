@@ -1,5 +1,5 @@
 {
-    "name": "not-found-test (404)",
+    "name": "aas info not found (404)",
     "initialState": {
         "shells": [
             {
@@ -205,7 +205,7 @@
     },
     "invocation": {
         "args": {
-            "aasIdentifier" : "https://acplt.org/Unknown"
+            "aasIdentifier": "https://acplt.org/Unknown"
         }
     },
     "expectedState": {
@@ -408,7 +408,8 @@
                 ],
                 "idShort": "DemoAASV3"
             }
-        ]
+        ],
+        "submodels": []
     },
     "expectedErrorStatusCode": 404
 }

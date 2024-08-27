@@ -1,0 +1,112 @@
+{
+    "name": "success-test-limit",
+    "initialState": {
+        "submodels": [
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": [
+                    {
+                        "modelType": "Property",
+                        "value": "1",
+                        "valueType": "xs:long",
+                        "idShort": "1"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "2",
+                        "valueType": "xs:long",
+                        "idShort": "2"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "3",
+                        "valueType": "xs:long",
+                        "idShort": "3"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "4",
+                        "valueType": "xs:long",
+                        "idShort": "4"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "5",
+                        "valueType": "xs:long",
+                        "idShort": "5"
+                    }
+                ]
+            }
+        ]
+    },
+    "invocation": {
+        "args": {
+            "submodelIdentifier": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+            "limit": 2
+        }
+    },
+    "expectedState": {
+        "submodels": [
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": [
+                    {
+                        "modelType": "Property",
+                        "value": "1",
+                        "valueType": "xs:long",
+                        "idShort": "1"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "2",
+                        "valueType": "xs:long",
+                        "idShort": "2"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "3",
+                        "valueType": "xs:long",
+                        "idShort": "3"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "4",
+                        "valueType": "xs:long",
+                        "idShort": "4"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "5",
+                        "valueType": "xs:long",
+                        "idShort": "5"
+                    }
+                ]
+            }
+        ]
+    },
+    "expectedReturnValue": {
+        "paging_metadata": {
+            "cursor" : "Mg"
+        },
+        "result": [
+            {
+                "modelType": "Property",
+                "value": "1",
+                "valueType": "xs:long",
+                "idShort": "1"
+            },
+            {
+                "modelType": "Property",
+                "value": "2",
+                "valueType": "xs:long",
+                "idShort": "2"
+            }
+        ]
+    }
+}

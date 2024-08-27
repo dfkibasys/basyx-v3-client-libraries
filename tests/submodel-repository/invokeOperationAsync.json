@@ -1,0 +1,90 @@
+{
+    "name": "success-test",
+    "mocks": [
+        {
+            "request": {
+                "method": "POST",
+                "urlPath": "/api/echo",
+                "headers": {
+                    "Content-Type": {
+                        "equalTo": "application/json",
+                        "caseInsensitive": true
+                    }
+                }
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": "{ \"value\" : { \"modelType\" : \"Property\", \"value\": \"Hello World!\" } }"
+            }
+        }
+    ],
+    "initialState": {
+        "submodels": [
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": [
+                    {
+                        "modelType": "SubmodelElementCollection",
+                        "idShort": "col1",
+                        "value": [
+                            {
+                                "modelType": "Operation",
+                                "idShort": "message",
+                                "qualifiers": [
+                                    {
+                                        "kind": "ConceptQualifier",
+                                        "type": "invocationDelegation",
+                                        "valueType": "xs:string",
+                                        "value": "$PROPERTY(basyxtest.mockserver.url.internal)/api/echo"
+                                    }
+                                ],
+                                "inputVariables": [
+                                    {
+                                        "value": {
+                                            "idShort": "msg",
+                                            "modelType": "Property",
+                                            "valueType": "xs:string"
+                                        }
+                                    }
+                                ],
+                                "outputVariables": [
+                                    {
+                                        "value": {
+                                            "idShort": "result",
+                                            "modelType": "Property",
+                                            "valueType": "xs:string"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "invocation": {
+        "args": {
+            "submodelIdentifier": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+            "idShortPath": "col1.message",
+            "operationRequest": {
+                "inputArguments": [
+                    {
+                        "value": {
+                            "idShort": "msg",
+                            "modelType": "Property",
+                            "valueType": "xs:string",
+                            "value": "Hi there!"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -208,10 +208,9 @@
             "aasIdentifier": "https://acplt.org/Unknown",
             "assetInformation": {
                 "assetKind": "Type",
-                "globalAssetId": "https://acplt.org/Test_New"
+                "globalAssetId": "https://acplt.org/Test_New22"
             }
         }
-        
     },
     "expectedState": {
         "shells": [
@@ -280,7 +279,7 @@
                 "modelType": "AssetAdministrationShell",
                 "assetInformation": {
                     "assetKind": "Type",
-                    "globalAssetId": "https://acplt.org/Test_New"
+                    "globalAssetId": "https://acplt.org/Test_Asset_Mandatory"
                 },
                 "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory",
                 "idShort": "Test_AssetAdministrationShell2_Mandatory"
@@ -413,7 +412,8 @@
                 ],
                 "idShort": "DemoAASV3"
             }
-        ]
+        ],
+        "submodels": []
     }, 
     "expectedErrorStatusCode": 404
 }

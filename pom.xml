@@ -16,8 +16,9 @@
  		<module>java/parent</module>
  		<module>java/build/generated/project</module>
     	<module>java/facade</module>
+		<!--
 		<module>typescript</module>
-		<module>python</module>
+		<module>python</module>-->
 	</modules>
 
 	<properties>

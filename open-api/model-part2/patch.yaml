@@ -92,3 +92,5 @@
 # # # - op: remove
 # # #   path: /components/parameters/AssetInformation/properties/assetType/pattern
 # # #   path: /components/schemas/Key/properties/value/pattern
+
+

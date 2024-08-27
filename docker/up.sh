@@ -3,12 +3,25 @@
 
 PORTAINER_PWD=$(cat ./portainer/admin-password)
 
-docker compose -p basyx -f docker-compose-basyx.yml up -d
 
+read -p "Should authentication be enabled? [Y/n]: " auth_enabled
 
-set -a
-source .env
-set +a
+auth_enabled=${auth_enabled:-Y}
+
+if [[ "$auth_enabled" =~ ^[Yy]$ ]]; then
+    echo "Authentication will be enabled."
+    docker compose --env-file .env.secure -p basyx -f docker-compose-basyx.yml up -d --remove-orphans
+    set -a
+    source .env
+    set +a
+else
+    echo "Authentication will not be enabled."
+    docker compose --env-file .env.unsecure  -p basyx -f docker-compose-basyx.yml up -d --remove-orphans
+    set -a
+    source .env.unsecure
+    set +a
+fi
+
 
 echo ""
 echo "=== services services  ==="

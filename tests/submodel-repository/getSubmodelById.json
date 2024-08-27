@@ -1,0 +1,66 @@
+{
+    "name": "success-test",
+    "initialState": {
+        "submodels": [
+            
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40_Erdgas",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40_Erdgas",
+                "submodelElements": []
+            }
+        ]
+    },
+    "invocation": {
+        "args": {
+            "submodelIdentifier" : "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30"
+        }
+    },
+    "expectedState": {
+        "submodels": [            
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40_Erdgas",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40_Erdgas",
+                "submodelElements": []
+            }
+        ]
+    },
+    "expectedReturnValue" : {
+        "modelType": "Submodel",
+        "kind": "Instance",
+        "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+        "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+        "submodelElements": []
+    }
+}

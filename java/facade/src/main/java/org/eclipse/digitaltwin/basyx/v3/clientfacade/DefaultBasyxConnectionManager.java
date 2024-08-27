@@ -27,7 +27,6 @@ package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.Aas4jObjectMapperFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.BasyxApiFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.DefaultBasyxApiFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
@@ -52,6 +51,7 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.security.NullBasyxAuthorize
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.security.ServiceAccountAuthorizer;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.security.ServiceAccountAuthorizerConfigurationFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.security.config.EnvironmentBasedAuthorizerConfigProvider;
+import org.eclipse.digitaltwin.basyx.v3.clients.JSON;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AasxFileServerApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRegistryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRegistryApi;
@@ -70,7 +70,7 @@ public class DefaultBasyxConnectionManager implements BasyxConnectionManager {
 	}
 
 	public DefaultBasyxConnectionManager(BasyxTransferInterceptor interceptor) {
-		this(new Aas4jObjectMapperFactory().newObjectMapper(), new DefaultBasyxApiFactory(interceptor));
+		this(JSON.getDefault().getMapper(), new DefaultBasyxApiFactory(interceptor));
 	}
 	
 	public DefaultBasyxConnectionManager(ObjectMapper mapper, BasyxApiFactory factory) {

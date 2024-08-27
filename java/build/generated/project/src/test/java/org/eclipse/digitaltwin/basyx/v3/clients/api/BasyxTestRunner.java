@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,19 +36,23 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.stubbing.StubImport;
+import com.github.tomakehurst.wiremock.stubbing.StubImportBuilder;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.google.common.base.Functions;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
 public class BasyxTestRunner {
 
-	private final BasyxTestEnvironment environment;
+	private final BasyxTestEnvironmentBase environment;
 	private final ObjectMapper mapper;
 	private final Path testFolder;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BasyxTestRunner.class);
 
-	public BasyxTestRunner(BasyxTestEnvironment environment, ObjectMapper mapper, Path testFolder) {
+	public BasyxTestRunner(BasyxTestEnvironmentBase environment, ObjectMapper mapper, Path testFolder) {
 		this.environment = environment;
 		this.mapper = mapper;
 		this.testFolder = testFolder;
@@ -86,6 +91,7 @@ public class BasyxTestRunner {
 					String content = Files.readString(eachPath, StandardCharsets.UTF_8);
 					content = content.replace("$PROPERTY(basyxtest.folder)",
 							testFolder.toString().replace("\\", "\\\\"));
+					content = content.replace("$PROPERTY(basyxtest.mockserver.url.internal)", environment.getInternalMockServerUrl());
 					C value = mapper.readValue(content, javaType);
 					if (Strings.isNullOrEmpty(value.getName())) {
 						value.setName(fileName);
@@ -155,11 +161,36 @@ public class BasyxTestRunner {
 
 		Assert.assertTrue("These thumbnails do not have corresponding ids: " + thumbnails.keySet(),
 				thumbnails.isEmpty());
+
+	}
+
+	private void initializeMockService(List<StubMapping> mappings) {
+		if (mappings == null || mappings.isEmpty()) {
+			return;
+		}
+
+		URI uri = URI.create(environment.getExternalMockServerUrl());
+		WireMock.configureFor(uri.getScheme(), uri.getHost(), uri.getPort());
+		StubImportBuilder builder = StubImport.stubImport().overwriteExisting();
+		for (StubMapping eachMapping : mappings) {
+			builder.stub(eachMapping);
+		}
+		WireMock.importStubs(builder);
+	}
+
+	private void cleanupMockService(List<StubMapping> mappings) {
+		if (mappings == null) {
+			return;
+		}
+		for (StubMapping eachMapping : mappings) {
+			WireMock.removeStub(eachMapping);
+		}
 	}
 
 	public <T extends BasyxTestValues> void runAndAssertWithVoidResult(BasyxVoidTestDefinition<T> def,
 			Consumer<T> consumer) {
 		try {
+			initializeMockService(def.getMocks());
 			initializeServices(def.getInitialState());
 
 			Integer errorCode = def.getExpectedErrorStatusCode();
@@ -178,6 +209,7 @@ public class BasyxTestRunner {
 		} catch (IOException | JSONException e) {
 			throw new RuntimeException(e);
 		} finally {
+			cleanupMockService(def.getMocks());
 			environment.cleanup();
 		}
 	}
@@ -185,6 +217,7 @@ public class BasyxTestRunner {
 	public <T extends BasyxTestValues, R extends Object> void runAndAssertWithListResult(
 			BasyxListTestDefinition<T, R> def, Function<T, List<R>> func) {
 		try {
+			initializeMockService(def.getMocks());
 			initializeServices(def.getInitialState());
 
 			Integer expectedStatus = def.getExpectedErrorStatusCode();
@@ -221,6 +254,7 @@ public class BasyxTestRunner {
 		} catch (IOException | JSONException e) {
 			throw new RuntimeException(e);
 		} finally {
+			cleanupMockService(def.getMocks());
 			environment.cleanup();
 		}
 	}
@@ -229,8 +263,8 @@ public class BasyxTestRunner {
 			BasyxFunctionalTestDefinition<T, R> def, Function<T, R> func) {
 		try {
 			LOGGER.info("Running: " + def.getName());
-
 			initializeServices(def.getInitialState());
+			initializeMockService(def.getMocks());
 
 			T args = Optional.ofNullable(def.getInvocation()).map(Invocation::getArgs).orElse(null);
 			Integer expectedStatus = def.getExpectedErrorStatusCode();
@@ -262,6 +296,7 @@ public class BasyxTestRunner {
 		} catch (IOException | JSONException e) {
 			throw new RuntimeException(e);
 		} finally {
+			cleanupMockService(def.getMocks());
 			environment.cleanup();
 		}
 	}
@@ -411,6 +446,8 @@ public class BasyxTestRunner {
 
 		private String comment;
 
+		private List<StubMapping> mocks;
+
 		private BasyxRepositoryState initialState;
 
 		private BasyxRepositoryState expectedState;
@@ -418,6 +455,14 @@ public class BasyxTestRunner {
 		private Integer expectedErrorStatusCode;
 
 		private Invocation<T> invocation;
+
+		public List<StubMapping> getMocks() {
+			return mocks;
+		}
+
+		public void setMocks(List<StubMapping> mocks) {
+			this.mocks = mocks;
+		}
 
 		public Integer getExpectedErrorStatusCode() {
 			return expectedErrorStatusCode;

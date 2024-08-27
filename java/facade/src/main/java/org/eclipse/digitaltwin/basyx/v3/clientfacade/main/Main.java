@@ -40,10 +40,13 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxUpdateCon
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolvers;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SimpleSubmodelReferenceResolver;
+import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Main {
 
-	public static void main(String[] args) throws ConflictingIdentifierException {
+	public static void main(String[] args) throws ConflictingIdentifierException, JsonProcessingException, ApiException {
 		
 		BasyxConnectionManager manager = new DefaultBasyxConnectionManager();
 		
@@ -68,8 +71,7 @@ public class Main {
 			}
 		}
 		updateFacade.deleteAllShells();
-		updateFacade.deleteAllSubmodels();
-		
+		updateFacade.deleteAllSubmodels();		
 	}
 
 }

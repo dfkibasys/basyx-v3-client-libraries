@@ -211,9 +211,6 @@
         }
     },
     "expectedState": {
-        "thumbnails": {
-            "https://acplt.org/Test_AssetAdministrationShell2_Mandatory" : "$PROPERTY(basyxtest.folder)/basyx_thumbnail.png"
-        },
         "shells": [
             {
                 "modelType": "AssetAdministrationShell",
@@ -413,7 +410,8 @@
                 ],
                 "idShort": "DemoAASV3"
             }
-        ]
+        ],
+        "submodels": []
     },
     "expectedErrorStatusCode" : 404
 
