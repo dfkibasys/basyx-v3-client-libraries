@@ -45,18 +45,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class BasyxTestEnvironmentBase {
 
 	private final ObjectMapper mapper;
-	private String wireMockPath;
 	
 	public BasyxTestEnvironmentBase(ObjectMapper mapper) {
 		this.mapper = mapper; 
 	}
-	
-	public void initialize() {
-		if (wireMockPath != null) {
-			
-		}
-	}
-	
+		
 	public void postSubmodel(CloseableHttpClient client, Submodel sm) throws ClientProtocolException, IOException {
 		postResource(client, getSubmodelRepositoryUrl(), "submodels", sm);
 	}
@@ -102,8 +95,21 @@ public abstract class BasyxTestEnvironmentBase {
 			Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 		}
 	}
-
 	
+	public void putFileAttachment(CloseableHttpClient client, String smId, String smePath, Path filePath) throws ClientProtocolException, IOException {
+		// for now we assume that value and content-type in submodel-element match the referenced file of this put request
+		HttpEntity entity = MultipartEntityBuilder.create().addPart("file", new FileBody(filePath.toFile()))
+				.addTextBody("fileName", filePath.getFileName().toString())
+				.setContentType(ContentType.MULTIPART_FORM_DATA).build();
+		String encodedId = Base64.getUrlEncoder().encodeToString(smId.getBytes(StandardCharsets.UTF_8));
+		HttpPut put = new HttpPut(getSubmodelRepositoryUrl() + "/submodels/"
+				+ encodedId + "/submodel-elements/" + smePath + "/attachment?fileName=");
+		put.setEntity(entity);		
+		
+		try (CloseableHttpResponse response = client.execute(put)) {
+			Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+		}
+	}
 	
 	public void cleanup() {
 		try (CloseableHttpClient client = HttpClients.createMinimal()) {
@@ -232,6 +238,24 @@ public abstract class BasyxTestEnvironmentBase {
 			}
 		}
 	}
+	
+
+	public Optional<byte[]> getFileAttachment(String smId, String path) throws ClientProtocolException, IOException {
+		try (CloseableHttpClient client = HttpClients.createMinimal()) {
+			String encodedId = Base64.getUrlEncoder().encodeToString(smId.getBytes(StandardCharsets.UTF_8));
+			HttpGet get = new HttpGet(getSubmodelRepositoryUrl() + "/submodels/"
+					+ encodedId + "/submodel-elements/" + path + "/attachment");
+			try (CloseableHttpResponse response = client.execute(get)) {
+				if (response.getStatusLine().getStatusCode() == 200) {
+					HttpEntity entity = response.getEntity();
+					ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+					entity.writeTo(bOut);
+					return Optional.of(bOut.toByteArray());
+				}
+				return Optional.empty();
+			}
+		}
+	}
 
 	public void up() {
 	}
@@ -252,4 +276,6 @@ public abstract class BasyxTestEnvironmentBase {
 	protected abstract String getInternalMockServerUrl();
 
 	protected abstract String getExternalMockServerUrl();
+
+
 }

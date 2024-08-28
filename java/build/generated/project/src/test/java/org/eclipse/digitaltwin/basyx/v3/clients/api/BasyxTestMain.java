@@ -146,7 +146,7 @@ public class BasyxTestMain {
 		for (Submodel sm : submodels) {
 			String id = sm.getId();
 			System.out.println(id);
-			smRepoApi.deleteSubmodelById(id);
+			smRepoApi.deleteSubmodel(id);
 			System.out.println("Submodel " + id + " deleted!");
 		}
 	}

@@ -112,7 +112,7 @@ public class BasyxTestRunner {
 		return (name.equals(namePrefix + ".json") || name.startsWith(namePrefix + "_")) && name.endsWith(".json");
 	}
 
-	public void initializeServices(BasyxRepositoryState initialState) throws JsonProcessingException, IOException {
+	private void initializeServices(BasyxRepositoryState initialState) throws JsonProcessingException, IOException {
 		if (initialState == null) {
 			return;
 		}
@@ -122,6 +122,7 @@ public class BasyxTestRunner {
 		List<SubmodelDescriptor> smDescriptors = initialState.getSubmodelDescriptors();
 		Map<String, String> thumbnails = new HashMap<>(
 				initialState.getThumbnails() != null ? initialState.getThumbnails() : Map.of());
+		Map<String, Map<String, String>> fileAttachments = initialState.getFileAttachments();
 
 		Assert.assertFalse(
 				"As auto registration is activated just initialize shells or shell descriptors (even if declared empty), because shell descriptors are deployed implicitely.",
@@ -145,6 +146,18 @@ public class BasyxTestRunner {
 			if (submodels != null) {
 				for (Submodel sm : submodels) {
 					environment.postSubmodel(client, sm);
+					
+				}
+			}
+			if (fileAttachments != null) {
+				for (Entry<String, Map<String, String>> eachIdToPathMap : fileAttachments.entrySet()) {
+					String smId = eachIdToPathMap.getKey();
+					for (Entry<String, String> eachPathToFileMap : eachIdToPathMap.getValue().entrySet()) {
+						String path = eachPathToFileMap.getKey();
+						String filePath = eachPathToFileMap.getValue();
+						environment.putFileAttachment(client, smId, path, Path.of(filePath));
+					}
+					
 				}
 			}
 			if (shellDescriptors != null) {
@@ -269,6 +282,7 @@ public class BasyxTestRunner {
 			T args = Optional.ofNullable(def.getInvocation()).map(Invocation::getArgs).orElse(null);
 			Integer expectedStatus = def.getExpectedErrorStatusCode();
 			R expected = def.getExpectedReturnValue();
+			
 			R result;
 			if (expectedStatus != null) {
 				try {
@@ -326,7 +340,6 @@ public class BasyxTestRunner {
 		if (expected == null) {
 			return;
 		}
-		assertRepositoryStatus(name, expected);
 		List<AssetAdministrationShell> expectedShellList = expected.getShells();
 		if (expectedShellList != null) {
 			Map<String, AssetAdministrationShell> expectedShells = expectedShellList.stream()
@@ -361,30 +374,6 @@ public class BasyxTestRunner {
 					.stream().collect(Collectors.toMap(SubmodelDescriptor::getId, Function.identity()));
 			assertEquals(name, expectedSubmodelDescriptors, currentSubmodelDescriptors, "SubmodelDescriptors");
 		}
-	}
-
-	private void assertRepositoryStatus(String name, BasyxRepositoryState expected) throws IOException, JSONException {
-		if (expected == null) {
-			return;
-		}
-		List<AssetAdministrationShellDescriptor> expectedShellDescrList = expected.getShellDescriptors();
-		if (expectedShellDescrList != null) {
-			Map<String, AssetAdministrationShellDescriptor> expectedShells = expectedShellDescrList.stream()
-					.collect(Collectors.toMap(AssetAdministrationShellDescriptor::getId, Functions.identity()));
-			Map<String, AssetAdministrationShellDescriptor> currentShells = environment.getAllShellDescriptors()
-					.stream().collect(Collectors.toMap(AssetAdministrationShellDescriptor::getId, Function.identity()));
-
-			assertEquals(name, expectedShells, currentShells, "ShellDescriptors");
-		}
-		List<Submodel> expectedSubmodelList = expected.getSubmodels();
-		if (expectedSubmodelList != null) {
-			Map<String, Submodel> expectedSubmodels = expected.getSubmodels().stream()
-					.collect(Collectors.toMap(Submodel::getId, Functions.identity()));
-			Map<String, Submodel> currentSumodels = environment.getAllSubmodels().stream()
-					.collect(Collectors.toMap(Submodel::getId, Function.identity()));
-
-			assertEquals(name, expectedSubmodels, currentSumodels, "SubmodelDescriptors");
-		}
 		Map<String, String> thumbnails = expected.getThumbnails();
 		if (thumbnails != null) {
 			for (Entry<String, String> eachThumbnail : thumbnails.entrySet()) {
@@ -396,7 +385,24 @@ public class BasyxTestRunner {
 				Assert.assertArrayEquals(expectedFile, dataOpt.get());
 			}
 		}
+		Map<String, Map<String, String>> attachments = expected.getFileAttachments();
+		if (attachments != null) {
+			for (Entry<String, Map<String, String>> eachAttachment : attachments.entrySet()) {
+				String smId = eachAttachment.getKey();
+				for (Entry<String, String> eachPathMapping : eachAttachment.getValue().entrySet()) {
+					String path = eachPathMapping.getKey();
+					Path filePath = Path.of(eachPathMapping.getValue());
+					Optional<byte[]> dataOpt = environment.getFileAttachment(smId, path);
+					Assert.assertTrue("File attachment for submodel '" + smId + "' and submodel element path '" +path+ "' not found on backend.", dataOpt.isPresent());
+					byte[] expectedFile = Files.readAllBytes(filePath);
+					Assert.assertArrayEquals(expectedFile, dataOpt.get());
+					
+				}
+			}
+		}
 	}
+
+
 
 	private <T> void assertEquals(String name, Map<String, T> expected, Map<String, T> current, String resourceName)
 			throws JsonProcessingException, JSONException {
@@ -535,7 +541,6 @@ public class BasyxTestRunner {
 			extends AbstractBasyxTestDefinition<T> {
 
 		private R expectedReturnValue;
-		private File expectedReturnFile;
 
 		public R getExpectedReturnValue() {
 			return expectedReturnValue;
@@ -543,14 +548,6 @@ public class BasyxTestRunner {
 
 		public void setExpectedReturnValue(R returnValue) {
 			this.expectedReturnValue = returnValue;
-		}
-
-		public File getExpectedReturnFile() {
-			return expectedReturnFile;
-		}
-
-		public void setExpectedReturnFile(File expectedReturnFile) {
-			this.expectedReturnFile = expectedReturnFile;
 		}
 
 	}
@@ -581,7 +578,17 @@ public class BasyxTestRunner {
 		private List<SubmodelDescriptor> submodelDescriptors;
 
 		private Map<String, String> thumbnails;
+		
+		private Map<String, Map<String, String>> fileAttachments;
 
+		public Map<String, Map<String, String>> getFileAttachments() {
+			return fileAttachments;
+		}
+		
+		public void setFileAttachments(Map<String, Map<String, String>> fileAttachments) {
+			this.fileAttachments = fileAttachments;
+		}
+		
 		public Map<String, String> getThumbnails() {
 			return thumbnails;
 		}

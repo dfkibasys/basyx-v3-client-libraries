@@ -79,8 +79,8 @@ public class BasyxTestEnvironmentInMemory extends BasyxTestEnvironmentBase {
 	public void up() {
 		aasRegistryContainer.waitingFor(Wait.forHealthcheck()).start();
 		smRegistryContainer.waitingFor(Wait.forHealthcheck()).start();
-		aasEnvironmentContainer.start();
-		wireMockContainer.start();
+		aasEnvironmentContainer.waitingFor(Wait.forHealthcheck()).start();
+		wireMockContainer.waitingFor(Wait.forHealthcheck()).start();
 	}
 
 	@Override

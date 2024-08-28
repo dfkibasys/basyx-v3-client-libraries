@@ -1,7 +1,28 @@
 {
-    "name": "success-test",
+    "name": "sm-id-notfound (404)",
     "initialState": {
         "submodels": [
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40_Erdgas",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40_Erdgas",
+                "submodelElements": []
+            },
             {
                 "modelType": "Submodel",
                 "kind": "Template",
@@ -369,14 +390,33 @@
     },
     "invocation": {
         "args": {
-            "submodelIdentifier": "https://admin-shell.io/idta/TimeSeries/1/1_2",
-            "idShortPath": "Segments.LinkedSegment.Name",
-            "fileName": "basyx_thumbnail.png",
-            "_file": "$PROPERTY(basyxtest.folder)/basyx_thumbnail.png"
+            "submodelIdentifier": "https://admin-shell.io/idta/Unknown",
+            "idShortPath": "Segments.LinkedSegment"
         }
     },
     "expectedState": {
         "submodels": [
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40_Erdgas",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40_Erdgas",
+                "submodelElements": []
+            },
             {
                 "modelType": "Submodel",
                 "kind": "Template",
@@ -741,5 +781,6 @@
                 ]
             }
         ]
-    }
+    },
+    "expectedErrorStatusCode" : 404
 }
