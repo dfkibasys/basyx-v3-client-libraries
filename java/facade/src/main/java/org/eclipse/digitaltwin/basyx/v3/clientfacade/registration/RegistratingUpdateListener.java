@@ -66,7 +66,7 @@ public class RegistratingUpdateListener implements BasyxUpdateListener {
 	
 	@Override
 	public void onDeleteShell(AssetAdministrationShell eachShell) {
-		aasRegApi.deleteAssetAdministrationShellDescriptorById(eachShell.getId());		
+		aasRegApi.deleteAssetAdministrationShellDescriptor(eachShell.getId());		
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class RegistratingUpdateListener implements BasyxUpdateListener {
 	@Override
 	public void onUpdateShell(AssetAdministrationShell shell) {
 		AssetAdministrationShellDescriptor descr = toDescriptor(shell);
-		aasRegApi.putAssetAdministrationShellDescriptorById(descr.getId(), descr);		
+		aasRegApi.putAssetAdministrationShellDescriptor(descr.getId(), descr);		
 	}
 
 	@Override

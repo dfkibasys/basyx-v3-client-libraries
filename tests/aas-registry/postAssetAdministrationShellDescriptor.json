@@ -1,8 +1,7 @@
 {
     "name": "success-test",
     "initialState": {
-        "shells": [],
-        "submodels": []
+        "shellDescriptors": []
     },
     "invocation" : {
     "args": {
@@ -37,7 +36,6 @@
         }
     }},
     "expectedState": {
-        "shells": [],
         "shellDescriptors": [
             {
                 "description": [
@@ -68,8 +66,7 @@
                 "idShort": "TestAssetAdministrationShell",
                 "id": "https://acplt.org/Test_AssetAdministrationShell"
             }
-        ],
-        "submodels": []
+        ]
     },
     "expectedReturnValue": {
         "description": [

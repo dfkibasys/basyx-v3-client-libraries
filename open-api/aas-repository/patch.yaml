@@ -57,3 +57,39 @@
   path: /paths/~1shells~1{aasIdentifier}~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}
 - op: remove
   path: /paths/~1shells~1{aasIdentifier}~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}~1$value
+
+
+# adjust operatorIds to alter the method names
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}/delete/operationId
+  value: DeleteAssetAdministrationShell
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}/get/operationId
+  value: GetAssetAdministrationShell
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}/put/operationId
+  value: PutAssetAdministrationShell
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}~1submodel-refs~1{submodelIdentifier}/delete/operationId
+  value: DeleteSubmodelReference
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}~1submodel-refs/post/operationId
+  value: PostSubmodelReference
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}~1asset-information~1thumbnail/delete/operationId
+  value: DeleteThumbnail
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}~1asset-information~1thumbnail/put/operationId
+  value: PutThumbnail
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}~1asset-information~1thumbnail/get/operationId
+  value: GetThumbnail
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}~1submodel-refs/get/operationId
+  value: GetAllSubmodelReferences
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}~1asset-information/put/operationId
+  value: PutAssetInformation
+- op: replace
+  path: /paths/~1shells~1{aasIdentifier}~1asset-information/get/operationId
+  value: GetAssetInformation

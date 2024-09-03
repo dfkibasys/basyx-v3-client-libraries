@@ -48,7 +48,7 @@ import org.wiremock.integrations.testcontainers.WireMockContainer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class BasyxTestEnvironmentInMemory extends BasyxTestEnvironmentBase {
+public class BasyxTestEnvironmentTestContainers extends BasyxTestEnvironmentBase {
 
 	private final Network NETWORK = Network.newNetwork();
 
@@ -67,11 +67,15 @@ public class BasyxTestEnvironmentInMemory extends BasyxTestEnvironmentBase {
 			.withEnv("BASYX_EXTERNALURL", "http://aas-environment:8081").withNetwork(NETWORK)
 			.dependsOn(aasRegistryContainer, smRegistryContainer).withReuse(true);
 	
+	private final GenericContainer<?> aasDiscoveryContainer = new GenericContainer<>(
+			DockerImageName.parse("eclipsebasyx/aas-discovery:2.0.0-SNAPSHOT")).withExposedPorts(8081)
+			.withNetworkAliases("aas-discovery-container").withReuse(true);
+	
     private final WireMockContainer wireMockContainer = new WireMockContainer("wiremock/wiremock:3.9.1").withNetwork(NETWORK).withReuse(true)
     		.withNetworkAliases("wiremock");
 
     
-	public BasyxTestEnvironmentInMemory(ObjectMapper mapper) {
+	public BasyxTestEnvironmentTestContainers(ObjectMapper mapper) {
 		super(mapper);
 	}
 
@@ -81,6 +85,7 @@ public class BasyxTestEnvironmentInMemory extends BasyxTestEnvironmentBase {
 		smRegistryContainer.waitingFor(Wait.forHealthcheck()).start();
 		aasEnvironmentContainer.waitingFor(Wait.forHealthcheck()).start();
 		wireMockContainer.waitingFor(Wait.forHealthcheck()).start();
+		aasDiscoveryContainer.waitingFor(Wait.forHealthcheck()).start();
 	}
 
 	@Override
@@ -89,6 +94,7 @@ public class BasyxTestEnvironmentInMemory extends BasyxTestEnvironmentBase {
 		smRegistryContainer.stop();
 		aasEnvironmentContainer.stop();
 		wireMockContainer.stop();
+		aasDiscoveryContainer.stop();
 	}
 	
 	@Override
@@ -135,8 +141,7 @@ public class BasyxTestEnvironmentInMemory extends BasyxTestEnvironmentBase {
 	}
 
 	public String getAasDiscoveryserviceUrl() {
-		// TODO
-		return null;
+		return "http://localhost:" + aasDiscoveryContainer.getFirstMappedPort();
 	}
 
 	public String getSubmodelServiceUrl() {

@@ -31,15 +31,18 @@ import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetInformation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Resource;
+import org.eclipse.digitaltwin.aas4j.v3.model.SpecificAssetId;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
+import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.GetAllAssetLinksResult;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetAssetAdministrationShellDescriptorsResult;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetAssetAdministrationShellsResult;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetSubmodelDescriptorsResult;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetSubmodelsResult;
 import org.junit.Assert;
-import org.testcontainers.containers.GenericContainer;
 
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class BasyxTestEnvironmentBase {
@@ -111,6 +114,19 @@ public abstract class BasyxTestEnvironmentBase {
 		}
 	}
 	
+	public void postAssetLinks(CloseableHttpClient client, String id, List<SpecificAssetId> value) throws ClientProtocolException, IOException {
+		String url = getAasDiscoveryserviceUrl();
+		String encodedId = Base64.getUrlEncoder().encodeToString(id.getBytes(StandardCharsets.UTF_8));
+		HttpPost post = new HttpPost(url + "/lookup/shells/" + encodedId);
+		post.setHeader("Content-Type", "application/json");
+		String toSend = mapper.writeValueAsString(value);
+		post.setEntity(new StringEntity(toSend, ContentType.APPLICATION_JSON));
+
+		try (CloseableHttpResponse response = client.execute(post)) {
+			Assert.assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
+		}
+	}
+	
 	public void cleanup() {
 		try (CloseableHttpClient client = HttpClients.createMinimal()) {
 
@@ -128,9 +144,16 @@ public abstract class BasyxTestEnvironmentBase {
 			for (SubmodelDescriptor eachDescr : getAllSubmodelDescriptors()) {
 				deleteSubmodelDescriptor(client, eachDescr.getId());
 			}
+			for (String eachId : getAllAssetLinks()) {
+				deleteAssetLinks(client, eachId);
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private void deleteAssetLinks(CloseableHttpClient client, String id) throws ClientProtocolException, IOException {
+		deleteResource(client, getAasDiscoveryserviceUrl(), "lookup/shells", id);
 	}
 
 	private void deleteShellDescriptor(CloseableHttpClient client, String id)
@@ -188,6 +211,33 @@ public abstract class BasyxTestEnvironmentBase {
 		return getAllResources(getSubmodelRegistryUrl(), "submodel-descriptors",
 				GetSubmodelDescriptorsResult.class).getResult();
 	}
+	
+	public List<String> getAllAssetLinks() {
+		return getAllResources(getAasDiscoveryserviceUrl(), "/lookup/shells", GetAllAssetLinksResult.class).getResult();
+	}
+	
+	public Optional<List<SpecificAssetId>> getAssetLinks(String id) {
+		try (CloseableHttpClient client = HttpClients.createMinimal()) {
+			String idEncoded = Base64.getUrlEncoder().encodeToString(id.getBytes(StandardCharsets.UTF_8));
+			HttpGet get = new HttpGet(getAasDiscoveryserviceUrl() + "/lookup/shells/" + idEncoded + "?limit=" + Integer.MAX_VALUE);
+			get.setHeader("Accept", "application/json");
+			try (CloseableHttpResponse response = client.execute(get)) {
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+					return Optional.empty();
+				}
+				Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+				try (InputStream in = response.getEntity().getContent();
+						BufferedInputStream bIn = new BufferedInputStream(in);
+						InputStreamReader reader = new InputStreamReader(bIn, StandardCharsets.UTF_8)) {
+					MappingIterator<SpecificAssetId> iter = mapper.readerFor(SpecificAssetId.class).readValues(reader);
+					return Optional.of(iter.readAll());
+				}
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 
 	protected abstract String getSubmodelRegistryUrl();
 
@@ -276,6 +326,9 @@ public abstract class BasyxTestEnvironmentBase {
 	protected abstract String getInternalMockServerUrl();
 
 	protected abstract String getExternalMockServerUrl();
+
+
+
 
 
 }

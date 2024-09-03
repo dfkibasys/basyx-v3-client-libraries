@@ -5,15 +5,18 @@ volumes:
 
 services:
 
+
   wiremock: 
     image: wiremock/wiremock:3.9.1
     container_name: wiremock
+    restart: always
     ports:
     - "8087:8080"
 
   portainer:
     image: portainer/portainer-ce:2.18.2
     container_name: portainer
+    restart: always
     command: --admin-password-file=/secrets/admin-password
     ports: 
       - "8084:9000"
@@ -43,6 +46,24 @@ services:
   #       BASYX_CORS_ALLOWED_ORIGINS: '*'
   #       BASYX_CORS_ALLOWED_METHODS: GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD
 
+
+  aas-discovery:
+    image: eclipsebasyx/aas-discovery:${BASYX_VERSION}
+    restart: always
+    container_name: aas-discovery
+    ports:
+    - "8091:8081"
+    environment: 
+      BASYX_CORS_ALLOWED_ORIGINS: '*'
+      BASYX_CORS_ALLOWED_METHODS: GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD
+      BASYX_FEATURE_AUTHORIZATION_ENABLED: '${AUTHORIZATION_ENABLED}'
+      BASYX_FEATURE_AUTHORIZATION_TYPE: rbac
+      BASYX_FEATURE_AUTHORIZATION_JWTBEARERTOKENPROVIDER: keycloak
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/EclipseBaSyx
+      BASYX_FEATURE_AUTHORIZATION_RBAC_FILE: file:/rbac/rbac_rules.json
+    volumes:
+    - ./keycloak/rbac_rules-aas-discovery.json:/rbac/rbac_rules.json:ro
+
   aas-registry:
     image: eclipsebasyx/aas-registry-log-mem:${BASYX_VERSION}
     restart: always
@@ -57,9 +78,6 @@ services:
       BASYX_FEATURE_AUTHORIZATION_JWTBEARERTOKENPROVIDER: keycloak
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/EclipseBaSyx
       BASYX_FEATURE_AUTHORIZATION_RBAC_FILE: file:/rbac/rbac_rules.json
-      TEST: false
-      AA: $AUTHORIZATION_ENABLED
-      BB: ${AUTHORIZATION_ENABLED}
     volumes:
     - ./keycloak/rbac_rules-aas-registry.json:/rbac/rbac_rules.json:ro
 
@@ -89,8 +107,8 @@ services:
     environment:
       # we can't autoregister anymore as we are using authorization
       # see client settings -> we publish the descriptor on client side for now
-      # BASYX_AASREPOSITORY_FEATURE_REGISTRYINTEGRATION: http://aas-registry:8080
-      # BASYX_SUBMODELREPOSITORY_FEATURE_REGISTRYINTEGRATION: http://submodel-registry:8080
+      BASYX_AASREPOSITORY_FEATURE_REGISTRYINTEGRATION: $AAS_REGISTRY_INTEGRATION
+      BASYX_SUBMODELREPOSITORY_FEATURE_REGISTRYINTEGRATION: $SUBMODEL_REGISTRY_INTEGRATION
       BASYX_AASREPOSITORY_FEATURE_AASXUPLOAD_ENABLED: "true"   
       BASYX_CORS_ALLOWED_ORIGINS: '*'
       BASYX_CORS_ALLOWED_METHODS: GET,POST,PATCH,DELETE,PUT,OPTIONS,HEAD
@@ -130,6 +148,7 @@ services:
   keycloak:
     # image: keycloak/keycloak:$KEYCLOAK_VERSION
     image: eclipsebasyx/keycloak:0.0.1
+    restart: always
     build:
       context: ./keycloak/initializer
       dockerfile_inline: |
@@ -143,7 +162,6 @@ services:
         FROM keycloak/keycloak:$KEYCLOAK_VERSION
         COPY --from=build /workspace/target/org.eclipse.digitaltwin.basyx.v3.clients-keycloak-issuer-initializer.jar /opt/keycloak/providers/issuer-initializer.jar
     container_name: keycloak
-    restart: always
     environment:
       KC_DB: postgres
       KC_DB_USERNAME: keycloak
@@ -164,6 +182,7 @@ services:
   aas-gui:
     image: eclipsebasyx/aas-gui:${AAS_WEBUI_VERSION}
     container_name: aas-gui
+    restart: always
     environment:
       CHOKIDAR_USEPOLLING: "true"
       VITE_AAS_REGISTRY_PATH: http://localhost:8083

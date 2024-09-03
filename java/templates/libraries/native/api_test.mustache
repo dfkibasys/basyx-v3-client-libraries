@@ -123,40 +123,19 @@ public class {{classname}}Test {
     private static class {{#lambda.titlecase}}{{operationId}}{{/lambda.titlecase}}Params implements BasyxTestValues {
 
         {{#allParams}}
-        {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        private {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}};
-        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        private {{{dataType}}} {{paramName}};
-        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
+        private {{>base64-aware-dataType}} {{paramName}};
+        {{/allParams}}
+        {{#allParams}}
+        @SuppressWarnings("unused")
+        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{>base64-aware-dataType}} {{paramName}}) {
+            this.{{paramName}} = {{paramName}};
+        }
         {{/allParams}}
         {{#allParams}}
 
-        {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        @SuppressWarnings("unused")
-        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}}) {
-            this.{{paramName}} = {{paramName}};
-        }
-        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        @SuppressWarnings("unused")
-        public void set{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}({{{dataType}}} {{paramName}}) {
-            this.{{paramName}} = {{paramName}};
-        }
-        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        {{/allParams}}
-        {{#allParams}}
-
-        {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        public {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}() {
+        public {{>base64-aware-dataType}} get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}() {
             return this.{{paramName}};
         }
-        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        {{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-        public {{{dataType}}} get{{#lambda.titlecase}}{{paramName}}{{/lambda.titlecase}}() {
-            return this.{{paramName}};
-        }
-        {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
         {{/allParams}}
     }  
     {{/operation}}

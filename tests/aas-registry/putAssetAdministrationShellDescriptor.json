@@ -1,56 +1,8 @@
 {
     "name": "success-test",
     "initialState": {
-        "shells": [
+        "shellDescriptors": [
             {
-                "modelType": "AssetAdministrationShell",
-                "assetInformation": {
-                    "assetKind": "Instance",
-                    "globalAssetId": "https://acplt.org/Test_Asset"
-                },
-                "derivedFrom": {
-                    "keys": [
-                        {
-                            "type": "AssetAdministrationShell",
-                            "value": "https://acplt.org/TestAssetAdministrationShell2"
-                        }
-                    ],
-                    "type": "ExternalReference"
-                },
-                "submodels": [
-                    {
-                        "keys": [
-                            {
-                                "type": "Submodel",
-                                "value": "https://acplt.org/Test_Submodel"
-                            }
-                        ],
-                        "type": "ExternalReference"
-                    },
-                    {
-                        "keys": [
-                            {
-                                "type": "Submodel",
-                                "value": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
-                            }
-                        ],
-                        "type": "ExternalReference"
-                    },
-                    {
-                        "keys": [
-                            {
-                                "type": "Submodel",
-                                "value": "http://acplt.org/Submodels/Assets/TestAsset/Identification"
-                            }
-                        ],
-                        "type": "ExternalReference"
-                    }
-                ],
-                "administration": {
-                    "revision": "9",
-                    "version": "0"
-                },
-                "id": "https://acplt.org/Test_AssetAdministrationShell",
                 "description": [
                     {
                         "language": "en-us",
@@ -61,7 +13,23 @@
                         "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
                     }
                 ],
-                "idShort": "TestAssetAdministrationShell"
+                "administration": {
+                    "version": "0",
+                    "revision": "9"
+                },
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGw",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset",
+                "idShort": "TestAssetAdministrationShell",
+                "id": "https://acplt.org/Test_AssetAdministrationShell"
             }
         ]
     },

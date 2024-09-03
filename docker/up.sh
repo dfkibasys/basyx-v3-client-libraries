@@ -3,24 +3,32 @@
 
 PORTAINER_PWD=$(cat ./portainer/admin-password)
 
+read -p "Should authentication be enabled? [y/N]: " auth_enabled
+auth_enabled=${auth_enabled:-N}
+read -p "Should registy integration be enabled? [Y/n]: " registration_integration_enabled
+registration_integration_enabled=${registration_integration_enabled:-Y}
 
-read -p "Should authentication be enabled? [Y/n]: " auth_enabled
 
-auth_enabled=${auth_enabled:-Y}
 
 if [[ "$auth_enabled" =~ ^[Yy]$ ]]; then
-    echo "Authentication will be enabled."
-    docker compose --env-file .env.secure -p basyx -f docker-compose-basyx.yml up -d --remove-orphans
-    set -a
-    source .env
-    set +a
+    envFile=.env
 else
-    echo "Authentication will not be enabled."
-    docker compose --env-file .env.unsecure  -p basyx -f docker-compose-basyx.yml up -d --remove-orphans
-    set -a
-    source .env.unsecure
-    set +a
+    envFile=.env.unsecure
 fi
+
+if [[ "$registration_integration_enabled" =~ ^[Yy]$ ]]; then
+    echo "Registry integration will be enabled."
+else
+    echo "Registry integration will not be enabled."
+    envFile=${envFile}.noregistryintegration
+fi
+
+echo using env file ${envFile}
+
+docker compose --env-file ${envFile} -p basyx -f docker-compose-basyx.yml up -d --remove-orphans
+set -a
+source ${envFile}
+set +a
 
 
 echo ""

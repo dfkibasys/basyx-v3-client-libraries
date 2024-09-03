@@ -169,8 +169,8 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
-  public {{#vendorExtensions.x-return-byte-stream}}InputStream{{/vendorExtensions.x-return-byte-stream}}{{^vendorExtensions.x-return-byte-stream}}{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}{{/vendorExtensions.x-return-byte-stream}} {{operationId}}({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
-    {{#vendorExtensions.x-return-byte-stream}}ApiResponse<InputStream> localVarResponse ={{/vendorExtensions.x-return-byte-stream}}{{^vendorExtensions.x-return-byte-stream}}{{#returnType}}ApiResponse<{{{.}}}> localVarResponse = {{/returnType}}{{/vendorExtensions.x-return-byte-stream}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
+  public {{>stream-aware-returnType}} {{operationId}}({{#allParams}}{{>base64-aware-dataType}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+    {{#returnType}}{{>stream-aware-returnType-apiresponse}} localVarResponse =  {{/returnType}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
     {{#returnType}}
     return localVarResponse.getData();
     {{/returnType}}
@@ -195,15 +195,9 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
- public ApiResponse<{{#vendorExtensions.x-return-byte-stream}}InputStream{{/vendorExtensions.x-return-byte-stream}}{{^vendorExtensions.x-return-byte-stream}}{{{returnType}}}{{^returnType}}Void{{/returnType}}{{/vendorExtensions.x-return-byte-stream}}> {{operationId}}WithHttpInfo({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
- 	{{#allParams}}
-    {{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    {{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}} {{paramName}}AsBytes = ApiClient.base64UrlEncode({{paramName}});
-    {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}
-    {{/allParams}}
-  	return {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}AsBytes{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^-last}}, {{/-last}}{{/allParams}});
- 	
- }
+  public {{>stream-aware-returnType-apiResponse}} {{operationId}}WithHttpInfo({{#allParams}}{{>base64-aware-dataType}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+    return {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{>base64-aware-parameter-withMapping}}{{^-last}}, {{/-last}}{{/allParams}});
+  }
 
 
   /**
@@ -212,7 +206,7 @@ public class {{classname}} {
    {{#allParams}}
    * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{^isContainer}}{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/isContainer}}{{/required}}
    {{/allParams}}
-   * @return ApiResponse&lt;{{returnType}}{{^returnType}}Void{{/returnType}}&gt;
+   * @return {{>stream-aware-returnType-apiResponse}}
    * @throws ApiException if fails to make API call
    {{#isDeprecated}}
    * @deprecated
@@ -225,7 +219,7 @@ public class {{classname}} {
   {{#isDeprecated}}
   @Deprecated
   {{/isDeprecated}}
-  public ApiResponse<{{#vendorExtensions.x-return-byte-stream}}InputStream{{/vendorExtensions.x-return-byte-stream}}{{^vendorExtensions.x-return-byte-stream}}{{{returnType}}}{{^returnType}}Void{{/returnType}}{{/vendorExtensions.x-return-byte-stream}}> {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+  public {{>stream-aware-returnType-apiResponse}} {{operationId}}WithHttpInfoNoUrlEncoding({{#allParams}}{{>base64-aware-dataType-noUrlEncoding}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
     HttpRequest.Builder localVarRequestBuilder = {{operationId}}RequestBuilder({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
     try {
       HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
@@ -290,7 +284,7 @@ public class {{classname}} {
     }
   }
 
-  private HttpRequest.Builder {{operationId}}RequestBuilder({{#allParams}}{{#vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{#isArray}}List<String> {{/isArray}}{{^isArray}}String {{/isArray}}{{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{{dataType}}} {{/vendorExtensions.x-utf8-base64-url-encoded-as-string}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
+  private HttpRequest.Builder {{operationId}}RequestBuilder({{#allParams}}{{>base64-aware-dataType-noUrlEncoding}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
     {{#allParams}}
     {{#required}}
     // verify the required parameter '{{paramName}}' is set

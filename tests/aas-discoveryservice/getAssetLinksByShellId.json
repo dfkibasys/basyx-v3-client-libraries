@@ -1,0 +1,66 @@
+{
+    "name": "success-test",
+    "initialState": {
+        "assetLinks" : {
+            "https://acplt.org/Test_AssetAdministrationShell1": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test1"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ],
+            "https://acplt.org/Test_AssetAdministrationShell2": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test2"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "invocation": {
+        "args": {
+            "aasIdentifier": "https://acplt.org/Test_AssetAdministrationShell2"
+        }
+    },
+    "expectedState": {
+        "assetLinks" : {
+            "https://acplt.org/Test_AssetAdministrationShell1": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test1"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ],
+            "https://acplt.org/Test_AssetAdministrationShell2": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test2"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "expectedReturnValue": [
+        {
+            "name": "specificAssetId",
+            "value": "org::acplt::asset::test2"
+        },
+        {
+            "name": "type",
+            "value": "robot"
+        }
+    ]
+}

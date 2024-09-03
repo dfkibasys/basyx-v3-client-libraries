@@ -39,6 +39,7 @@
             }
         }
     },
+    "comment": "Just overridden, no conflict but also no duplicates",
     "expectedState": {
         "shells": [
             {
@@ -63,13 +64,5 @@
             }
         ]
     },
-    "expectedReturnValue": {
-        "keys": [
-            {
-                "type": "Submodel",
-                "value": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
-            }
-        ],
-        "type": "ExternalReference"
-    }
+    "expectedErrorStatusCode": 409
 }

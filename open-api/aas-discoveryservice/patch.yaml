@@ -6,13 +6,26 @@
   path: /components
   value: 
     schemas: 
-      PagedResultOrStringItems:
+      GetAllAssetLinksResult:
         type: object
         allOf: []
 - op: copy
   from: /paths/~1lookup~1shells/get/responses/200/content/application~1json/schema/allOf
-  path: /components/schemas/PagedResultOrStringItems/allOf
+  path: /components/schemas/GetAllAssetLinksResult/allOf
 - op: add
   path: /paths/~1lookup~1shells/get/responses/200/content/application~1json/schema
   value: 
-    $ref: '#/components/schemas/PagedResultOrStringItems'
+    $ref: '#/components/schemas/GetAllAssetLinksResult'
+# rename operations
+- op: replace
+  path: /paths/~1lookup~1shells/get/operationId
+  value: GetAllShellIdsByAssetLinks
+- op: replace
+  path: /paths/~1lookup~1shells~1{aasIdentifier}/get/operationId
+  value: GetAssetLinksByShellId
+- op: replace
+  path: /paths/~1lookup~1shells~1{aasIdentifier}/post/operationId
+  value: PostAssetLinksByShellId
+- op: replace
+  path: /paths/~1lookup~1shells~1{aasIdentifier}/delete/operationId
+  value: DeleteAssetLinksByShellId

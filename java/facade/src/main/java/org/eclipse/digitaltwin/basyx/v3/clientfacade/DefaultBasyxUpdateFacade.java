@@ -98,7 +98,7 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 
 	@Override
 	public void deleteShell(String id) {
-		shellRepositoryApi.deleteAssetAdministrationShellById(id);
+		shellRepositoryApi.deleteAssetAdministrationShell(id);
 	}
 
 	@Override
@@ -136,7 +136,7 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 	public void deleteSubmodel(String id) throws MissingIdentifierException, IdentifiableNotFoundException {
 		checkId(id);
 		try {
-			this.smRepositoryApi.deleteSubmodelById(id);
+			this.smRepositoryApi.deleteSubmodel(id);
 			listener.onDeleteSubmodel(id);
 		} catch (ApiException ex) {
 			if (ex.getCode() == HttpStatus.SC_NOT_FOUND) {
@@ -164,7 +164,7 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 	@Override
 	public Reference updateShell(AssetAdministrationShell shell) throws MissingIdentifierException {
 		checkId(shell);
-		shellRepositoryApi.putAssetAdministrationShellById(shell.getId(), shell);
+		shellRepositoryApi.putAssetAdministrationShell(shell.getId(), shell);
 		listener.onUpdateShell(shell);
 		return AasUtils.toReference(shell);
 	}
@@ -189,7 +189,7 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 	public Reference updateSubmodel(Submodel submodel) throws MissingIdentifierException {
 		checkId(submodel);
 		Reference ref = AasUtils.toReference(submodel);
-		smRepositoryApi.putSubmodelById(submodel.getId(), submodel);
+		smRepositoryApi.putSubmodel(submodel.getId(), submodel);
 		listener.onUpdateSubmodel(submodel);
 		return ref;
 	}

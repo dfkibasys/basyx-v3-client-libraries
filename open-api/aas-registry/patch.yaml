@@ -134,7 +134,29 @@
         items: 
           $ref: 'https://api.swaggerhub.com/domains/Plattform_i40/Part2-API-Schemas/V3.0.1#/components/schemas/AssetAdministrationShellDescriptor'
 
-# params
-- op: add
-  path: /paths/~1shell-descriptors/get/x-testfile-input-path
-  value: getAllShellDescriptorsTest.yaml
+
+# adjust operatorIds to alter the method names
+- op: replace
+  path: /paths/~1shell-descriptors~1{aasIdentifier}/get/operationId
+  value: GetAssetAdministrationShellDescriptor
+- op: replace
+  path: /paths/~1shell-descriptors~1{aasIdentifier}/put/operationId
+  value: PutAssetAdministrationShellDescriptor
+- op: replace
+  path: /paths/~1shell-descriptors~1{aasIdentifier}/delete/operationId
+  value: DeleteAssetAdministrationShellDescriptor
+- op: replace
+  path: /paths/~1shell-descriptors~1{aasIdentifier}~1submodel-descriptors/get/operationId
+  value: GetAllSubmodelDescriptors
+- op: replace
+  path: /paths/~1shell-descriptors~1{aasIdentifier}~1submodel-descriptors/post/operationId
+  value: PostSubmodelDescriptor
+- op: replace
+  path: /paths/~1shell-descriptors~1{aasIdentifier}~1submodel-descriptors~1{submodelIdentifier}/get/operationId
+  value: GetSubmodelDescriptor
+- op: replace
+  path: /paths/~1shell-descriptors~1{aasIdentifier}~1submodel-descriptors~1{submodelIdentifier}/put/operationId
+  value: PutSubmodelDescriptor
+- op: replace
+  path: /paths/~1shell-descriptors~1{aasIdentifier}~1submodel-descriptors~1{submodelIdentifier}/delete/operationId
+  value: DeleteSubmodelDescriptor

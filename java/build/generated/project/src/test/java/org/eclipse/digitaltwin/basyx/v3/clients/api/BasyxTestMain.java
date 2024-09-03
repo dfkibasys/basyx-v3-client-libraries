@@ -6,12 +6,15 @@ import java.util.function.Function;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
 import org.eclipse.digitaltwin.aas4j.v3.model.Key;
+import org.eclipse.digitaltwin.aas4j.v3.model.KeyTypes;
 import org.eclipse.digitaltwin.aas4j.v3.model.LangStringNameType;
 import org.eclipse.digitaltwin.aas4j.v3.model.LangStringTextType;
 import org.eclipse.digitaltwin.aas4j.v3.model.ModellingKind;
 import org.eclipse.digitaltwin.aas4j.v3.model.Operation;
 import org.eclipse.digitaltwin.aas4j.v3.model.OperationVariable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Property;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.SpecificAssetId;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElementCollection;
@@ -23,6 +26,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperation;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultOperationVariable;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultReference;
+import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSpecificAssetId;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodelElementCollection;
 import org.eclipse.digitaltwin.basyx.v3.clients.JSON;
@@ -35,8 +39,24 @@ public class BasyxTestMain {
 
 	
 	public static void main(String[] args) throws JsonProcessingException {
-		Submodel sm = create();
-		System.out.println(JSON.getDefault().getMapper().writeValueAsString(sm));
+		AssetAdministrationShellBasicDiscoveryApi api = new AssetAdministrationShellBasicDiscoveryApi("http://localhost:8091");
+		System.out.println(JSON.getDefault().getMapper().writeValueAsString(api.getDescription()));
+
+//		SpecificAssetId globalAssetId1 = new DefaultSpecificAssetId.Builder().name("type").value("heizung").build();
+//		api.postAllAssetLinksById("http://www.aas.org/aasid/11111", List.of(globalAssetId1));
+		System.out.println(JSON.getDefault().getMapper().writeValueAsString(api.getAllShellIdsByAssetLinks(null, null, null)));
+//		SpecificAssetId globalAssetId2 = new DefaultSpecificAssetId.Builder().name("globalAssetId").value("org::aas::2").build();
+//		api.postAllAssetLinksById("http://www.aas.org/aasid/2", List.of(globalAssetId2));
+//		SpecificAssetId globalAssetId3 = new DefaultSpecificAssetId.Builder().name("globalAssetId").value("org::aas::3").build();
+//		api.postAllAssetLinksById("http://www.aas.org/aasid/3", List.of(globalAssetId3));
+//		
+//		List<SpecificAssetId> ids = api.getAllAssetLinksById("http://www.aas.org/aasid/2");
+//		System.out.println(ids);
+		
+		
+		
+//		Submodel sm = create();
+//		System.out.println(JSON.getDefault().getMapper().writeValueAsString(sm));
 	}
 	
 	public static Submodel create() {

@@ -1,0 +1,47 @@
+{
+    "name": "conflict-test (409)",
+    "initialState": {
+        "assetLinks" : {
+            "https://acplt.org/Test_AssetAdministrationShell": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "invocation": {
+        "args": {
+            "aasIdentifier": "https://acplt.org/Test_AssetAdministrationShell",
+            "specificAssetId": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "expectedState": {
+        "assetLinks" : {
+            "https://acplt.org/Test_AssetAdministrationShell": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "expectedErrorStatusCode": 409
+}

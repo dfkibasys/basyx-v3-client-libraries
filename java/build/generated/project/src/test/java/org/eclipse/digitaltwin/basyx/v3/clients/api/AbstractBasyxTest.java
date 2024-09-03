@@ -20,6 +20,7 @@ public abstract class AbstractBasyxTest {
 	private static final String ENVIRONMENT_MOCKSERVICE_PORT = "environment.mockservice.port";
 	private static final String ENVIRONMENT_SUBMODELREPOSITORY_PORT = "environment.submodelrepository.port";
 	private static final String ENVIRONMENT_AASREPOSITORY_PORT = "environment.aasrepository.port";
+	private static final String ENVIRONMENT_AASDISCOVERY_PORT = "environment.aasdiscovery.port";
 	private static final String ENVIRONMENT_SUBMODELREGISTRY_PORT = "environment.submodelregistry.port";
 	private static final String ENVIRONMENT_AASREGISTRY_PORT = "environment.aasregistry.port";
 	private static final String ENVIRONMENT_TYPE_EXTERNAL = "EXTERNAL";
@@ -40,13 +41,15 @@ public abstract class AbstractBasyxTest {
 			int smRegistryPort = getPort(ENVIRONMENT_SUBMODELREGISTRY_PORT);
 			int aasRepositoryPort = getPort(ENVIRONMENT_AASREPOSITORY_PORT);
 			int smRepositoryPort = getPort(ENVIRONMENT_SUBMODELREPOSITORY_PORT);
+			int aasDiscoveryPort = getPort(ENVIRONMENT_AASDISCOVERY_PORT);
 			String containerUrl = getWireMockContainerUrl();
 			ENVIRONMENT = new BasyxTestEnvironmentExternal.Builder(MAPPER, host).aasRegistryPort(aasRegistryPort)
 					.mockServicePort(mockServicePort, containerUrl)
+					.aasDiscoveryServicePort(aasDiscoveryPort)
 					.aasRepositoryPort(aasRepositoryPort).smRegistryPort(smRegistryPort)
 					.smRepositoryPort(smRepositoryPort).build();
 		} else {
-			ENVIRONMENT = new BasyxTestEnvironmentInMemory(MAPPER);
+			ENVIRONMENT = new BasyxTestEnvironmentTestContainers(MAPPER);
 		}
 
 	}

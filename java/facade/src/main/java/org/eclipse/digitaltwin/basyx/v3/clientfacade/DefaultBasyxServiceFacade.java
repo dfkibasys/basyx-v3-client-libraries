@@ -234,7 +234,7 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 	private Optional<Submodel> fetchSubmodelById(String baseUrl, String id) {
 		SubmodelRepositoryApi repoApi = factory.newSubmodelRepositoryApi(mapper, baseUrl);
 		try {
-			return Optional.of(repoApi.getSubmodelById(id, null, null));
+			return Optional.of(repoApi.getSubmodel(id, null, null));
 		} catch (ApiException ex) {
 			if (ex.getCode() == HttpStatus.SC_NOT_FOUND) {
 				return Optional.empty();
@@ -286,14 +286,14 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 	}
 
 	private Optional<AssetAdministrationShell> fetchShellById(String id) {
-		AssetAdministrationShellDescriptor descriptor = aasRegistryApi.getAssetAdministrationShellDescriptorById(id);
+		AssetAdministrationShellDescriptor descriptor = aasRegistryApi.getAssetAdministrationShellDescriptor(id);
 		return endpointResolver.resolveShell(mapper, descriptor.getEndpoints(), this::fetchShellById);
 	}
 
 	private Optional<AssetAdministrationShell> fetchShellById(String baseUrl, String id) {
 		AssetAdministrationShellRepositoryApi api = factory.newShellRepositoryApi(mapper, baseUrl);
 		try {
-			return Optional.of(api.getAssetAdministrationShellById(id));
+			return Optional.of(api.getAssetAdministrationShell(id));
 		} catch (ApiException ex) {
 			if (ex.getCode() == HttpStatus.SC_NOT_FOUND) {
 				return Optional.empty();

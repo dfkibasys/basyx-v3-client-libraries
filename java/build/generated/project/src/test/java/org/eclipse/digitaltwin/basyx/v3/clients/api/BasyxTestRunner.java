@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,14 +18,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.swing.event.TreeSelectionEvent;
+
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
+import org.eclipse.digitaltwin.aas4j.v3.model.SpecificAssetId;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
@@ -51,11 +58,14 @@ public class BasyxTestRunner {
 	private final Path testFolder;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BasyxTestRunner.class);
+	
+	private final BasyxTestAssertions assertions;
 
 	public BasyxTestRunner(BasyxTestEnvironmentBase environment, ObjectMapper mapper, Path testFolder) {
 		this.environment = environment;
 		this.mapper = mapper;
 		this.testFolder = testFolder;
+		assertions = new BasyxTestAssertions(environment, mapper);
 	}
 
 	public <T extends BasyxTestValues> List<BasyxVoidTestDefinition<T>> loadVoidTestDefinition(String fileName,
@@ -91,7 +101,8 @@ public class BasyxTestRunner {
 					String content = Files.readString(eachPath, StandardCharsets.UTF_8);
 					content = content.replace("$PROPERTY(basyxtest.folder)",
 							testFolder.toString().replace("\\", "\\\\"));
-					content = content.replace("$PROPERTY(basyxtest.mockserver.url.internal)", environment.getInternalMockServerUrl());
+					content = content.replace("$PROPERTY(basyxtest.mockserver.url.internal)",
+							environment.getInternalMockServerUrl());
 					C value = mapper.readValue(content, javaType);
 					if (Strings.isNullOrEmpty(value.getName())) {
 						value.setName(fileName);
@@ -123,6 +134,7 @@ public class BasyxTestRunner {
 		Map<String, String> thumbnails = new HashMap<>(
 				initialState.getThumbnails() != null ? initialState.getThumbnails() : Map.of());
 		Map<String, Map<String, String>> fileAttachments = initialState.getFileAttachments();
+		Map<String, List<SpecificAssetId>> assetLinks = initialState.getAssetLinks();
 
 		Assert.assertFalse(
 				"As auto registration is activated just initialize shells or shell descriptors (even if declared empty), because shell descriptors are deployed implicitely.",
@@ -146,7 +158,7 @@ public class BasyxTestRunner {
 			if (submodels != null) {
 				for (Submodel sm : submodels) {
 					environment.postSubmodel(client, sm);
-					
+
 				}
 			}
 			if (fileAttachments != null) {
@@ -157,7 +169,7 @@ public class BasyxTestRunner {
 						String filePath = eachPathToFileMap.getValue();
 						environment.putFileAttachment(client, smId, path, Path.of(filePath));
 					}
-					
+
 				}
 			}
 			if (shellDescriptors != null) {
@@ -168,6 +180,11 @@ public class BasyxTestRunner {
 			if (smDescriptors != null) {
 				for (SubmodelDescriptor eachDescriptor : smDescriptors) {
 					environment.postSubmodelDescriptor(client, eachDescriptor);
+				}
+			}
+			if (assetLinks != null) {
+				for (Entry<String, List<SpecificAssetId>> assetIds : assetLinks.entrySet()) {
+					environment.postAssetLinks(client, assetIds.getKey(), assetIds.getValue());
 				}
 			}
 		}
@@ -218,7 +235,7 @@ public class BasyxTestRunner {
 			} else {
 				consumer.accept(args);
 			}
-			assertEnvironmentState(def.getName(), def.getExpectedState());
+			assertions.assertEnvironmentState(def.getName(), def.getExpectedState());
 		} catch (IOException | JSONException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -230,11 +247,13 @@ public class BasyxTestRunner {
 	public <T extends BasyxTestValues, R extends Object> void runAndAssertWithListResult(
 			BasyxListTestDefinition<T, R> def, Function<T, List<R>> func) {
 		try {
+			String name = def.getName();
 			initializeMockService(def.getMocks());
 			initializeServices(def.getInitialState());
 
 			Integer expectedStatus = def.getExpectedErrorStatusCode();
 			List<R> expected = def.getExpectedReturnValue();
+			Assert.assertTrue("Only specify expectedReturnValues or expectedErrorStatusCode, not both", expectedStatus != null || expected != null);
 			List<R> result;
 
 			T args = Optional.ofNullable(def.getInvocation()).map(Invocation::getArgs).orElse(null);
@@ -250,20 +269,10 @@ public class BasyxTestRunner {
 				result = func.apply(args);
 				Assert.assertTrue("No 'expectedReturnValue' specified", expected != null);
 			}
-
-			Set<R> toCompareResult = new HashSet<>(result);
-			Set<R> toCompareExpected = new HashSet<>(expected);
-			toCompareResult.removeAll(expected);
-			if (!toCompareResult.isEmpty()) {
-				Assert.assertEquals(def.getName() + ": Got more return values than expected",
-						mapper.writeValueAsString(result), mapper.writeValueAsString(expected));
+			if (expected != null) {
+				assertions.assertExpectedReturnValues(name, expected, result);				
 			}
-			toCompareExpected.removeAll(result);
-			if (!toCompareExpected.isEmpty()) {
-				Assert.assertEquals(def.getName() + ": Got less return values than expected",
-						mapper.writeValueAsString(result), mapper.writeValueAsString(expected));
-			}
-			assertEnvironmentState(def.getName(), def.getExpectedState());
+			assertions.assertEnvironmentState(def.getName(), def.getExpectedState());
 		} catch (IOException | JSONException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -275,14 +284,16 @@ public class BasyxTestRunner {
 	public <T extends BasyxTestValues, R extends Object> void runAndAssertWithFunctionalResult(
 			BasyxFunctionalTestDefinition<T, R> def, Function<T, R> func) {
 		try {
-			LOGGER.info("Running: " + def.getName());
+			String name = def.getName();
+			LOGGER.info("Running: " + name);
 			initializeServices(def.getInitialState());
 			initializeMockService(def.getMocks());
 
 			T args = Optional.ofNullable(def.getInvocation()).map(Invocation::getArgs).orElse(null);
 			Integer expectedStatus = def.getExpectedErrorStatusCode();
 			R expected = def.getExpectedReturnValue();
-			
+
+			Assert.assertTrue("Only specify expectedReturnValues or expectedErrorStatusCode, not both", expectedStatus != null || expected != null);
 			R result;
 			if (expectedStatus != null) {
 				try {
@@ -297,16 +308,9 @@ public class BasyxTestRunner {
 				result = func.apply(args);
 			}
 			if (expected != null) {
-				if (expected instanceof File && result instanceof File) {
-					File expectedFile = (File) expected;
-					Assert.assertTrue(def.getName() + ": Return file is not equals to " + expectedFile.getPath(),
-							areFilesEqual(expectedFile, (File) result));
-				} else if (!Objects.equal(expected, result)) {
-					Assert.assertEquals(def.getName() + ": Return values is not equals to the expected one",
-							mapper.writeValueAsString(expected), mapper.writeValueAsString(result));
-				}
+				assertions.assertExpectedReturnValue(name, expected, result);
 			}
-			assertEnvironmentState(def.getName(), def.getExpectedState());
+			assertions.assertEnvironmentState(name, def.getExpectedState());
 		} catch (IOException | JSONException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -315,122 +319,7 @@ public class BasyxTestRunner {
 		}
 	}
 
-	public static boolean areFilesEqual(File file1, File file2) throws IOException {
-		if (file1.length() != file2.length()) {
-			return false;
-		}
-		try (InputStream is1 = new FileInputStream(file1); InputStream is2 = new FileInputStream(file2)) {
 
-			byte[] buffer1 = new byte[1024];
-			byte[] buffer2 = new byte[1024];
-			int bytesRead1, bytesRead2;
-
-			while ((bytesRead1 = is1.read(buffer1)) != -1) {
-				bytesRead2 = is2.read(buffer2);
-				if (bytesRead1 != bytesRead2 || !Arrays.equals(buffer1, buffer2)) {
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
-
-	private void assertEnvironmentState(String name, BasyxRepositoryState expected) throws IOException, JSONException {
-		if (expected == null) {
-			return;
-		}
-		List<AssetAdministrationShell> expectedShellList = expected.getShells();
-		if (expectedShellList != null) {
-			Map<String, AssetAdministrationShell> expectedShells = expectedShellList.stream()
-					.collect(Collectors.toMap(AssetAdministrationShell::getId, Functions.identity()));
-			Map<String, AssetAdministrationShell> currentShells = environment.getAllShells().stream()
-					.collect(Collectors.toMap(AssetAdministrationShell::getId, Function.identity()));
-			assertEquals(name, expectedShells, currentShells, "Shells");
-		}
-		List<Submodel> expectedSubmodelList = expected.getSubmodels();
-		if (expectedSubmodelList != null) {
-			Map<String, Submodel> expectedSubmodels = expectedSubmodelList.stream()
-					.collect(Collectors.toMap(Submodel::getId, Functions.identity()));
-			Map<String, Submodel> currentSumodels = environment.getAllSubmodels().stream()
-					.collect(Collectors.toMap(Submodel::getId, Function.identity()));
-			assertEquals(name, expectedSubmodels, currentSumodels, "Submodels");
-		}
-		List<AssetAdministrationShellDescriptor> expectedShellDescriptorsList = expected.getShellDescriptors();
-		if (expectedShellDescriptorsList != null) {
-			Map<String, AssetAdministrationShellDescriptor> expectedShellDescriptors = expectedShellDescriptorsList
-					.stream()
-					.collect(Collectors.toMap(AssetAdministrationShellDescriptor::getId, Functions.identity()));
-			Map<String, AssetAdministrationShellDescriptor> currentShellDescriptors = environment
-					.getAllShellDescriptors().stream()
-					.collect(Collectors.toMap(AssetAdministrationShellDescriptor::getId, Function.identity()));
-			assertEquals(name, expectedShellDescriptors, currentShellDescriptors, "ShellDescriptors");
-		}
-		List<SubmodelDescriptor> expectedSubmodelDescriptorsList = expected.getSubmodelDescriptors();
-		if (expectedSubmodelDescriptorsList != null) {
-			Map<String, SubmodelDescriptor> expectedSubmodelDescriptors = expectedSubmodelDescriptorsList.stream()
-					.collect(Collectors.toMap(SubmodelDescriptor::getId, Functions.identity()));
-			Map<String, SubmodelDescriptor> currentSubmodelDescriptors = environment.getAllSubmodelDescriptors()
-					.stream().collect(Collectors.toMap(SubmodelDescriptor::getId, Function.identity()));
-			assertEquals(name, expectedSubmodelDescriptors, currentSubmodelDescriptors, "SubmodelDescriptors");
-		}
-		Map<String, String> thumbnails = expected.getThumbnails();
-		if (thumbnails != null) {
-			for (Entry<String, String> eachThumbnail : thumbnails.entrySet()) {
-				String id = eachThumbnail.getKey();
-				Path tnPath = Path.of(eachThumbnail.getValue());
-				Optional<byte[]> dataOpt = environment.getThumbnail(id);
-				Assert.assertTrue("Thumbnail for shell '" + id + "' not found on backend.", dataOpt.isPresent());
-				byte[] expectedFile = Files.readAllBytes(tnPath);
-				Assert.assertArrayEquals(expectedFile, dataOpt.get());
-			}
-		}
-		Map<String, Map<String, String>> attachments = expected.getFileAttachments();
-		if (attachments != null) {
-			for (Entry<String, Map<String, String>> eachAttachment : attachments.entrySet()) {
-				String smId = eachAttachment.getKey();
-				for (Entry<String, String> eachPathMapping : eachAttachment.getValue().entrySet()) {
-					String path = eachPathMapping.getKey();
-					Path filePath = Path.of(eachPathMapping.getValue());
-					Optional<byte[]> dataOpt = environment.getFileAttachment(smId, path);
-					Assert.assertTrue("File attachment for submodel '" + smId + "' and submodel element path '" +path+ "' not found on backend.", dataOpt.isPresent());
-					byte[] expectedFile = Files.readAllBytes(filePath);
-					Assert.assertArrayEquals(expectedFile, dataOpt.get());
-					
-				}
-			}
-		}
-	}
-
-
-
-	private <T> void assertEquals(String name, Map<String, T> expected, Map<String, T> current, String resourceName)
-			throws JsonProcessingException, JSONException {
-		if (current.isEmpty() && expected.isEmpty()) {
-			return;
-		}
-
-		for (Entry<String, T> eachEntry : expected.entrySet()) {
-			String id = eachEntry.getKey();
-			T expectedValue = eachEntry.getValue();
-			T eachCurrent = current.remove(id);
-			if (eachCurrent == null) {
-				if (current.isEmpty()) {
-					Assert.assertNotNull(name + ": Expected " + resourceName + " with id " + id
-							+ " not found. No resources available on serverside.", eachCurrent);
-				} else {
-					Assert.assertNotNull(name + ": Expected " + resourceName + " with id " + id + " not found. Only "
-							+ current.keySet() + "available.", eachCurrent);
-				}
-			}
-			new BasyxTestMatcher(mapper).assertEquals(
-					"Expected resource for id '" + id + "' is not equals the current value.", expectedValue,
-					eachCurrent);
-		}
-		Assert.assertTrue(
-				name + ": " + resourceName + " found on backend site but are not expected: " + current.keySet(),
-				current.isEmpty());
-	}
 
 	public static class Invocation<T> {
 
@@ -578,17 +467,27 @@ public class BasyxTestRunner {
 		private List<SubmodelDescriptor> submodelDescriptors;
 
 		private Map<String, String> thumbnails;
-		
+
 		private Map<String, Map<String, String>> fileAttachments;
+
+		private Map<String, List<SpecificAssetId>> assetLinks;
+
+		public Map<String, List<SpecificAssetId>> getAssetLinks() {
+			return assetLinks;
+		}
+
+		public void setAssetLinks(Map<String, List<SpecificAssetId>> assetLinks) {
+			this.assetLinks = assetLinks;
+		}
 
 		public Map<String, Map<String, String>> getFileAttachments() {
 			return fileAttachments;
 		}
-		
+
 		public void setFileAttachments(Map<String, Map<String, String>> fileAttachments) {
 			this.fileAttachments = fileAttachments;
 		}
-		
+
 		public Map<String, String> getThumbnails() {
 			return thumbnails;
 		}
