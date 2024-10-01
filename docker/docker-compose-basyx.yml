@@ -126,6 +126,19 @@ services:
       submodel-registry:
         condition: service_healthy
 
+  submodel-service:
+    image: "eclipsebasyx/submodel-service:test"
+    container_name: submodel-service
+    restart: always
+    ports:
+    - 8079:8081
+    volumes: 
+    - ./submodel-service/config/application.yml:/application/config/application.yml:ro
+    - ./submodel-service/submodel.json:/application/submodel.json
+    - ./submodel-service/classes/:/application/classes/
+  #  - ./submodel-service/sources/:/application/sources/
+  #  - ./submodel-service/libs/:/application/libs/
+
   postgres:
     image: postgres:${POSTGRES_VERSION}
     container_name: postgres
@@ -135,6 +148,8 @@ services:
     environment:
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
+    profiles:
+      - secure
     healthcheck:
       test: pg_isready
       interval: 1s
@@ -175,6 +190,8 @@ services:
     command: ["start-dev", "--import-realm"]
     ports:
     - 8085:8080
+    profiles:
+      - secure
     volumes:
     - ./keycloak/realms:/opt/keycloak/data/import:ro
     # - ./initializer/target/org.eclipse.digitaltwin.basyx.v3.clients-keycloak-issuer-initializer.jar:/opt/keycloak/providers/initializer.jar

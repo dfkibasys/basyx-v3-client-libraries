@@ -1,0 +1,64 @@
+{
+    "name": "success-test (properties-only)",
+    "initialState": {
+        "submodelServiceElements": [
+            {
+                "modelType": "Property",
+                "value": "1",
+                "idShort": "Val1"
+            },
+            {
+                "modelType": "SubmodelElementCollection",
+                "idShort": "AdditionalProps",
+                "value": [
+                    {
+                        "modelType": "Property",
+                        "value": "2",
+                        "idShort": "Val2"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "3",
+                        "idShort": "Val3"
+                    }
+                ]
+            }
+        ]
+    },
+    "invocation": {
+        "args": {
+        }
+    },
+    "expectedState": {
+        "submodelServiceElements": [
+            {
+                "modelType": "Property",
+                "value": "1",
+                "idShort": "Val1"
+            },
+            {
+                "modelType": "SubmodelElementCollection",
+                "idShort": "AdditionalProps",
+                "value": [
+                    {
+                        "modelType": "Property",
+                        "value": "2",
+                        "idShort": "Val2"
+                    },
+                    {
+                        "modelType": "Property",
+                        "value": "3",
+                        "idShort": "Val3"
+                    }
+                ]
+            }
+        ]
+    }, 
+    "expectedReturnValue" : {
+        "Val1": "1",
+        "AdditionalProps": {
+            "Val2": "2",
+            "Val3": "3"
+        }
+    }
+}

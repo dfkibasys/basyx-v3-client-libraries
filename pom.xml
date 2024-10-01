@@ -11,12 +11,14 @@
 
 
 	<modules>
-		<module>csharp-unity</module>
+		<!--<module>csharp-unity</module>-->
 		<module>java</module>
  		<module>java/parent</module>
- 		<module>java/build/generated/project</module>
+		 <module>java/test-environment</module>
+		 <module>java/build/generated/project</module>
+ 		<!--
+		
     	<module>java/facade</module>
-		<!--
 		<module>typescript</module>
 		<module>python</module>-->
 	</modules>

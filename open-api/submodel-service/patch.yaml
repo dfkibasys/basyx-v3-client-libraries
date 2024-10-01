@@ -1,72 +1,190 @@
 - op: replace
   path: /servers
   value: []
-- op: move
-  from: /paths/~1submodel
-  path: /paths/~1
-- op: move
-  from: /paths/~1submodel~1$metadata
-  path: /paths/~1$metadata
-- op: move
-  from: /paths/~1submodel~1$value
-  path: /paths/~1$value
-- op: move
-  from: /paths/~1submodel~1$reference
-  path: /paths/~1$reference
-- op: move
-  from: /paths/~1submodel~1$path
-  path: /paths/~1$path
-- op: move
-  from: /paths/~1submodel~1submodel-elements
-  path: /paths/~1submodel-elements
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1$metadata
-  path: /paths/~1submodel-elements~1$metadata
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1$value
-  path: /paths/~1submodel-elements~1$value
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1$reference
-  path: /paths/~1$submodel-elements~1$reference
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1$path
-  path: /paths/~1submodel-elements~1$path
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}
-  path: /paths/~1submodel-elements~1{idShortPath}
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$metadata
-  path: /paths/~1submodel-elements~1{idShortPath}~1$metadata
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$value
-  path: /paths/~1submodel-elements~1{idShortPath}~1$value
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$reference
-  path: /paths/~1submodel-elements~1{idShortPath}~1$reference
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$path
-  path: /paths/~1submodel-elements~1{idShortPath}~1$path
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1attachment
-  path: /paths/~1submodel-elements~1{idShortPath}~1attachment
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke
-  path: /paths/~1submodel-elements~1{idShortPath}~1$invoke
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke~1$value
-  path: /paths/~1submodel-elements~1{idShortPath}~1$invoke~1$value
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke-async
-  path: /paths/~1submodel-elements~1{idShortPath}~1$invoke-async
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke-async~1$value
-  path: /paths/~1submodel-elements~1{idShortPath}~1$invoke-async~1$value
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1operation-status~1{handleId}
-  path: /paths/~1submodel-elements~1{idShortPath}~1operation-status~1{handleId}
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}
-  path: /paths/~1submodel-elements~1{idShortPath}~1$operation-results~1{handleId}
-- op: move
-  from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}~1$value
-  path: /paths/~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}~1$value
+
+# will be already fixed in the next release 3.0.2
+- op: replace
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$value/patch/requestBody/content
+  value: 
+    application/json:
+      schema:
+        $ref: 'https://api.swaggerhub.com/domains/Plattform_i40/Part2-API-Schemas/V3.0.1#/components/schemas/SubmodelElementValue'
+
+# - op: move
+#   from: /paths/~1submodel
+#   path: /paths/~1
+# - op: move
+#   from: /paths/~1submodel~1$metadata
+#   path: /paths/~1$metadata
+# - op: move
+#   from: /paths/~1submodel~1$value
+#   path: /paths/~1$value
+# - op: move
+#   from: /paths/~1submodel~1$reference
+#   path: /paths/~1$reference
+# - op: move
+#   from: /paths/~1submodel~1$path
+#   path: /paths/~1$path
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements
+#   path: /paths/~1submodel-elements
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1$metadata
+#   path: /paths/~1submodel-elements~1$metadata
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1$value
+#   path: /paths/~1submodel-elements~1$value
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1$reference
+#   path: /paths/~1$submodel-elements~1$reference
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1$path
+#   path: /paths/~1submodel-elements~1$path
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}
+#   path: /paths/~1submodel-elements~1{idShortPath}
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$metadata
+#   path: /paths/~1submodel-elements~1{idShortPath}~1$metadata
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$value
+#   path: /paths/~1submodel-elements~1{idShortPath}~1$value
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$reference
+#   path: /paths/~1submodel-elements~1{idShortPath}~1$reference
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$path
+#   path: /paths/~1submodel-elements~1{idShortPath}~1$path
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1attachment
+#   path: /paths/~1submodel-elements~1{idShortPath}~1attachment
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke
+#   path: /paths/~1submodel-elements~1{idShortPath}~1$invoke
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke~1$value
+#   path: /paths/~1submodel-elements~1{idShortPath}~1$invoke~1$value
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke-async
+#   path: /paths/~1submodel-elements~1{idShortPath}~1$invoke-async
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke-async~1$value
+#   path: /paths/~1submodel-elements~1{idShortPath}~1$invoke-async~1$value
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1operation-status~1{handleId}
+#   path: /paths/~1submodel-elements~1{idShortPath}~1operation-status~1{handleId}
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}
+#   path: /paths/~1submodel-elements~1{idShortPath}~1$operation-results~1{handleId}
+# - op: move
+#   from: /paths/~1submodel~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}~1$value
+#   path: /paths/~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}~1$value
+
+
+
+#remove unimplemented methods
+- op: remove
+  path: /paths/~1submodel/patch
+- op: remove
+  path: /paths/~1serialization
+- op: remove
+  path: /paths/~1submodel~1$metadata/patch
+- op: remove
+  path: /paths/~1submodel~1$path/get
+- op: remove
+  path: /paths/~1submodel~1$value/patch
+- op: remove
+  path: /paths/~1submodel/put
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1$value/get
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke~1$value
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke-async
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1invoke-async~1$value
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1operation-status~1{handleId}
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1operation-results~1{handleId}~1$value
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}/patch
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1$reference/get
+- op: remove 
+  path: /paths/~1submodel~1$reference
+- op: remove
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$reference
+
+- op: replace
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$value/patch/operationId
+  value: PatchSubmodelElementValue
+- op: replace
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}~1$value/get/operationId
+  value: GetSubmodelElementValue
+- op: replace
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}/delete/operationId
+  value: DeleteSubmodelElement
+- op: replace
+  path: /paths/~1submodel~1submodel-elements~1{idShortPath}/get/operationId
+  value: GetSubmodelElement
+- op: replace
+  path: /paths/~1submodel~1$value/get/operationId
+  value: GetSubmodelValue
+
+# - op: replace
+#   path: /paths/~1submodel~1submodel-elements~1{idShortPath}/patch/operationId
+#   value: PatchSubmodelElementUnderPath
+
+
+#   - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}/put/operationId
+#   value: PutSubmodel
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}/get/operationId
+#   value: GetSubmodel
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}/delete/operationId
+#   value: DeleteSubmodel
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1$metadata/get/operationId
+#   value: GetSubmodelMetadata
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/get/operationId
+#   value: GetSubmodelElement
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/delete/operationId
+#   value: DeleteSubmodelElement
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements/post/operationId
+#   value: PostSubmodelElement
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/post/operationId
+#   value: PostSubmodelElementUnderPath
+  
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/get/operationId
+#   value: GetSubmodelElement
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$value/get/operationId
+#   value: GetSubmodelElementValue
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}/put/operationId
+#   value: PutSubmodelElement
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1$value/patch/operationId
+#   value: PatchSubmodelElementValue
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1invoke/post/operationId
+#   value: InvokeOperation 
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1attachment/put/operationId
+#   value: PutFileAttachment
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1attachment/get/operationId
+#   value: GetFileAttachment
+# - op: replace
+#   path: /paths/~1submodels~1{submodelIdentifier}~1submodel-elements~1{idShortPath}~1attachment/delete/operationId
+#   value: DeleteFileAttachment

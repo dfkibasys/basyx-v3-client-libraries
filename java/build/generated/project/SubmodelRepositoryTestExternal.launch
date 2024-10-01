@@ -22,5 +22,5 @@
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRepositoryApiTest"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="basyx-java-clients"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-ea -Dbasyxtest.folder=../../../../tests -Denvironment.type=EXTERNAL -Denvironment.mockservice.containerurl=http://wiremock:8080 -Denvironment.mockservice.port=8087 -Denvironment.submodelrepository.port=8081 -Denvironment.aasrepository.port=8081 -Denvironment.submodelregistry.port=8082 -Denvironment.aasregistry.port=8083"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-ea -Dbasyxtest.folder=../../../../tests -Denvironment.type=EXTERNAL -Denvironment.mockservice.containerurl=http://wiremock:8080 -Denvironment.mockservice.port=8087 -Denvironment.submodelrepository.port=8081 -Denvironment.aasrepository.port=8081 -Denvironment.submodelregistry.port=8082 -Denvironment.aasdiscovery.port=8091 -Denvironment.submodelservice.port=8079 -Denvironment.aasregistry.port=8083"/>
 </launchConfiguration>
