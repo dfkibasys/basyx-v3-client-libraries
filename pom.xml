@@ -12,15 +12,18 @@
 
 	<modules>
 		<!--<module>csharp-unity</module>-->
+<!--		<module>dart</module>-->
+
+		<!--
 		<module>java</module>
  		<module>java/parent</module>
 		 <module>java/test-environment</module>
-		 <module>java/build/generated/project</module>
+		 <module>java/build/generated/project</module>-->
  		<!--
 		
-    	<module>java/facade</module>
+    	<module>java/facade</module>-->
 		<module>typescript</module>
-		<module>python</module>-->
+		<!--<module>python</module>-->
 	</modules>
 
 	<properties>
@@ -169,6 +172,7 @@
 												<output>${openapi.output.path}</output>
 											</configuration>
 										</pluginExecutor>
+										
 										<pluginExecutor>
 											<goal>find-and-replace</goal>
 											<plugin>
@@ -185,6 +189,7 @@
 												<fileMask>${openapi.output.name}</fileMask>
 											</configuration>
 										</pluginExecutor>
+										
 									</pluginExecutors>
 								</configuration>
 							</execution>
@@ -196,7 +201,9 @@
 									<goal>iterator</goal>
 								</goals>
 								<configuration>
-								    <folder>${openapi.parentFolder.path}</folder>
+								
+									<content>model-part1,model-part2,aas-discoveryservice,submodel-repository</content>
+								   <!-- <folder>${openapi.parentFolder.path}</folder>-->
 									<pluginExecutors>
 										<pluginExecutor>
 											<goal>read-project-properties</goal>
