@@ -20,7 +20,7 @@ paths:
       - "Asset Administration Shell Basic Discovery API"
       summary: "Returns a list of Asset Administration Shell ids linked to specific\
         \ Asset identifiers"
-      operationId: "GetAllAssetAdministrationShellIdsByAssetLink"
+      operationId: "GetAllShellIdsByAssetLinks"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetAllAssetAdministrationShellIdsByAssetLink/3/0"
       parameters:
@@ -33,7 +33,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PagedResultOrStringItems"
+                $ref: "#/components/schemas/GetAllAssetLinksResult"
         default:
           $ref: "./model-part2.yaml#/components/responses/default"
   /lookup/shells/{aasIdentifier}:
@@ -44,7 +44,7 @@ paths:
       - "Asset Administration Shell Basic Discovery API"
       summary: "Returns a list of specific Asset identifiers based on an Asset Administration\
         \ Shell id to edit discoverable content"
-      operationId: "GetAllAssetLinksById"
+      operationId: "GetAssetLinksByShellId"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetAllAssetLinksById/3/0"
       responses:
@@ -65,7 +65,7 @@ paths:
       - "Asset Administration Shell Basic Discovery API"
       summary: "Creates specific Asset identifiers linked to an Asset Administration\
         \ Shell to edit discoverable content"
-      operationId: "PostAllAssetLinksById"
+      operationId: "PostAssetLinksByShellId"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/PostAllAssetLinksById/3/0"
       requestBody:
@@ -99,7 +99,7 @@ paths:
       - "Asset Administration Shell Basic Discovery API"
       summary: "Deletes all specific Asset identifiers linked to an Asset Administration\
         \ Shell to edit discoverable content"
-      operationId: "DeleteAllAssetLinksById"
+      operationId: "DeleteAssetLinksByShellId"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/DeleteAllAssetLinksById/3/0"
       responses:
@@ -128,7 +128,7 @@ paths:
           $ref: "./model-part2.yaml#/components/responses/default"
 components:
   schemas:
-    PagedResultOrStringItems:
+    GetAllAssetLinksResult:
       type: "object"
       allOf:
       - $ref: "./model-part2.yaml#/components/schemas/PagedResult"

@@ -46,7 +46,6 @@ paths:
           $ref: "./model-part2.yaml#/components/responses/internal-server-error"
         default:
           $ref: "./model-part2.yaml#/components/responses/default"
-      x-testfile-input-path: "getAllShellDescriptorsTest.yaml"
     post:
       tags:
       - "Asset Administration Shell Registry API"
@@ -89,7 +88,7 @@ paths:
       tags:
       - "Asset Administration Shell Registry API"
       summary: "Returns a specific Asset Administration Shell Descriptor"
-      operationId: "GetAssetAdministrationShellDescriptorById"
+      operationId: "GetAssetAdministrationShellDescriptor"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetAssetAdministrationShellDescriptorById/3/0"
       parameters:
@@ -115,7 +114,7 @@ paths:
       tags:
       - "Asset Administration Shell Registry API"
       summary: "Updates an existing Asset Administration Shell Descriptor"
-      operationId: "PutAssetAdministrationShellDescriptorById"
+      operationId: "PutAssetAdministrationShellDescriptor"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/PutAssetAdministrationShellDescriptorById/3/0"
       parameters:
@@ -145,7 +144,7 @@ paths:
       - "Asset Administration Shell Registry API"
       summary: "Deletes an Asset Administration Shell Descriptor, i.e. de-registers\
         \ an AAS"
-      operationId: "DeleteAssetAdministrationShellDescriptorById"
+      operationId: "DeleteAssetAdministrationShellDescriptor"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/DeleteAssetAdministrationShellDescriptorById/3/0"
       parameters:
@@ -168,7 +167,7 @@ paths:
       tags:
       - "Asset Administration Shell Registry API"
       summary: "Returns all Submodel Descriptors"
-      operationId: "GetAllSubmodelDescriptorsThroughSuperpath"
+      operationId: "GetAllSubmodelDescriptors"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetAllSubmodelDescriptors/3/0"
       parameters:
@@ -195,7 +194,7 @@ paths:
       tags:
       - "Asset Administration Shell Registry API"
       summary: "Creates a new Submodel Descriptor, i.e. registers a submodel"
-      operationId: "PostSubmodelDescriptor-ThroughSuperpath"
+      operationId: "PostSubmodelDescriptor"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/PostSubmodelDescriptor/3/0"
       requestBody:
@@ -237,7 +236,7 @@ paths:
       tags:
       - "Asset Administration Shell Registry API"
       summary: "Returns a specific Submodel Descriptor"
-      operationId: "GetSubmodelDescriptorByIdThroughSuperpath"
+      operationId: "GetSubmodelDescriptor"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/GetSubmodelDescriptorById/3/0"
       responses:
@@ -261,7 +260,7 @@ paths:
       tags:
       - "Asset Administration Shell Registry API"
       summary: "Updates an existing Submodel Descriptor"
-      operationId: "PutSubmodelDescriptorByIdThroughSuperpath"
+      operationId: "PutSubmodelDescriptor"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/PutSubmodelDescriptorById/3/0"
       requestBody:
@@ -288,7 +287,7 @@ paths:
       tags:
       - "Asset Administration Shell Registry API"
       summary: "Deletes a Submodel Descriptor, i.e. de-registers a submodel"
-      operationId: "DeleteSubmodelDescriptorByIdThroughSuperpath"
+      operationId: "DeleteSubmodelDescriptor"
       x-semanticIds:
       - "https://admin-shell.io/aas/API/DeleteSubmodelDescriptorById/3/0"
       responses:
