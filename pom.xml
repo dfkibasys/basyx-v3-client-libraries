@@ -108,6 +108,21 @@
 		</plugins>
 	</build>
 	<profiles>
+
+		<profile>
+			<id>gitlab-ci</id>
+			<distributionManagement>
+				<snapshotRepository>
+				<id>basys-nexus</id>
+				<url>${env.MAVEN_REPO_URL}/maven-snapshots</url>
+				</snapshotRepository>
+				<repository>
+				<id>basys-nexus</id>
+				<url>${env.MAVEN_REPO_URL}/maven-releases</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+
 		<profile>
 			<id>generate-openapi</id>
 			<activation>
