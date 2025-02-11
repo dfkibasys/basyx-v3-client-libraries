@@ -69,7 +69,7 @@ public class DefaultBasyxFacadeManager implements BasyxFacadeManager {
 
 	@Override
 	public AasxFileServerFacade newAasxFileServiceFacade() {
-		return new DefaultAasxFileServerFacade(apiManager);
+		return new DefaultAasxContentServerFacade(apiManager);
 	}
 
 	@Override
@@ -95,15 +95,4 @@ public class DefaultBasyxFacadeManager implements BasyxFacadeManager {
 		}
 	}
 
-	
-	@Override
-	public String toJsonPretty(Object object) {
-		try {
-			return apiManager.getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(object);
-		} catch (JsonProcessingException e) {
-			return null;
-		}
-	}
-
-	
 }
