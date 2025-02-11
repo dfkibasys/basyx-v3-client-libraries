@@ -170,7 +170,7 @@ public class {{classname}} {
   @Deprecated
   {{/isDeprecated}}
   public {{>stream-aware-returnType}} {{operationId}}({{#allParams}}{{>base64-aware-dataType}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
-    {{#returnType}}{{>stream-aware-returnType-apiresponse}} localVarResponse =  {{/returnType}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
+    {{#returnType}}{{>stream-aware-returnType-apiResponse}} localVarResponse =  {{/returnType}}{{operationId}}WithHttpInfo({{#allParams}}{{paramName}}{{^-last}}, {{/-last}}{{/allParams}});
     {{#returnType}}
     return localVarResponse.getData();
     {{/returnType}}
