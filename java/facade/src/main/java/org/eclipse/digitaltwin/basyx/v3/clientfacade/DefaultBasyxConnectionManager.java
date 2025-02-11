@@ -78,7 +78,11 @@ public class DefaultBasyxConnectionManager implements BasyxConnectionManager {
 		this.cache = defaultClientCache();
 		this.apiFactory = factory;
 	}
-	
+
+	public BasyxApiFactory getApiFactory() {
+		return apiFactory;
+	}
+
 	protected static BasyxTransferInterceptor defaultInterceptor() {
 		Map<String, BasyxAuthorizerConfigurationFactory> configFactories = defaultConfigFactories();
 		EnvironmentBasedAuthorizerConfigProvider configProvider = new EnvironmentBasedAuthorizerConfigProvider(configFactories);
