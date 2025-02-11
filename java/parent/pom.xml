@@ -17,6 +17,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
+		<java.version>11</java.version>
 		<aas4j.version>1.0.2</aas4j.version>
 		<httpclient.version>4.5.14</httpclient.version>
 		<httpmime.version>4.5.14</httpmime.version>
