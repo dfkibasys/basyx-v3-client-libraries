@@ -36,6 +36,10 @@ public interface BasyxUpdateFacade {
 	
 	Reference postSubmodel(Submodel submodel) throws ConflictingIdentifierException;
 	
+	Reference postSubmodelReference(String aasId, Reference ref);
+	
+	void deleteSubmodelReference(String aasId, String id);
+	
 	Reference updateShell(AssetAdministrationShell shell) throws IdentifiableNotFoundException;
 	
 	Reference updateSubmodel(Submodel submodel) throws IdentifiableNotFoundException;

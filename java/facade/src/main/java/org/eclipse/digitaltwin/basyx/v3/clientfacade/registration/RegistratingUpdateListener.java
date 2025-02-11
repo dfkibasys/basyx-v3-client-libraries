@@ -36,6 +36,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetInformation;
 import org.eclipse.digitaltwin.aas4j.v3.model.Endpoint;
 import org.eclipse.digitaltwin.aas4j.v3.model.ProtocolInformation;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShellDescriptor;
@@ -62,6 +63,16 @@ public class RegistratingUpdateListener implements BasyxUpdateListener {
 		this.smRegApi = smRegApi;
 		this.aasRepoHrefs = repoHrefs;
 		this.smRepoHrefs = smRepoHrefs;
+	}
+	
+	@Override
+	public void onPostSubmodelReference(String shellId, Reference reference) {
+		// do nothing
+	}
+	
+	@Override
+	public void onDeleteSubmodelReference(String aasId, String submodelIdentifier) {
+		// do nothing	
 	}
 	
 	@Override

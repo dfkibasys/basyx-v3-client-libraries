@@ -60,6 +60,19 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 		this.config = config;
 	}
 	
+	@Override
+	public Reference postSubmodelReference(String aasId, Reference ref) {
+		ref = shellRepositoryApi.postSubmodelReference(aasId, ref);
+		listener.onPostSubmodelReference(aasId, ref);
+		return ref;
+	}
+	
+	@Override
+	public void deleteSubmodelReference(String aasId, String submodelIdentifier) {
+		shellRepositoryApi.deleteSubmodelReference(aasId, submodelIdentifier);
+		listener.onDeleteSubmodelReference(aasId, submodelIdentifier);
+	}
+	
 	public void setListener(BasyxUpdateListener listener) {
 		this.listener = listener;
 	}
