@@ -26,6 +26,7 @@ package org.eclipse.digitaltwin.basyx.v3.clientfacade.main;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.DataTypeDefXsd;
 import org.eclipse.digitaltwin.aas4j.v3.model.Entity;
@@ -37,33 +38,37 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShe
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEntity;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxConnectionManager;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxReadFacade;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxWriteFacade;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.DefaultBasyxConnectionManager;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.*;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxApiConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.EnvironmentBasedBasyxApiConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxApiConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.eclipse.digitaltwin.basyx.v3.clients.JSON;
 
 public class MainByEnvSettings {
 
 	public static void main(String[] args) throws JsonProcessingException, ConflictingIdentifierException {
-				
-		BasyxConnectionManager manager = new DefaultBasyxConnectionManager();
-		BasyxWriteFacade updateFacade = manager.newUpdateFacade();
+
+		BasyxApiConfiguration conf = new EnvironmentBasedBasyxApiConfiguration();
+		BasyxApiManager apiManager = new DefaultBasyxApiManager(conf);
+		BasyxFacadeManager manager = new DefaultBasyxFacadeManager(apiManager);
+
+		BasyxWriteFacade writeFacade = manager.newWriteFacade();
 		
-		updateFacade.deleteAllShells();
-		updateFacade.deleteAllSubmodels();
+		writeFacade.deleteAllShells();
+		writeFacade.deleteAllSubmodels();
 		
-		postShells(updateFacade);
+		postShells(writeFacade);
 		
-		BasyxReadFacade facade = manager.newServiceFacade();
+		BasyxReadFacade facade = manager.newReadFacade();
 
 		AssetAdministrationShell shell = facade.getShellById("http://aas.test.org/robot/5").get();
 		System.out.println(shell.getIdShort());
 		for (Submodel eachSm : facade.getAllSubmodels(shell)) {
-			System.out.println(manager.toJsonPretty(eachSm));
+			System.out.println(toJsonPretty(eachSm));
 			facade.getAllSubmodelElementPaths(eachSm).stream().forEach(System.out::println);
 			System.out.println(facade.getSubmodelElementByIdShortPath(eachSm, "robot.height", Property.class).get().getValue());
 
@@ -77,10 +82,10 @@ public class MainByEnvSettings {
 			System.out.println(eachSm.getId());
 		}
 		
-		facade.getSubmodelById("http://sm.test.org/technical/9/6").map(facade::getAllSubmodelElementReferences).stream().flatMap(BasyxIterable::stream).map(manager::toJsonPretty).forEach(System.out::println);
+		facade.getSubmodelById("http://sm.test.org/technical/9/6").map(facade::getAllSubmodelElementReferences).stream().flatMap(BasyxIterable::stream).map(MainByEnvSettings::toJsonPretty).forEach(System.out::println);
 		
-		updateFacade.deleteAllShells();
-		updateFacade.deleteAllSubmodels();
+		writeFacade.deleteAllShells();
+		writeFacade.deleteAllSubmodels();
 		
 	}
 
@@ -99,5 +104,12 @@ public class MainByEnvSettings {
 		}		
 	}
 
-	
+	private static String toJsonPretty(Object object) {
+		try {
+			return JSON.getDefault().getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(object);
+		} catch (JsonProcessingException e) {
+			return null;
+		}
+	}
+
 }

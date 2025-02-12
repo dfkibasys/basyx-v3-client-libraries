@@ -4,19 +4,22 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.PackageDescription;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.AasxFileServerFacade;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxConnectionManager;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.DefaultBasyxConnectionManager;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.*;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxApiConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleAasxFileServiceConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxApiConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 
 public class MainFileServer {
 
 	
 	public static void main(String[] args) throws ConflictingIdentifierException {
-		BasyxConnectionManager manager = new DefaultBasyxConnectionManager();
-		String url = "http://localhost:8080"; 
-		AasxFileServerFacade facade = manager.newAasxFileServiceFacade(new SimpleAasxFileServiceConfiguration().withAasxFileServerUrl(url));
+		String url = "http://localhost:8080";
+		BasyxApiConfiguration conf = new SimpleBasyxApiConfiguration().withAasxFileServerUrl(url).withAasxFileServerUrl(url);
+		BasyxApiManager apiManager = new DefaultBasyxApiManager(conf);
+		BasyxFacadeManager manager = new DefaultBasyxFacadeManager(apiManager);
+
+		AasxFileServerFacade facade = manager.newAasxFileServerFacade();
 		
 		System.out.println("aaa: " + facade.getAllPackagesByAasId("aaa").stream().count());
 		
