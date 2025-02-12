@@ -24,7 +24,6 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import org.apache.http.HttpStatus;
 import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.util.AasUtils;
@@ -32,8 +31,6 @@ import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.BasyxApiFactory;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.IdentifiableNotFoundException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.MissingIdentifierException;
@@ -46,7 +43,7 @@ import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.PagedResultPagingMet
 
 import java.util.List;
 
-class DefaultBasyxWriteFacade implements BasyxUpdateFacade {
+class DefaultBasyxWriteFacade implements BasyxWriteFacade {
 
 	private final AssetAdministrationShellRepositoryApi shellRepositoryApi;
 	private final SubmodelRepositoryApi smRepositoryApi;

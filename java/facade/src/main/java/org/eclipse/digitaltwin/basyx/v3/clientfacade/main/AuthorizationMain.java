@@ -26,7 +26,7 @@ package org.eclipse.digitaltwin.basyx.v3.clientfacade.main;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxConnectionManager;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxServiceFacade;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxReadFacade;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.DefaultBasyxConnectionManager;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxServiceConfiguration;
@@ -52,7 +52,7 @@ public class AuthorizationMain {
 				.withAasRegistryUrl("http://127.0.0.1:8083")
 				.withSubmodelRegistryUrl("http://127.0.0.1:8082");
 		
-		BasyxServiceFacade serviceFacade = manager.newServiceFacade(serviceConfig);
+		BasyxReadFacade serviceFacade = manager.newServiceFacade(serviceConfig);
 		while (true) {
 			serviceFacade.getAllShells().stream().map(AssetAdministrationShell::getId).forEach(System.out::println);
 		}

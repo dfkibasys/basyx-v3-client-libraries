@@ -30,8 +30,8 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxConnectionManager;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxServiceFacade;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxUpdateFacade;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxReadFacade;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxWriteFacade;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.DefaultBasyxConnectionManager;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
@@ -51,7 +51,7 @@ public class Main {
 		BasyxConnectionManager manager = new DefaultBasyxConnectionManager();
 		
 		BasyxUpdateConfiguration updateConfig = SimpleBasyxUpdateConfiguration.forEnvironmentUrl("http://127.0.0.1:8081");
-		BasyxUpdateFacade updateFacade = manager.newUpdateFacade(updateConfig);
+		BasyxWriteFacade updateFacade = manager.newUpdateFacade(updateConfig);
 
 		BasyxRegistryServiceConfiguration serviceConfig = new SimpleBasyxServiceConfiguration().withAasRegistryUrl("http://127.0.0.1:8083").withSubmodelRegistryUrl("http://127.0.0.1:8082");
 		manager.newServiceFacade(serviceConfig).getAllShells().stream().map(AssetAdministrationShell::getId).forEach(System.out::println);
@@ -62,7 +62,7 @@ public class Main {
 		Reference ref = updateFacade.postSubmodel(new DefaultSubmodel.Builder().id("http://sm.test.org/test-sm").idShort("test-sm").build());
 		updateFacade.postShell(new DefaultAssetAdministrationShell.Builder().id("http://aas.test.org/test-aas").idShort("test-aas").submodels(ref).build());
 		
-		BasyxServiceFacade facade = manager.newServiceFacade(serviceConfig).withEndpointResolver(EndpointResolvers.firstWithAddress("127.0.0.1:8081"))
+		BasyxReadFacade facade = manager.newServiceFacade(serviceConfig).withEndpointResolver(EndpointResolvers.firstWithAddress("127.0.0.1:8081"))
 				.withSubmodelResolver(new SimpleSubmodelReferenceResolver());
 		for (AssetAdministrationShell eachShell : facade.getAllShells()) {
 			System.out.println(eachShell.getId());

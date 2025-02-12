@@ -70,8 +70,10 @@ public class SimpleBasyxApiConfiguration implements BasyxApiConfiguration {
         return this;
     }
 
-    public static final SimpleBasyxApiConfiguration forEnvironmentUrl(String url) {
-        return new SimpleBasyxApiConfiguration().withAasRepositoryUrl(url).withSubmodelRepositoryUrl(url);
+    public final SimpleBasyxApiConfiguration withEnvironmentUrl(String url) {
+        this.aasRepoUrl = url;
+        this.submodelRepoUrl = url;
+        return this;
     }
 
     public SimpleBasyxApiConfiguration withAasxFileServerUrl(String aasxFileServerUrl) {

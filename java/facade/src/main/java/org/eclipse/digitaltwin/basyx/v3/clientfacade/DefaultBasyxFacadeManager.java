@@ -24,7 +24,6 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.CacheUpdateHandler;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.DefaultBasyxClientCacheFactory;
@@ -63,17 +62,17 @@ public class DefaultBasyxFacadeManager implements BasyxFacadeManager {
 	}
 
 	@Override
-	public BasyxServiceFacade newServiceFacade() {
+	public BasyxReadFacade newReadFacade() {
 		return new DefaultBasyxReadFacade(apiManager).withClientCache(cache);
 	}
 
 	@Override
-	public AasxFileServerFacade newAasxFileServiceFacade() {
-		return new DefaultAasxContentServerFacade(apiManager);
+	public AasxFileServerFacade newAasxFileServerFacade() {
+		return new DefaultAasxFileServerFacade(apiManager);
 	}
 
 	@Override
-	public BasyxUpdateFacade newUpdateFacade() {
+	public BasyxWriteFacade newWriteFacade() {
 		DefaultBasyxWriteFacade facade = new DefaultBasyxWriteFacade(apiManager);
 
 		assignListener(facade, apiManager.getConfig());

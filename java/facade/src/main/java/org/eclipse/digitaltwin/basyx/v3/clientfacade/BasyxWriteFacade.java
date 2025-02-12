@@ -30,7 +30,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.IdentifiableNotFoundException;
 
-public interface BasyxUpdateFacade {
+public interface BasyxWriteFacade {
 
 	Reference postShell(AssetAdministrationShell shell) throws ConflictingIdentifierException;
 	

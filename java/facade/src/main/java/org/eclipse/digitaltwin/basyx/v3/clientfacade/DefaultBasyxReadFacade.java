@@ -24,13 +24,10 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
 import org.eclipse.digitaltwin.aas4j.v3.model.*;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.BasyxApiFactory;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.PassThroughBasyxClientCache;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.FirstEndpointResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.TryAllEndpointResolver;
@@ -51,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-class DefaultBasyxReadFacade implements BasyxServiceFacade {
+class DefaultBasyxReadFacade implements BasyxReadFacade {
 
 
 	private EndpointResolver endpointResolver;

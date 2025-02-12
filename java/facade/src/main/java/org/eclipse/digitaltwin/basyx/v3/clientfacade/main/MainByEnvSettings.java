@@ -38,10 +38,9 @@ import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultEntity;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultProperty;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxConnectionManager;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxServiceFacade;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxUpdateFacade;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxReadFacade;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxWriteFacade;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.DefaultBasyxConnectionManager;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolvers;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
 
@@ -52,14 +51,14 @@ public class MainByEnvSettings {
 	public static void main(String[] args) throws JsonProcessingException, ConflictingIdentifierException {
 				
 		BasyxConnectionManager manager = new DefaultBasyxConnectionManager();
-		BasyxUpdateFacade updateFacade = manager.newUpdateFacade();
+		BasyxWriteFacade updateFacade = manager.newUpdateFacade();
 		
 		updateFacade.deleteAllShells();
 		updateFacade.deleteAllSubmodels();
 		
 		postShells(updateFacade);
 		
-		BasyxServiceFacade facade = manager.newServiceFacade();
+		BasyxReadFacade facade = manager.newServiceFacade();
 
 		AssetAdministrationShell shell = facade.getShellById("http://aas.test.org/robot/5").get();
 		System.out.println(shell.getIdShort());
@@ -85,7 +84,7 @@ public class MainByEnvSettings {
 		
 	}
 
-	private static void postShells(BasyxUpdateFacade updateFacade) throws ConflictingIdentifierException {
+	private static void postShells(BasyxWriteFacade updateFacade) throws ConflictingIdentifierException {
 		for (int i = 0; i < 10; i++) {
 			Builder builder = new DefaultAssetAdministrationShell.Builder().id("http://aas.test.org/robot/" + i).idShort("robot-"+i);
 			for (int j = 0; j < 10; j++) {

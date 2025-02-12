@@ -37,7 +37,7 @@ import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementInfo;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortDirection;
 
-public interface BasyxServiceFacade {
+public interface BasyxReadFacade {
 
 	BasyxIterable<AssetAdministrationShell> getAllShells();
 
@@ -73,9 +73,9 @@ public interface BasyxServiceFacade {
 
 	<T extends SubmodelElement> Optional<T> getSubmodelElementByIdShortPath(Submodel sm, String idShortPath, Class<T> resultCls);
 
-	BasyxServiceFacade withSubmodelResolver(SubmodelReferenceResolver smReferenceResolver);
+	BasyxReadFacade withSubmodelResolver(SubmodelReferenceResolver smReferenceResolver);
 
-	BasyxServiceFacade withEndpointResolver(EndpointResolver endpointResolverStrategy);
+	BasyxReadFacade withEndpointResolver(EndpointResolver endpointResolverStrategy);
 
 	
 

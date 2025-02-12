@@ -25,18 +25,15 @@
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.AasxFileServiceConfiguration;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
 
 public interface BasyxFacadeManager {
 
 	BasyxFacadeManager withClientCache(BasyxClientCache cache);
 	
-	BasyxServiceFacade newServiceFacade();
+	BasyxReadFacade newReadFacade();
 
-	BasyxUpdateFacade newUpdateFacade();
+	BasyxWriteFacade newWriteFacade();
 	
-	AasxFileServerFacade newAasxFileServiceFacade();
+	AasxFileServerFacade newAasxFileServerFacade();
 
 }
