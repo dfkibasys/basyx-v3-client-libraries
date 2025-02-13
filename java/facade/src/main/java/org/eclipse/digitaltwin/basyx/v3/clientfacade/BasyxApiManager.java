@@ -24,35 +24,28 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.IdentifiableNotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxApiConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clients.api.*;
 
-public interface BasyxUpdateFacade {
+public interface BasyxApiManager {
+	BasyxApiConfiguration getConfig();
 
-	Reference postShell(AssetAdministrationShell shell) throws ConflictingIdentifierException;
-	
-	Reference postSubmodel(Submodel submodel) throws ConflictingIdentifierException;
-	
-	Reference postSubmodelReference(String aasId, Reference ref);
-	
-	void deleteSubmodelReference(String aasId, String id);
-	
-	Reference updateShell(AssetAdministrationShell shell) throws IdentifiableNotFoundException;
-	
-	Reference updateSubmodel(Submodel submodel) throws IdentifiableNotFoundException;
+	ObjectMapper getMapper();
 
-	long deleteAllShells();
+	AssetAdministrationShellRegistryApi getShellRegistryApi();
+	AssetAdministrationShellRegistryApi getShellRegistryApi(String baseUrl);
 
-	long deleteAllSubmodels();
+	SubmodelRegistryApi getSubmodelRegistryApi();
+	SubmodelRegistryApi getSubmodelRegistryApi(String baseUrl);
 
-	void deleteSubmodel(String id) throws IdentifiableNotFoundException;
+	AssetAdministrationShellRepositoryApi getShellRepositoryApi();
+	AssetAdministrationShellRepositoryApi getShellRepositoryApi(String baseUrl);
 
-	void deleteSubmodel(Submodel sm) throws IdentifiableNotFoundException;
+	SubmodelRepositoryApi getSubmodelRepositoryApi();
+	SubmodelRepositoryApi getSubmodelRepositoryApi(String baseUrl);
 
-	void deleteShell(String id) throws IdentifiableNotFoundException;
-	
-	void deleteShell(AssetAdministrationShell shell) throws IdentifiableNotFoundException;	
+	AasxFileServerApi getAasxFileServerApi();
+	AasxFileServerApi getAasxFileServerApi(String baseUrl);
+
 }

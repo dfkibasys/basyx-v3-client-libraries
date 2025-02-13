@@ -24,35 +24,16 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.apache.http.HttpStatus;
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShellDescriptor;
-import org.eclipse.digitaltwin.aas4j.v3.model.AssetKind;
-import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
-import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelDescriptor;
-import org.eclipse.digitaltwin.aas4j.v3.model.SubmodelElement;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.BasyxApiFactory;
+import org.eclipse.digitaltwin.aas4j.v3.model.*;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.PassThroughBasyxClientCache;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.FirstEndpointResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.TryAllEndpointResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SimpleSubmodelReferenceResolver;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SubmodelReferenceResolver;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterable;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxIterables;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.BasyxResult;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.ResultResolver;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementElementResolver;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementHierarchyResolver;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementInfo;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.SubmodelElementWalker;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.util.*;
 import org.eclipse.digitaltwin.basyx.v3.clients.ApiException;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRegistryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRepositoryApi;
@@ -60,36 +41,30 @@ import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRegistryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRepositoryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetAssetAdministrationShellDescriptorsResult;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetSubmodelDescriptorsResult;
-import org.eclipse.digitaltwin.basyx.v3.clients.model.search.Page;
-import org.eclipse.digitaltwin.basyx.v3.clients.model.search.ShellDescriptorQuery;
+import org.eclipse.digitaltwin.basyx.v3.clients.model.search.*;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.search.ShellDescriptorQuery.QueryTypeEnum;
-import org.eclipse.digitaltwin.basyx.v3.clients.model.search.ShellDescriptorSearchRequest;
-import org.eclipse.digitaltwin.basyx.v3.clients.model.search.ShellDescriptorSearchResponse;
-import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortDirection;
-import org.eclipse.digitaltwin.basyx.v3.clients.model.search.Sorting;
-import org.eclipse.digitaltwin.basyx.v3.clients.model.search.SortingPath;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-class DefaultBasyxServiceFacade implements BasyxServiceFacade {
+class DefaultBasyxReadFacade implements BasyxReadFacade {
 
-	private final ObjectMapper mapper;
+
 	private EndpointResolver endpointResolver;
 	private SubmodelReferenceResolver smReferenceResolver;
 	private BasyxClientCache clientCache;
 
 	private final AssetAdministrationShellRegistryApi aasRegistryApi;
 	private final SubmodelRegistryApi smRegistryApi;
-	private final BasyxApiFactory factory;
-
 	private final Integer limit;
+	private final BasyxApiManager apiManager;
 
-	public DefaultBasyxServiceFacade(ObjectMapper mapper, BasyxApiFactory factory, BasyxRegistryServiceConfiguration config) {
-		this.mapper = mapper;
-		aasRegistryApi = factory.newShellRegistryApi(mapper, config.getAasRegistryUrl());
-		smRegistryApi = factory.newSubmodelRegistryApi(mapper, config.getSubmodelRegistrUrl());
-		this.limit = config.getFetchLimit();
-		this.factory = factory;
+	public DefaultBasyxReadFacade(BasyxApiManager apiManager) {
+		this.apiManager = apiManager;
+		aasRegistryApi = apiManager.getShellRegistryApi();
+		smRegistryApi = apiManager.getSubmodelRegistryApi();
+		this.limit = apiManager.getConfig().getFetchLimit();
 		this.endpointResolver = defaultEndpointResolver();
 		this.smReferenceResolver = defaultSubmodelReferenceResolver();
 		this.clientCache = defaultClientCache();
@@ -108,18 +83,18 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 	}
 
 	@Override
-	public DefaultBasyxServiceFacade withEndpointResolver(EndpointResolver endpointResolverStrategy) {
+	public DefaultBasyxReadFacade withEndpointResolver(EndpointResolver endpointResolverStrategy) {
 		this.endpointResolver = endpointResolverStrategy;
 		return this;
 	}
 
 	@Override
-	public DefaultBasyxServiceFacade withSubmodelResolver(SubmodelReferenceResolver smReferenceResolver) {
+	public DefaultBasyxReadFacade withSubmodelResolver(SubmodelReferenceResolver smReferenceResolver) {
 		this.smReferenceResolver = smReferenceResolver;
 		return this;
 	}
 
-	DefaultBasyxServiceFacade withClientCache(BasyxClientCache cache) {
+	DefaultBasyxReadFacade withClientCache(BasyxClientCache cache) {
 		this.clientCache = cache;
 		return this;
 	}
@@ -228,11 +203,11 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 
 	private Optional<Submodel> fetchSubmodelById(String id) {
 		SubmodelDescriptor descriptor = smRegistryApi.getSubmodelDescriptorById(id);
-		return endpointResolver.resolveSubmodel(mapper, descriptor.getEndpoints(), this::fetchSubmodelById);
+		return endpointResolver.resolveSubmodel(apiManager.getMapper(), descriptor.getEndpoints(), this::fetchSubmodelById);
 	}
 
 	private Optional<Submodel> fetchSubmodelById(String baseUrl, String id) {
-		SubmodelRepositoryApi repoApi = factory.newSubmodelRepositoryApi(mapper, baseUrl);
+		SubmodelRepositoryApi repoApi = apiManager.getSubmodelRepositoryApi(baseUrl);
 		try {
 			return Optional.of(repoApi.getSubmodel(id, null, null));
 		} catch (ApiException ex) {
@@ -259,7 +234,7 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 		for (AssetAdministrationShellDescriptor eachDescriptor : hits) {
 			Optional<AssetAdministrationShell> shellOpt = clientCache.getShellByIdIfPresent(idShort);
 			if (shellOpt.isEmpty()) {
-				shellOpt = endpointResolver.resolveShell(mapper, eachDescriptor.getEndpoints(), this::fetchShellById);
+				shellOpt = endpointResolver.resolveShell(apiManager.getMapper(), eachDescriptor.getEndpoints(), this::fetchShellById);
 			}
 			shellOpt.ifPresent(toReturn::add);
 		}
@@ -277,7 +252,7 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 		List<SubmodelDescriptor> fetchedResult = descriptorResult.result();
 		List<Submodel> toReturn = new ArrayList<>(fetchedResult.size());
 		for (SubmodelDescriptor eachDescriptor : fetchedResult) {
-			Optional<Submodel> sm = endpointResolver.resolveSubmodel(mapper, eachDescriptor.getEndpoints(), this::fetchSubmodelById);
+			Optional<Submodel> sm = endpointResolver.resolveSubmodel(apiManager.getMapper(), eachDescriptor.getEndpoints(), this::fetchSubmodelById);
 			if (sm.isPresent()) {
 				toReturn.add(sm.get());
 			}
@@ -287,11 +262,11 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 
 	private Optional<AssetAdministrationShell> fetchShellById(String id) {
 		AssetAdministrationShellDescriptor descriptor = aasRegistryApi.getAssetAdministrationShellDescriptor(id);
-		return endpointResolver.resolveShell(mapper, descriptor.getEndpoints(), this::fetchShellById);
+		return endpointResolver.resolveShell(apiManager.getMapper(), descriptor.getEndpoints(), this::fetchShellById);
 	}
 
 	private Optional<AssetAdministrationShell> fetchShellById(String baseUrl, String id) {
-		AssetAdministrationShellRepositoryApi api = factory.newShellRepositoryApi(mapper, baseUrl);
+		AssetAdministrationShellRepositoryApi api = apiManager.getShellRepositoryApi(baseUrl);
 		try {
 			return Optional.of(api.getAssetAdministrationShell(id));
 		} catch (ApiException ex) {
@@ -312,7 +287,7 @@ class DefaultBasyxServiceFacade implements BasyxServiceFacade {
 		List<AssetAdministrationShellDescriptor> fetchedResult = descriptorResult.result();
 		List<AssetAdministrationShell> toReturn = new ArrayList<>(fetchedResult.size());
 		for (AssetAdministrationShellDescriptor eachDescriptor : fetchedResult) {
-			Optional<AssetAdministrationShell> shellDescriptorOpt = endpointResolver.resolveShell(mapper, eachDescriptor.getEndpoints(), this::fetchShellById);
+			Optional<AssetAdministrationShell> shellDescriptorOpt = endpointResolver.resolveShell(apiManager.getMapper(), eachDescriptor.getEndpoints(), this::fetchShellById);
 			shellDescriptorOpt.ifPresent(toReturn::add);
 		}
 		return new BasyxResult<>(descriptorResult.cursor(), toReturn);

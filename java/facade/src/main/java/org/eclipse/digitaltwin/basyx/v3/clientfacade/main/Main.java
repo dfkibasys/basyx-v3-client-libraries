@@ -29,14 +29,8 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxConnectionManager;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxServiceFacade;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxUpdateFacade;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.DefaultBasyxConnectionManager;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxServiceConfiguration;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxUpdateConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.*;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.*;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.endpoints.EndpointResolvers;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.references.SimpleSubmodelReferenceResolver;
@@ -47,22 +41,25 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class Main {
 
 	public static void main(String[] args) throws ConflictingIdentifierException, JsonProcessingException, ApiException {
-		
-		BasyxConnectionManager manager = new DefaultBasyxConnectionManager();
-		
-		BasyxUpdateConfiguration updateConfig = SimpleBasyxUpdateConfiguration.forEnvironmentUrl("http://127.0.0.1:8081");
-		BasyxUpdateFacade updateFacade = manager.newUpdateFacade(updateConfig);
 
-		BasyxRegistryServiceConfiguration serviceConfig = new SimpleBasyxServiceConfiguration().withAasRegistryUrl("http://127.0.0.1:8083").withSubmodelRegistryUrl("http://127.0.0.1:8082");
-		manager.newServiceFacade(serviceConfig).getAllShells().stream().map(AssetAdministrationShell::getId).forEach(System.out::println);
+		BasyxApiConfiguration conf = new SimpleBasyxApiConfiguration()
+				.withEnvironmentUrl("http://127.0.0.1:8081")
+				.withAasRegistryUrl("http://127.0.0.1:8083")
+				.withSubmodelRegistryUrl("http://127.0.0.1:8082");
+		BasyxApiManager apiManager = new DefaultBasyxApiManager(conf);
+		BasyxFacadeManager manager = new DefaultBasyxFacadeManager(apiManager);
+
+		BasyxWriteFacade writeFacade = manager.newWriteFacade();
+
+		manager.newReadFacade().getAllShells().stream().map(AssetAdministrationShell::getId).forEach(System.out::println);
 		
-		updateFacade.deleteAllShells();
-		updateFacade.deleteAllSubmodels();
+		writeFacade.deleteAllShells();
+		writeFacade.deleteAllSubmodels();
 		
-		Reference ref = updateFacade.postSubmodel(new DefaultSubmodel.Builder().id("http://sm.test.org/test-sm").idShort("test-sm").build());
-		updateFacade.postShell(new DefaultAssetAdministrationShell.Builder().id("http://aas.test.org/test-aas").idShort("test-aas").submodels(ref).build());
+		Reference ref = writeFacade.postSubmodel(new DefaultSubmodel.Builder().id("http://sm.test.org/test-sm").idShort("test-sm").build());
+		writeFacade.postShell(new DefaultAssetAdministrationShell.Builder().id("http://aas.test.org/test-aas").idShort("test-aas").submodels(ref).build());
 		
-		BasyxServiceFacade facade = manager.newServiceFacade(serviceConfig).withEndpointResolver(EndpointResolvers.firstWithAddress("127.0.0.1:8081"))
+		BasyxReadFacade facade = manager.newReadFacade().withEndpointResolver(EndpointResolvers.firstWithAddress("127.0.0.1:8081"))
 				.withSubmodelResolver(new SimpleSubmodelReferenceResolver());
 		for (AssetAdministrationShell eachShell : facade.getAllShells()) {
 			System.out.println(eachShell.getId());
@@ -70,8 +67,8 @@ public class Main {
 				System.out.println(eachSm.getId());
 			}
 		}
-		updateFacade.deleteAllShells();
-		updateFacade.deleteAllSubmodels();		
+		writeFacade.deleteAllShells();
+		writeFacade.deleteAllSubmodels();
 	}
 
 }

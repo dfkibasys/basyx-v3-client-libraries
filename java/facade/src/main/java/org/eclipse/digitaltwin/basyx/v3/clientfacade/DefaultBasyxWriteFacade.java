@@ -24,16 +24,13 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
-import java.util.List;
-
+import com.google.common.base.Strings;
 import org.apache.http.HttpStatus;
 import org.eclipse.digitaltwin.aas4j.v3.dataformat.core.util.AasUtils;
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.Identifiable;
 import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.api.BasyxApiFactory;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.IdentifiableNotFoundException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.MissingIdentifierException;
@@ -44,20 +41,19 @@ import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetAssetAdministrati
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.GetSubmodelsResult;
 import org.eclipse.digitaltwin.basyx.v3.clients.model.part2.PagedResultPagingMetadata;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
+import java.util.List;
 
-class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
+class DefaultBasyxWriteFacade implements BasyxWriteFacade {
 
 	private final AssetAdministrationShellRepositoryApi shellRepositoryApi;
 	private final SubmodelRepositoryApi smRepositoryApi;
-	private BasyxUpdateConfiguration config;
 	private BasyxUpdateListener listener = BasyxUpdateListener.NULL;
+	private final BasyxApiManager apiManager;
 
-	DefaultBasyxUpdateFacade(ObjectMapper mapper, BasyxApiFactory apiFactory, BasyxUpdateConfiguration config) {
-		shellRepositoryApi = apiFactory.newShellRepositoryApi(mapper, config.getAasRepositoryUrl());
-		smRepositoryApi = apiFactory.newSubmodelRepositoryApi(mapper, config.getSubmodelRepositoryUrl());
-		this.config = config;
+	DefaultBasyxWriteFacade(BasyxApiManager apiManager) {
+		this.apiManager = apiManager;
+		this.shellRepositoryApi = apiManager.getShellRepositoryApi();
+		this.smRepositoryApi = apiManager.getSubmodelRepositoryApi();
 	}
 	
 	@Override
@@ -86,7 +82,7 @@ class DefaultBasyxUpdateFacade implements BasyxUpdateFacade {
 		long total = 0;
 		String cursor = null;
 		do {
-			GetAssetAdministrationShellsResult result = shellRepositoryApi.getAllAssetAdministrationShells(null, null, config.getFetchLimit(), cursor);
+			GetAssetAdministrationShellsResult result = shellRepositoryApi.getAllAssetAdministrationShells(null, null, apiManager.getConfig().getFetchLimit(), cursor);
 			PagedResultPagingMetadata meta = result.getPagingMetadata();
 			if (meta != null) {
 				cursor = meta.getCursor();

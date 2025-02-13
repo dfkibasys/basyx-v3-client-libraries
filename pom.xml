@@ -216,8 +216,8 @@
 								</goals>
 								<configuration>
 								
-									<content>model-part1,model-part2,aas-discoveryservice,submodel-repository</content>
-								   <!-- <folder>${openapi.parentFolder.path}</folder>-->
+									<!--<content>model-part1,model-part2,aas-discoveryservice,submodel-repository</content>-->
+								    <folder>${openapi.parentFolder.path}</folder>
 									<pluginExecutors>
 										<pluginExecutor>
 											<goal>read-project-properties</goal>

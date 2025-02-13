@@ -22,56 +22,37 @@
  * 
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
+package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
-package org.eclipse.digitaltwin.basyx.v3.clients.model.search;
+import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
+import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.IdentifiableNotFoundException;
 
-import java.util.Objects;
-import java.util.Map;
-import java.util.HashMap;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+public interface BasyxWriteFacade {
 
+	Reference postShell(AssetAdministrationShell shell) throws ConflictingIdentifierException;
+	
+	Reference postSubmodel(Submodel submodel) throws ConflictingIdentifierException;
+	
+	Reference postSubmodelReference(String aasId, Reference ref);
+	
+	void deleteSubmodelReference(String aasId, String id);
+	
+	Reference updateShell(AssetAdministrationShell shell) throws IdentifiableNotFoundException;
+	
+	Reference updateSubmodel(Submodel submodel) throws IdentifiableNotFoundException;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+	long deleteAllShells();
 
-/**
- * Gets or Sets SortingPath
- */
-public enum SortingPath {
-  
-  IDSHORT("idShort"),
-  
-  ID("id"),
-  
-  ADMINISTRATION_REVISION("administration.revision"),
-  
-  ADMINISTRATION_VERSION("administration.version");
+	long deleteAllSubmodels();
 
-  private String value;
+	void deleteSubmodel(String id) throws IdentifiableNotFoundException;
 
-  SortingPath(String value) {
-    this.value = value;
-  }
+	void deleteSubmodel(Submodel sm) throws IdentifiableNotFoundException;
 
-  @JsonValue
-  public String getValue() {
-    return value;
-  }
-
-  @Override
-  public String toString() {
-    return String.valueOf(value);
-  }
-
-  @JsonCreator
-  public static SortingPath fromValue(String value) {
-    for (SortingPath b : SortingPath.values()) {
-      if (b.value.equals(value)) {
-        return b;
-      }
-    }
-    throw new IllegalArgumentException("Unexpected value '" + value + "'");
-  }
-
+	void deleteShell(String id) throws IdentifiableNotFoundException;
+	
+	void deleteShell(AssetAdministrationShell shell) throws IdentifiableNotFoundException;	
 }
-
