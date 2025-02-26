@@ -207,6 +207,7 @@ class DefaultBasyxReadFacade implements BasyxReadFacade {
 	}
 
 	private Optional<Submodel> fetchSubmodelById(String baseUrl, String id) {
+		//
 		SubmodelRepositoryApi repoApi = apiManager.getSubmodelRepositoryApi(baseUrl);
 		try {
 			return Optional.of(repoApi.getSubmodel(id, null, null));
