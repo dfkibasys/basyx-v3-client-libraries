@@ -1,0 +1,60 @@
+{
+    "name": "success-test",
+    "initialState": {
+        "shells": [
+            {
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset"
+                },
+                "derivedFrom": {
+                    "keys": [
+                        {
+                            "type": "AssetAdministrationShell",
+                            "value": "https://acplt.org/TestAssetAdministrationShell2"
+                        }
+                    ],
+                    "type": "ExternalReference"
+                },
+                "submodels": [
+                    {
+                        "id" : "https://acplt.org/Test_Submodel"
+                    },
+                    {
+                        "id": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
+                    },
+                    {
+                        "id": "http://acplt.org/Submodels/Assets/TestAsset/Identification"
+                    }
+                ],
+                "administration": {
+                    "revision": "9",
+                    "version": "0"
+                },
+                "id": "https://acplt.org/Test_AssetAdministrationShell",
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "idShort": "TestAssetAdministrationShell"
+            }
+        ],
+        "submodels": []
+    },
+    "invocation": {
+        "args": {
+            "aasIdentifier": "urn:example:aas:12345",
+            "submodelIdentifier": "urn:example:submodel:status"
+        }
+    },
+    "expectedState": {
+        "shells": [
+        ]
+    }
+}

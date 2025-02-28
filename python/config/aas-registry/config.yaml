@@ -1,0 +1,31 @@
+additionalProperties:
+  packageVersion: 0.2.0
+  projectName: basyx-v3-clients
+  imports:
+    - import: from basyxclients.models.part2.asset_administration_shell_descriptor import AssetAdministrationShellDescriptor
+    - import: from basyxclients.models.part1.asset_kind import AssetKind
+    - import: from basyxclients.models.part2.get_asset_administration_shell_descriptors_result import GetAssetAdministrationShellDescriptorsResult
+    - import: from basyxclients.models.part2.get_submodel_descriptors_result import GetSubmodelDescriptorsResult
+    - import: from basyxclients.models.part2.service_description import ServiceDescription
+    - import: from basyxclients.models.search.shell_descriptor_search_request import ShellDescriptorSearchRequest
+    - import: from basyxclients.models.search.shell_descriptor_search_response import ShellDescriptorSearchResponse
+    - import: from basyxclients.models.part2.submodel_descriptor import SubmodelDescriptor
+    - import: from basyxclients.models.part1.entity import Entity
+    - import: from basyxclients.models.part1.operation import Operation
+    - import: from basyxclients.models.part1.submodel_element_collection import SubmodelElementCollection
+    - import: from basyxclients.models.part1.submodel_element_list import SubmodelElementList
+    - import: from basyxclients.models.part1.operation_variable import OperationVariable
+  userId: dfkibasys
+  repoId: basyx-v3-client-libraries
+  repoSuffix: ""
+  allPackages:
+  - basyxclients.models.part2
+  - basyxclients.models.part1
+  - basyxclients.models.discovery
+files:
+  __init__api.mustache:
+    templateType: SupportingFiles
+    destinationFilename: basyxclients/api/__init__.py
+  __init__global_model.mustache:
+    templateType: SupportingFiles
+    destinationFilename: basyxclients/models/__init__.py

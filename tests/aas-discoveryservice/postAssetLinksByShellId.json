@@ -1,0 +1,45 @@
+{
+    "name": "success-test",
+    "initialState": {
+        "assetLinks" : {}
+    },
+    "invocation": {
+        "args": {
+            "aasIdentifier": "https://acplt.org/Test_AssetAdministrationShell",
+            "specificAssetId": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "expectedState": {
+        "assetLinks" : {
+            "https://acplt.org/Test_AssetAdministrationShell": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "expectedReturnValue":  [
+        {
+            "name": "specificAssetId",
+            "value": "org::acplt::asset::test"
+        },
+        {
+            "name": "type",
+            "value": "robot"
+        }
+    ]
+}

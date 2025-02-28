@@ -25,6 +25,7 @@
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.BasyxClientCache;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.AasxFileServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
 
@@ -32,13 +33,17 @@ public interface BasyxConnectionManager {
 
 	BasyxConnectionManager withClientCache(BasyxClientCache cache);
 	
-	BasyxServiceFacade newServiceFacade();
+	BasyxReadFacade newServiceFacade();
 
-	BasyxServiceFacade newServiceFacade(BasyxRegistryServiceConfiguration conf);
+	BasyxReadFacade newServiceFacade(BasyxRegistryServiceConfiguration conf);
 
-	BasyxUpdateFacade newUpdateFacade(BasyxUpdateConfiguration conf);
+	BasyxWriteFacade newUpdateFacade(BasyxUpdateConfiguration conf);
 
-	BasyxUpdateFacade newUpdateFacade();
+	BasyxWriteFacade newUpdateFacade();
+	
+	AasxFileServerFacade newAasxFileServiceFacade();
+	
+	AasxFileServerFacade newAasxFileServiceFacade(AasxFileServiceConfiguration conf);
 	
 	String toJsonPretty(Object object);
 

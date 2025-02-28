@@ -1,0 +1,70 @@
+{
+    "name": "path-not-found (404)",
+    "initialState": {
+            "submodels": [
+                {
+                    "modelType": "Submodel",
+                    "kind": "Instance",
+                    "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                    "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                    "submodelElements": []
+                },
+                {
+                    "modelType": "Submodel",
+                    "kind": "Instance",
+                    "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+                    "idShort": "TechnicalData-heater-definition/Optima_Plus_40",
+                    "submodelElements":  [ 
+                        {
+                            "modelType" : "File",
+                            "idShort" : "BasyxImage",
+                            "value" : "basyx_thumbnail.png",
+                            "contentType": "image/png"
+                        }
+                    ]
+                }
+            ],
+            "fileAttachments" : {
+                "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40"  : {
+                    "BasyxImage" : "$PROPERTY(basyxtest.folder)/basyx_thumbnail.png"
+                }
+            }
+    },
+    "invocation": {
+        "args": {
+            "submodelIdentifier": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+            "idShortPath": "Unknown"
+        }
+    },
+    "expectedState": {
+        "submodels": [
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_30",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_30",
+                "submodelElements": []
+            },
+            {
+                "modelType": "Submodel",
+                "kind": "Instance",
+                "id": "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40",
+                "idShort": "TechnicalData-heater-definition/Optima_Plus_40",
+                "submodelElements":  [ 
+                    {
+                        "modelType" : "File",
+                        "idShort" : "BasyxImage",
+                        "value" : "$REGEX(.*)",
+                        "contentType": "image/png"
+                    }
+                ]
+            }
+        ],
+        "fileAttachments" : {
+            "http://sm.twinficient.de/TechnicalData/heater-definition/Optima_Plus_40"  : {
+                "BasyxImage" : "$PROPERTY(basyxtest.folder)/basyx_thumbnail.png"
+            }
+        }
+    },
+    "expectedErrorStatusCode" :  404
+}

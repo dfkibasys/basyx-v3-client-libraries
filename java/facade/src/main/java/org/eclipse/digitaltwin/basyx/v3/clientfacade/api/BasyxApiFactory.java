@@ -24,6 +24,7 @@
  ******************************************************************************/
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.api;
 
+import org.eclipse.digitaltwin.basyx.v3.clients.api.AasxFileServerApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRegistryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.AssetAdministrationShellRepositoryApi;
 import org.eclipse.digitaltwin.basyx.v3.clients.api.SubmodelRegistryApi;
@@ -40,5 +41,7 @@ public interface BasyxApiFactory {
 	AssetAdministrationShellRepositoryApi newShellRepositoryApi(ObjectMapper mapper, String baseUrl);
 	
 	SubmodelRepositoryApi newSubmodelRepositoryApi(ObjectMapper mapper, String baseUrl);
+	
+	AasxFileServerApi newAasxFileServerApi(ObjectMapper mapper, String baseUrl);
 	
 }

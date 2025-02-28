@@ -1,0 +1,155 @@
+{
+    "name": "success-test",
+    "initialState": {
+        "submodelServiceElements": [
+            {
+                "modelType": "Property",
+                "value": "123",
+                "idShort": "test"
+            },
+            {
+                "modelType": "Operation",
+                "inputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "input"
+                        }
+                    }
+                ],
+                "outputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "result"
+                        }
+                    }
+                ],
+                "idShort": "HelloOperation"
+            },
+            {
+                "modelType": "SubmodelElementCollection",
+                "idShort": "BaseOperations",
+                "value": [
+                    {
+                        "modelType": "Operation",
+                        "idShort": "AddOperation",
+                        "inputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort": "request"
+                                }
+                            }
+                        ],
+                        "outputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort": "result"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "invocation": {
+        "args": {
+            "idShortPath": "BaseOperations.AddOperation",
+            "operationRequest": {
+                "inputArguments": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "value": "2",
+                            "idShort": "first"
+                        }
+                    },
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "value": "5",
+                            "idShort": "second"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "expectedReturnValue": {
+        "outputArguments": [
+            {
+                "value": {
+                    "modelType": "Property",
+                    "value": "7",
+                    "valueType": "xs:int"
+                }
+            }
+        ]
+    },
+    "expectedState": {
+        "submodelServiceElements": [
+            {
+                "modelType": "Property",
+                "value": "123",
+                "idShort": "test"
+            },
+            {
+                "modelType": "Operation",
+                "inputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "input"
+                        }
+                    }
+                ],
+                "outputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "result"
+                        }
+                    }
+                ],
+                "idShort": "HelloOperation"
+            },
+            {
+                "modelType": "SubmodelElementCollection",
+                "idShort": "BaseOperations",
+                "value": [
+                    {
+                        "modelType": "Operation",
+                        "idShort": "AddOperation",
+                        "inputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort": "request"
+                                }
+                            }
+                        ],
+                        "outputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort": "result"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

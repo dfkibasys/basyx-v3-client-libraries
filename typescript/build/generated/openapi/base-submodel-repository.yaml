@@ -1,0 +1,680 @@
+---
+openapi: "3.0.3"
+info:
+  title: "DotAAS Part 2 | HTTP/REST | Submodel Repository Service Specification"
+  description: "The entire Submodel Repository Service Specification as part of the\
+    \ [Specification of the Asset Administration Shell: Part 2](http://industrialdigitaltwin.org/en/content-hub).\
+    \  \nPublisher: Industrial Digital Twin Association (IDTA) 2023"
+  contact:
+    name: "Industrial Digital Twin Association (IDTA)"
+    email: "info@idtwin.org"
+  license:
+    name: "CC BY 4.0"
+    url: "https://creativecommons.org/licenses/by/4.0/"
+  version: "V3.0.1_SSP-001"
+servers: []
+paths:
+  /submodels:
+    get:
+      tags:
+      - "Submodel Repository API"
+      summary: "Returns all Submodels"
+      operationId: "GetAllSubmodels"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetAllSubmodels/3/0"
+      - "https://admin-shell.io/aas/API/GetAllSubmodelsBySemanticId/3/0"
+      - "https://admin-shell.io/aas/API/GetAllSubmodelsByIdShort/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/SemanticId"
+      - $ref: "./model-part2.yaml#/components/parameters/IdShort"
+      - $ref: "./model-part2.yaml#/components/parameters/Limit"
+      - $ref: "./model-part2.yaml#/components/parameters/Cursor"
+      - $ref: "./model-part2.yaml#/components/parameters/Level"
+      - $ref: "./model-part2.yaml#/components/parameters/Extent"
+      responses:
+        "200":
+          description: "Requested Submodels"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/GetSubmodelsResult"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    post:
+      tags:
+      - "Submodel Repository API"
+      summary: "Creates a new Submodel"
+      operationId: "PostSubmodel"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PostSubmodel/3/0"
+      requestBody:
+        description: "Submodel object"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part1.yaml#/components/schemas/Submodel"
+        required: true
+      responses:
+        "201":
+          description: "Submodel created successfully"
+          headers:
+            Location:
+              description: "URL of the newly created resource"
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part1.yaml#/components/schemas/Submodel"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "409":
+          $ref: "./model-part2.yaml#/components/responses/conflict"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /submodels/{submodelIdentifier}:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/SubmodelIdentifier"
+    get:
+      tags:
+      - "Submodel Repository API"
+      summary: "Returns a specific Submodel"
+      operationId: "GetSubmodel"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetSubmodelById/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/Level"
+      - $ref: "./model-part2.yaml#/components/parameters/Extent"
+      responses:
+        "200":
+          description: "Requested Submodel"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part1.yaml#/components/schemas/Submodel"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    put:
+      tags:
+      - "Submodel Repository API"
+      summary: "Updates an existing Submodel"
+      operationId: "PutSubmodel"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PutSubmodelById/3/0"
+      requestBody:
+        description: "Submodel object"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part1.yaml#/components/schemas/Submodel"
+        required: true
+      responses:
+        "204":
+          description: "Submodel updated successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    delete:
+      tags:
+      - "Submodel Repository API"
+      summary: "Deletes a Submodel"
+      operationId: "DeleteSubmodel"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/DeleteSubmodelById/3/0"
+      responses:
+        "204":
+          description: "Submodel deleted successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /submodels/{submodelIdentifier}/$metadata:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/SubmodelIdentifier"
+    get:
+      tags:
+      - "Submodel Repository API"
+      summary: "Returns the metadata attributes of a specific Submodel"
+      operationId: "GetSubmodelMetadata"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetSubmodelById/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/Level"
+      responses:
+        "200":
+          description: "Requested Submodel in the metadata representation"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/SubmodelMetadata"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /submodels/{submodelIdentifier}/submodel-elements:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/SubmodelIdentifier"
+    get:
+      tags:
+      - "Submodel Repository API"
+      summary: "Returns all submodel elements including their hierarchy"
+      operationId: "GetAllSubmodelElements"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetAllSubmodelElements/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/Limit"
+      - $ref: "./model-part2.yaml#/components/parameters/Cursor"
+      - $ref: "./model-part2.yaml#/components/parameters/Level"
+      - $ref: "./model-part2.yaml#/components/parameters/Extent"
+      responses:
+        "200":
+          description: "List of found submodel elements"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/GetSubmodelElementsResult"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          description: "Default error handling for unmentioned status codes"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/Result"
+    post:
+      tags:
+      - "Submodel Repository API"
+      summary: "Creates a new submodel element"
+      operationId: "PostSubmodelElement"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PostSubmodelElement/3/0"
+      requestBody:
+        description: "Requested submodel element"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part1.yaml#/components/schemas/SubmodelElement"
+        required: true
+      responses:
+        "201":
+          description: "Submodel element created successfully"
+          headers:
+            Location:
+              description: "URL of the newly created resource"
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part1.yaml#/components/schemas/SubmodelElement"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "409":
+          $ref: "./model-part2.yaml#/components/responses/conflict"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/SubmodelIdentifier"
+    - $ref: "./model-part2.yaml#/components/parameters/IdShortPath"
+    get:
+      tags:
+      - "Submodel Repository API"
+      summary: "Returns a specific submodel element from the Submodel at a specified\
+        \ path"
+      operationId: "GetSubmodelElement"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetSubmodelElementByPath/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/Level"
+      - $ref: "./model-part2.yaml#/components/parameters/Extent"
+      responses:
+        "200":
+          description: "Requested submodel element"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part1.yaml#/components/schemas/SubmodelElement"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    post:
+      tags:
+      - "Submodel Repository API"
+      summary: "Creates a new submodel element at a specified path within submodel\
+        \ elements hierarchy"
+      operationId: "PostSubmodelElementUnderPath"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PostSubmodelElementByPath/3/0"
+      requestBody:
+        description: "Requested submodel element"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part1.yaml#/components/schemas/SubmodelElement"
+        required: true
+      responses:
+        "201":
+          description: "Submodel element created successfully"
+          headers:
+            Location:
+              description: "URL of the newly created resource"
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part1.yaml#/components/schemas/SubmodelElement"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "409":
+          $ref: "./model-part2.yaml#/components/responses/conflict"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    put:
+      tags:
+      - "Submodel Repository API"
+      summary: "Updates an existing submodel element at a specified path within submodel\
+        \ elements hierarchy"
+      operationId: "PutSubmodelElement"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PutSubmodelElementByPath/3/0"
+      - "https://admin-shell.io/aas/API/SetSubmodelElementValueByPath/3/0"
+      parameters:
+      - name: "level"
+        in: "query"
+        description: "Determines the structural depth of the respective resource content"
+        required: false
+        schema:
+          type: "string"
+          default: "deep"
+          enum:
+          - "deep"
+      requestBody:
+        description: "Requested submodel element"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part1.yaml#/components/schemas/SubmodelElement"
+        required: true
+      responses:
+        "204":
+          description: "Submodel element updated successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    delete:
+      tags:
+      - "Submodel Repository API"
+      summary: "Deletes a submodel element at a specified path within the submodel\
+        \ elements hierarchy"
+      operationId: "DeleteSubmodelElement"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/DeleteSubmodelElementByPath/3/0"
+      responses:
+        "204":
+          description: "Submodel element deleted successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/$value:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/SubmodelIdentifier"
+    - $ref: "./model-part2.yaml#/components/parameters/IdShortPath"
+    get:
+      tags:
+      - "Submodel Repository API"
+      summary: "Returns a specific submodel element from the Submodel at a specified\
+        \ path in the ValueOnly representation"
+      operationId: "GetSubmodelElementValue"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetSubmodelElementByPath/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/Level"
+      - $ref: "./model-part2.yaml#/components/parameters/Extent"
+      responses:
+        "200":
+          description: "Requested submodel element"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/SubmodelElementValue"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    patch:
+      tags:
+      - "Submodel Repository API"
+      summary: "Updates the value of an existing SubmodelElement"
+      operationId: "PatchSubmodelElementValue"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PatchSubmodelElementByPath/3/0"
+      parameters:
+      - name: "level"
+        in: "query"
+        description: "Determines the structural depth of the respective resource content"
+        required: false
+        schema:
+          type: "string"
+          default: "core"
+          enum:
+          - "core"
+      requestBody:
+        description: "The SubmodelElement in its ValueOnly representation"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part2.yaml#/components/schemas/SubmodelElementValue"
+        required: true
+      responses:
+        "204":
+          description: "Submodel updated successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/attachment:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/SubmodelIdentifier"
+    - $ref: "./model-part2.yaml#/components/parameters/IdShortPath"
+    get:
+      tags:
+      - "Submodel Repository API"
+      summary: "Downloads file content from a specific submodel element from the Submodel\
+        \ at a specified path"
+      operationId: "GetFileAttachment"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetFileByPath/3/0"
+      responses:
+        "200":
+          description: "Requested file"
+          headers:
+            Content-Disposition:
+              schema:
+                type: "string"
+              description: "In order to physically download the file usually set to\
+                \ attachment with a filename"
+              example: "attachment; filename=\"filename.jpg\""
+          content:
+            application/octet-stream:
+              schema:
+                type: "string"
+                format: "binary"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "405":
+          description: "Method not allowed - Download only valid for File submodel\
+            \ element"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/Result"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+      x-return-byte-stream: true
+    put:
+      tags:
+      - "Submodel Repository API"
+      summary: "Uploads file content to an existing submodel element at a specified\
+        \ path within submodel elements hierarchy"
+      operationId: "PutFileAttachment"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PutFileByPath/3/0"
+      requestBody:
+        description: "File to upload"
+        content:
+          multipart/form-data:
+            schema:
+              type: "object"
+              properties:
+                fileName:
+                  type: "string"
+                file:
+                  type: "string"
+                  format: "binary"
+            encoding:
+              file:
+                contentType: "application/octet-stream"
+        required: true
+      responses:
+        "204":
+          description: "Submodel element updated successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "405":
+          description: "Method not allowed - Upload only valid for File submodel element"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/Result"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    delete:
+      tags:
+      - "Submodel Repository API"
+      summary: "Deletes file content of an existing submodel element at a specified\
+        \ path within submodel elements hierarchy"
+      operationId: "DeleteFileAttachment"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/DeleteFileByPath/3/0"
+      responses:
+        "200":
+          description: "Submodel element updated successfully"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /submodels/{submodelIdentifier}/submodel-elements/{idShortPath}/invoke:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/SubmodelIdentifier"
+    - $ref: "./model-part2.yaml#/components/parameters/IdShortPath"
+    post:
+      tags:
+      - "Submodel Repository API"
+      summary: "Synchronously or asynchronously invokes an Operation at a specified\
+        \ path"
+      operationId: "InvokeOperation"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/InvokeOperationSync/3/0"
+      - "https://admin-shell.io/aas/API/InvokeOperationAsync/3/0"
+      parameters:
+      - name: "async"
+        in: "query"
+        description: "Determines whether an operation invocation is performed asynchronously\
+          \ or synchronously"
+        schema:
+          type: "boolean"
+          default: false
+      requestBody:
+        description: "Operation request object"
+        content:
+          application/json:
+            schema:
+              $ref: "./model-part2.yaml#/components/schemas/OperationRequest"
+        required: true
+      responses:
+        "200":
+          description: "Operation result object"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/OperationResult"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "405":
+          description: "Method not allowed - Invoke only valid for Operation submodel\
+            \ element"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/Result"
+        "500":
+          $ref: "./model-part2.yaml#/components/responses/internal-server-error"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /description:
+    get:
+      tags:
+      - "Description API"
+      summary: "Returns the self-describing information of a network resource (ServiceDescription)"
+      operationId: "GetDescription"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/Descriptor/GetDescription/3/0"
+      responses:
+        "200":
+          description: "Requested Description"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/ServiceDescription"
+        "401":
+          $ref: "./model-part2.yaml#/components/responses/unauthorized"
+        "403":
+          $ref: "./model-part2.yaml#/components/responses/forbidden"

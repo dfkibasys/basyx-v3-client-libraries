@@ -1,0 +1,317 @@
+{
+    "name": "assetkind-test",
+    "initialState": {
+        "shellDescriptors": [
+            {
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "administration": {
+                    "version": "0",
+                    "revision": "9"
+                },
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGw",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset",
+                "idShort": "TestAssetAdministrationShell",
+                "id": "https://acplt.org/Test_AssetAdministrationShell"
+            },
+            {
+                "assetKind": "Type",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGwyX01hbmRhdG9yeQ",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
+                "idShort": "Test_AssetAdministrationShell2_Mandatory",
+                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory"
+            },
+            {
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWFuZGF0b3J5",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
+                "idShort": "Test_AssetAdministrationShell_Mandatory",
+                "id": "https://acplt.org/Test_AssetAdministrationShell_Mandatory"
+            },
+            {
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "administration": {
+                    "version": "0",
+                    "revision": "9"
+                },
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWlzc2luZw",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset_Missing",
+                "idShort": "TestAssetAdministrationShell",
+                "id": "https://acplt.org/Test_AssetAdministrationShell_Missing"
+            },
+            {
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9leGFtcGxlLmNvbS9pZHMvc20vMjQxMV83MTYwXzAxMzJfNDUyMw",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://htw-berlin.de/ids/asset/1090_7160_0132_8069",
+                "idShort": "SecondAAS",
+                "id": "https://example.com/ids/sm/2411_7160_0132_4523"
+            },
+            {
+                "description": [
+                    {
+                        "language": "de",
+                        "text": "Verwaltungsschale zur Demonstration in dem BaSyx AAS Web UI"
+                    },
+                    {
+                        "language": "en",
+                        "text": "Asset Administration Shell for demonstration use of the BaSyx AAS Web UI"
+                    }
+                ],
+                "displayName": [
+                    {
+                        "language": "de",
+                        "text": "Demo VWS V3"
+                    },
+                    {
+                        "language": "en",
+                        "text": "Demo AAS V3"
+                    }
+                ],
+                "assetKind": "Instance",
+                "assetType": "DemoAsset",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9odHctYmVybGluLmRlL2lkcy9hYXMvZGVtb2Fhc3Yz",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://htw-berlin.de/ids/asset/2450_7160_0132_1843",
+                "idShort": "DemoAASV3",
+                "id": "https://htw-berlin.de/ids/aas/demoaasv3"
+            }
+        ]
+    },
+    "invocation": {
+        "args": {
+            "assetKind": "Type"
+        }
+    },
+    "expectedState": {
+        "shellDescriptors": [
+            {
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "administration": {
+                    "version": "0",
+                    "revision": "9"
+                },
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGw",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset",
+                "idShort": "TestAssetAdministrationShell",
+                "id": "https://acplt.org/Test_AssetAdministrationShell"
+            },
+            {
+                "assetKind": "Type",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGwyX01hbmRhdG9yeQ",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
+                "idShort": "Test_AssetAdministrationShell2_Mandatory",
+                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory"
+            },
+            {
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWFuZGF0b3J5",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
+                "idShort": "Test_AssetAdministrationShell_Mandatory",
+                "id": "https://acplt.org/Test_AssetAdministrationShell_Mandatory"
+            },
+            {
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "administration": {
+                    "version": "0",
+                    "revision": "9"
+                },
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWlzc2luZw",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset_Missing",
+                "idShort": "TestAssetAdministrationShell",
+                "id": "https://acplt.org/Test_AssetAdministrationShell_Missing"
+            },
+            {
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9leGFtcGxlLmNvbS9pZHMvc20vMjQxMV83MTYwXzAxMzJfNDUyMw",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://htw-berlin.de/ids/asset/1090_7160_0132_8069",
+                "idShort": "SecondAAS",
+                "id": "https://example.com/ids/sm/2411_7160_0132_4523"
+            },
+            {
+                "description": [
+                    {
+                        "language": "de",
+                        "text": "Verwaltungsschale zur Demonstration in dem BaSyx AAS Web UI"
+                    },
+                    {
+                        "language": "en",
+                        "text": "Asset Administration Shell for demonstration use of the BaSyx AAS Web UI"
+                    }
+                ],
+                "displayName": [
+                    {
+                        "language": "de",
+                        "text": "Demo VWS V3"
+                    },
+                    {
+                        "language": "en",
+                        "text": "Demo AAS V3"
+                    }
+                ],
+                "assetKind": "Instance",
+                "assetType": "DemoAsset",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9odHctYmVybGluLmRlL2lkcy9hYXMvZGVtb2Fhc3Yz",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://htw-berlin.de/ids/asset/2450_7160_0132_1843",
+                "idShort": "DemoAASV3",
+                "id": "https://htw-berlin.de/ids/aas/demoaasv3"
+            }
+        ]
+    },
+    "comment": "Due to implementation details a cursor is returned here, even than no limit is given via arguments!",
+    "expectedReturnValue": {
+        "paging_metadata": {
+            "cursor": "aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGxfTWFuZGF0b3J5"
+        },
+        "result": [
+            {
+                "assetKind": "Type",
+                "endpoints": [
+                    {
+                        "protocolInformation": {
+                            "endpointProtocol": "http",
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGwyX01hbmRhdG9yeQ"
+                        },
+                        "interface": "AAS-3.0"
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset_Mandatory",
+                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory",
+                "idShort": "Test_AssetAdministrationShell2_Mandatory"
+            }
+        ]
+    }
+}

@@ -1,0 +1,11 @@
+# flake8: noqa
+
+# import apis into api package
+from basyxclients.api.asset_administration_shell_basic_discovery_api import AssetAdministrationShellBasicDiscoveryApi
+from basyxclients.api.asset_administration_shell_registry_api import AssetAdministrationShellRegistryApi
+from basyxclients.api.asset_administration_shell_repository_api import AssetAdministrationShellRepositoryApi
+from basyxclients.api.asset_administration_shell_service_api import AssetAdministrationShellServiceApi
+from basyxclients.api.concept_description_repository_api import ConceptDescriptionRepositoryApi
+from basyxclients.api.submodel_registry_api import SubmodelRegistryApi
+from basyxclients.api.submodel_repository_api import SubmodelRepositoryApi
+from basyxclients.api.submodel_service_api import SubmodelServiceApi

@@ -69,9 +69,17 @@
   value: "https://api.swaggerhub.com/domains/Plattform_i40/Part1-MetaModel-Schemas/V3.0.1#/components/schemas/SubmodelElement_choice"
 
 
-# # add url encode hints
+# perform generation tricks and add url encode hints
+- op: replace
+  path: /components/parameters/AssetIds/schema/items
+  value: 
+    "$ref": "https://api.swaggerhub.com/domains/Plattform_i40/Part1-MetaModel-Schemas/V3.0.1#/components/schemas/SpecificAssetId"
+# we add both settings here
 - op: add
-  path: /components/parameters/AssetIds/x-utf8-base64-url-encoded-as-string
+  path: /components/parameters/AssetIds/x-utf8-base64-url-encoded-json-as-string
+  value: true
+- op: add
+  path: /components/parameters/AssetType/x-utf8-base64-url-encoded-as-string
   value: true 
 - op: add
   path: /components/parameters/AssetAdministrationShellIdentifier/x-utf8-base64-url-encoded-as-string
@@ -89,3 +97,5 @@
 # # # - op: remove
 # # #   path: /components/parameters/AssetInformation/properties/assetType/pattern
 # # #   path: /components/schemas/Key/properties/value/pattern
+
+

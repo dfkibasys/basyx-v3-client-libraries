@@ -9,22 +9,20 @@
 	<packaging>pom</packaging>
 	<version>0.2.0-SNAPSHOT</version>
 
-	<parent>
-		<groupId>de.dfki.cos.basys</groupId>
-		<artifactId>pom</artifactId>
-		<version>0.5.1</version>
-		<relativePath />
-	</parent>
-
-
 
 	<modules>
 		<!--<module>csharp-unity</module>-->
+<!--		<module>dart</module>-->
+
+		
 		<module>java</module>
  		<module>java/parent</module>
- 		<module>java/build/generated/project</module>
+		<module>java/test-environment</module>
+		<module>java/build/generated/project</module>
+ 		
     	<module>java/facade</module>
-	<!--	<module>typescript</module>-->
+		<!--<module>typescript</module>-->
+		<!--<module>python</module>-->
 	</modules>
 
 	<properties>
@@ -40,15 +38,24 @@
 		<generated.folder.name>build/generated</generated.folder.name>
 		<openapi.folder.name>@item@</openapi.folder.name>
 		<openapi.input.name>api.yaml</openapi.input.name>
+		<openapi.baseoutput.name>base-@item@.yaml</openapi.baseoutput.name>
 		<openapi.output.name>@item@.yaml</openapi.output.name>
 		<openapi.patch.name>patch.yaml</openapi.patch.name>
 		<openapi.input.path>
 			${openapi.parentFolder.path}/${openapi.folder.name}/${openapi.input.name}</openapi.input.path>
+		<!-- base patch -->
 		<openapi.patch.path>
 			${openapi.parentFolder.path}/${openapi.folder.name}/${openapi.patch.name}</openapi.patch.path>
+		<!-- language specific patch -->
+		<openapi.language-patch.path>
+			${project.basedir}/patches/${openapi.folder.name}/${openapi.patch.name}</openapi.language-patch.path>
+
 		<openapi.output.folder>${project.basedir}/${generated.folder.name}/openapi</openapi.output.folder>
 		<gensrc.output.folder>${project.basedir}/${generated.folder.name}/project</gensrc.output.folder>
+		
+		<openapi.baseoutput.path>${openapi.output.folder}/${openapi.baseoutput.name}</openapi.baseoutput.path>
 		<openapi.output.path>${openapi.output.folder}/${openapi.output.name}</openapi.output.path>
+
 		<openapi.generator.config.name>config</openapi.generator.config.name>
 		<openapi.generator.config.path>${project.basedir}/${openapi.generator.config.name}</openapi.generator.config.path>
   
@@ -74,19 +81,24 @@
 					</execution>
 				</executions>
 				<configuration>
-					<filesets><!--
+					<filesets>
 						<fileset>
 							<directory>${openapi.output.folder}</directory>
 							<excludes>
 								<exclude>**/.gitkeep</exclude>
 							</excludes>
 							<followSymlinks>false</followSymlinks>
-						</fileset>-->
+						</fileset>
 						<fileset>
 							<directory>${gensrc.output.folder}</directory>
 							<excludes>
 								<exclude>.openapi-generator-ignore</exclude>
 								<exclude>pom.xml</exclude>
+								<exclude>.project</exclude>
+								<exclude>.classpath</exclude>
+								<exclude>**/*.launch</exclude>
+								<exclude>**/*BasyxTest*</exclude>
+								<exclude>**/logback.xml</exclude>
 							</excludes>
 							<followSymlinks>false</followSymlinks>
 						</fileset>
@@ -96,6 +108,21 @@
 		</plugins>
 	</build>
 	<profiles>
+
+		<profile>
+			<id>gitlab-ci</id>
+			<distributionManagement>
+				<snapshotRepository>
+				<id>basys-nexus</id>
+				<url>${env.MAVEN_REPO_URL}/maven-snapshots</url>
+				</snapshotRepository>
+				<repository>
+				<id>basys-nexus</id>
+				<url>${env.MAVEN_REPO_URL}/maven-releases</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+
 		<profile>
 			<id>generate-openapi</id>
 			<activation>
@@ -144,9 +171,22 @@
 											<configuration>
 												<input>${openapi.input.path}</input>
 												<patch>${openapi.patch.path}</patch>
+												<output>${openapi.baseoutput.path}</output>
+											</configuration>
+										</pluginExecutor>
+										<pluginExecutor>
+											<goal>jsonpatch-maven-plugin</goal>
+											<plugin>
+												<groupId>de.dfki.cos.basys.common</groupId>
+												<artifactId>jsonpatch-maven-plugin</artifactId>
+											</plugin>
+											<configuration>
+												<input>${openapi.baseoutput.path}</input>
+												<patch>${openapi.language-patch.path}</patch>
 												<output>${openapi.output.path}</output>
 											</configuration>
 										</pluginExecutor>
+										
 										<pluginExecutor>
 											<goal>find-and-replace</goal>
 											<plugin>
@@ -163,9 +203,11 @@
 												<fileMask>${openapi.output.name}</fileMask>
 											</configuration>
 										</pluginExecutor>
+										
 									</pluginExecutors>
 								</configuration>
 							</execution>
+							
 							<execution>
 								<id>generate-code</id>
 								<phase>generate-sources</phase>
@@ -173,11 +215,9 @@
 									<goal>iterator</goal>
 								</goals>
 								<configuration>
-								<folder>${openapi.parentFolder.path}</folder>
-								<!--	<content>aas-discoveryservice,aas-repository</content>-->
-									<!--<content>model-part1,model-part2,aas-service</content>-->
-
-
+								
+									<!--<content>model-part1,model-part2,aas-discoveryservice,submodel-repository</content>-->
+								    <folder>${openapi.parentFolder.path}</folder>
 									<pluginExecutors>
 										<pluginExecutor>
 											<goal>read-project-properties</goal>

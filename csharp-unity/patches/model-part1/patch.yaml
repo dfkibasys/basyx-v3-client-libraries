@@ -1,0 +1,4 @@
+- op: remove
+  path: /components/schemas/SubmodelElementList/allOf/1/properties/modelType
+- op: remove
+  path: /components/schemas/SubmodelElementCollection/allOf/1/properties/modelType

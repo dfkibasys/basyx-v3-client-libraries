@@ -1,0 +1,424 @@
+{
+    "name": "success-test",
+    "initialState": {
+        "thumbnails": {
+            "https://acplt.org/Test_AssetAdministrationShell" : "$PROPERTY(basyxtest.folder)/basyx_thumbnail_colored.png",
+            "https://acplt.org/Test_AssetAdministrationShell2_Mandatory" : "$PROPERTY(basyxtest.folder)/basyx_thumbnail.png"
+        },
+        "shells": [
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset"
+                },
+                "derivedFrom": {
+                    "keys": [
+                        {
+                            "type": "AssetAdministrationShell",
+                            "value": "https://acplt.org/TestAssetAdministrationShell2"
+                        }
+                    ],
+                    "type": "ExternalReference"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://acplt.org/Test_Submodel"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    },
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    },
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "http://acplt.org/Submodels/Assets/TestAsset/Identification"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "administration": {
+                    "revision": "9",
+                    "version": "0"
+                },
+                "id": "https://acplt.org/Test_AssetAdministrationShell",
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "idShort": "TestAssetAdministrationShell"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Type",
+                    "globalAssetId": "https://acplt.org/Test_Asset_Mandatory"
+                },
+                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory",
+                "idShort": "Test_AssetAdministrationShell2_Mandatory"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset_Mandatory"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://acplt.org/Test_Submodel_Mandatory"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    },
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://acplt.org/Test_Submodel2_Mandatory"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "id": "https://acplt.org/Test_AssetAdministrationShell_Mandatory",
+                "idShort": "Test_AssetAdministrationShell_Mandatory"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset_Missing"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://acplt.org/Test_Submodel_Missing"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "administration": {
+                    "revision": "9",
+                    "version": "0"
+                },
+                "id": "https://acplt.org/Test_AssetAdministrationShell_Missing",
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "idShort": "TestAssetAdministrationShell"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://htw-berlin.de/ids/asset/1090_7160_0132_8069"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://example.com/ids/sm/2411_7160_0132_4523"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "id": "https://example.com/ids/sm/2411_7160_0132_4523",
+                "idShort": "SecondAAS"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "assetType": "DemoAsset",
+                    "defaultThumbnail": {
+                        "contentType": "image/png",
+                        "path": "OPC2AAS_Logo.png"
+                    },
+                    "globalAssetId": "https://htw-berlin.de/ids/asset/2450_7160_0132_1843"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://htw-berlin.de/ids/sm/demosubmodelv3"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "id": "https://htw-berlin.de/ids/aas/demoaasv3",
+                "description": [
+                    {
+                        "language": "de",
+                        "text": "Verwaltungsschale zur Demonstration in dem BaSyx AAS Web UI"
+                    },
+                    {
+                        "language": "en",
+                        "text": "Asset Administration Shell for demonstration use of the BaSyx AAS Web UI"
+                    }
+                ],
+                "displayName": [
+                    {
+                        "language": "de",
+                        "text": "Demo VWS V3"
+                    },
+                    {
+                        "language": "en",
+                        "text": "Demo AAS V3"
+                    }
+                ],
+                "idShort": "DemoAASV3"
+            }
+        ],
+        "submodels": []
+    },
+    "invocation": {
+        "args": {
+            "aasIdentifier" : "https://acplt.org/Test_AssetAdministrationShell"
+        }
+    },
+    "expectedState": {
+        "thumbnails": {
+            "https://acplt.org/Test_AssetAdministrationShell2_Mandatory" : "$PROPERTY(basyxtest.folder)/basyx_thumbnail.png"
+        },
+        "shells": [
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset"
+                },
+                "derivedFrom": {
+                    "keys": [
+                        {
+                            "type": "AssetAdministrationShell",
+                            "value": "https://acplt.org/TestAssetAdministrationShell2"
+                        }
+                    ],
+                    "type": "ExternalReference"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://acplt.org/Test_Submodel"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    },
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    },
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "http://acplt.org/Submodels/Assets/TestAsset/Identification"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "administration": {
+                    "revision": "9",
+                    "version": "0"
+                },
+                "id": "https://acplt.org/Test_AssetAdministrationShell",
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "idShort": "TestAssetAdministrationShell"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Type",
+                    "defaultThumbnail" : {
+                        "contentType" : "application/octet-stream",
+                        "path" : "$REGEX(^(.)*/basyx_thumbnail.png$)"
+                    },
+                    "globalAssetId": "https://acplt.org/Test_Asset_Mandatory"
+                },
+                "id": "https://acplt.org/Test_AssetAdministrationShell2_Mandatory",
+                "idShort": "Test_AssetAdministrationShell2_Mandatory"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset_Mandatory"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://acplt.org/Test_Submodel_Mandatory"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    },
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://acplt.org/Test_Submodel2_Mandatory"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "id": "https://acplt.org/Test_AssetAdministrationShell_Mandatory",
+                "idShort": "Test_AssetAdministrationShell_Mandatory"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset_Missing"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://acplt.org/Test_Submodel_Missing"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "administration": {
+                    "revision": "9",
+                    "version": "0"
+                },
+                "id": "https://acplt.org/Test_AssetAdministrationShell_Missing",
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "idShort": "TestAssetAdministrationShell"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://htw-berlin.de/ids/asset/1090_7160_0132_8069"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://example.com/ids/sm/2411_7160_0132_4523"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "id": "https://example.com/ids/sm/2411_7160_0132_4523",
+                "idShort": "SecondAAS"
+            },
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "assetType": "DemoAsset",
+                    "defaultThumbnail": {
+                        "contentType": "image/png",
+                        "path": "OPC2AAS_Logo.png"
+                    },
+                    "globalAssetId": "https://htw-berlin.de/ids/asset/2450_7160_0132_1843"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "https://htw-berlin.de/ids/sm/demosubmodelv3"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "id": "https://htw-berlin.de/ids/aas/demoaasv3",
+                "description": [
+                    {
+                        "language": "de",
+                        "text": "Verwaltungsschale zur Demonstration in dem BaSyx AAS Web UI"
+                    },
+                    {
+                        "language": "en",
+                        "text": "Asset Administration Shell for demonstration use of the BaSyx AAS Web UI"
+                    }
+                ],
+                "displayName": [
+                    {
+                        "language": "de",
+                        "text": "Demo VWS V3"
+                    },
+                    {
+                        "language": "en",
+                        "text": "Demo AAS V3"
+                    }
+                ],
+                "idShort": "DemoAASV3"
+            }
+        ]
+    }
+}

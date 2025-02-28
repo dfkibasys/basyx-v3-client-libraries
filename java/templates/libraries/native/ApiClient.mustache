@@ -4,6 +4,7 @@ package {{invokerPackage}};
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 {{#openApiNullable}}
@@ -452,7 +453,7 @@ public class ApiClient {
   	return value == null ? null : new String(java.util.Base64.getUrlEncoder().encode(value.getBytes(java.nio.charset.StandardCharsets.UTF_8)), java.nio.charset.StandardCharsets.UTF_8);
   }
 
-  public static List<String> base64UrlEncode(List<String> values) {
+  public static List<String> base64UrlEncodeList(List<String> values) {
     if (values == null) {
       return null;
     }
@@ -462,4 +463,27 @@ public class ApiClient {
     }
     return toReturn;
   }
+  	
+  public static String base64UrlEncodeObject(Object value) {
+		if (value == null) {
+			return null;
+		}
+		try {
+			String sValue = JSON.getDefault().getMapper().writeValueAsString(value);
+			return base64UrlEncode(sValue);
+		} catch (JsonProcessingException e) {
+			throw new ApiException("Object could not be serialized to json");
+		}
+	}
+
+	public static List<String> base64UrlEncodeObjectList(List<? extends Object> values) {
+		if (values == null) {
+			return null;
+		}
+		List<String> toReturn = new ArrayList<>(values.size());
+		for (Object eachValue : values) {
+			toReturn.add(ApiClient.base64UrlEncodeObject(eachValue));
+		}
+		return toReturn;
+	}
 }

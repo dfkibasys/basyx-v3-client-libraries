@@ -1,0 +1,13 @@
+basyx:
+  submodel:
+    file: submodel.json
+  operation:
+    java:
+      classesPath: classes
+      additionaClassPath:
+      - /application/libs/
+    invokation:
+      mappings:
+        ProxyOperation: PostOperation
+    proxy:
+      uri: http://wiremock:8080

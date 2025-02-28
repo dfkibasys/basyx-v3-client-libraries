@@ -1,0 +1,37 @@
+{
+    "name": "not-found-test (404)",
+    "initialState": {
+        "assetLinks" : {
+            "https://acplt.org/Test_AssetAdministrationShell": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "invocation": {
+        "args": {
+            "aasIdentifier": "https://acplt.org/Unknown"
+        }
+    },
+    "expectedState": {
+        "assetLinks" : {
+            "https://acplt.org/Test_AssetAdministrationShell": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "expectedErrorStatusCode" : 404
+}

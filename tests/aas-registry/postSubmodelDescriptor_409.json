@@ -1,0 +1,114 @@
+{
+    "name": "conflict 409",
+    "initialState": {
+        "shellDescriptors": [
+            {
+                "idShort": "identification_7",
+                "id": "identification_7",
+                "assetType": "tp",
+                "assetKind": "Type",
+                "administration": {
+                    "revision": "22"
+                },
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "identification_7"
+                    }
+                ],
+                "submodelDescriptors": [
+                    {
+                        "idShort": "submodel_0",
+                        "id": "submodel_0",
+                        "description": [
+                            {
+                                "language": "de-DE",
+                                "text": "G1"
+                            }
+                        ],
+                        "endpoints": [
+                            {
+                                "protocolInformation": {
+                                    "href": "http://127.0.0.1:8099/submodel",
+                                    "endpointProtocol": "HTTP",
+                                    "subprotocol": "AAS"
+                                },
+                                "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "invocation": {
+        "args": {
+            "aasIdentifier": "identification_7",
+            "submodelDescriptor": {
+                "idShort": "submodel-new",
+                "id": "submodel_0",
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "another description"
+                    }
+                ],
+                "endpoints": [
+                    {
+                        "protocolInformation": {
+                            "href": "http://127.0.0.1:8099/submodel",
+                            "endpointProtocol": "HTTP",
+                            "subprotocol": "AAS"
+                        },
+                        "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
+                    }
+                ]
+            }
+        }
+    },
+    "expectedState": {
+        "shellDescriptors": [
+            {
+                "idShort": "identification_7",
+                "id": "identification_7",
+                "assetType": "tp",
+                "assetKind": "Type",
+                "administration": {
+                    "revision": "22"
+                },
+                "description": [
+                    {
+                        "language": "de-DE",
+                        "text": "identification_7"
+                    }
+                ],
+                "submodelDescriptors": [
+                    {
+                        "idShort": "submodel_0",
+                        "id": "submodel_0",
+                        "description": [
+                            {
+                                "language": "de-DE",
+                                "text": "G1"
+                            }
+                        ],
+                        "endpoints": [
+                            {
+                                "protocolInformation": {
+                                    "href": "http://127.0.0.1:8099/submodel",
+                                    "endpointProtocol": "HTTP",
+                                    "subprotocol": "AAS"
+                                },
+                                "interface": "https://admin-shell.io/aas/API/3/0/SubmodelServiceSpecification/SSP-003"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "submodels": [],
+        "shells": [],
+        "submodelDescriptors": []
+    },
+    "expectedErrorStatusCode": 409
+}

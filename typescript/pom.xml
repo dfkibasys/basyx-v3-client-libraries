@@ -10,7 +10,7 @@
 		<relativePath>..</relativePath>
 	</parent>
 
-	<artifactId>typescript-fetch-clients-v3.0.1</artifactId>
-	<name>typescript-fetch-clients-v3.0.1</name>
+	<artifactId>typescript-clients-v3.0.1</artifactId>
+	<name>typescript-clients-v3.0.1</name>
 	<packaging>pom</packaging>
 </project>

@@ -1,0 +1,207 @@
+{
+    "name": "success-test",
+    "initialState": {
+        "submodelServiceElements": [
+            {
+                "modelType": "Property",
+                "value": "123",
+                "idShort": "test"
+            },
+            {
+                "modelType": "Operation",
+                "inputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "input"
+                        }
+                    }
+                ],
+                "outputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "result"
+                        }
+                    }
+                ],
+                "idShort": "HelloOperation"
+            },
+            {
+                "modelType": "SubmodelElementCollection",
+                "idShort" : "BaseOperations",
+                "value": [
+                    {
+                        "modelType": "Operation",
+                        "idShort" : "AddOperation",
+                        "inputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort" : "request"
+                                }
+                            }
+                        ],
+                        "outputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort": "result"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "invocation": {
+        "args": {}
+    },
+    "expectedState": {
+        "submodelServiceElements": [
+            {
+                "modelType": "Property",
+                "value": "123",
+                "idShort": "test"
+            },
+            {
+                "modelType": "Operation",
+                "inputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "input"
+                        }
+                    }
+                ],
+                "outputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "result"
+                        }
+                    }
+                ],
+                "idShort": "HelloOperation"
+            },
+            {
+                "modelType": "SubmodelElementCollection",
+                "idShort" : "BaseOperations",
+                "value": [
+                    {
+                        "modelType": "Operation",
+                        "idShort" : "AddOperation",
+                        "inputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort" : "request"
+                                }
+                            }
+                        ],
+                        "outputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort": "result"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "expectedReturnValue": {
+        "modelType": "Submodel",
+        "id": "Example",
+        "idShort": "example",
+        "kind": "Instance",
+        "semanticId": {
+            "keys": [
+                {
+                    "value": "123"
+                }
+            ]
+        },
+        "category": "TestCategory",
+        "description": [
+            {
+                "language": "de-DE",
+                "text": "Test"
+            }
+        ],
+        "displayName": [
+            {
+                "language": "de-DE",
+                "text": "Test"
+            }
+        ],
+        "submodelElements": [
+            {
+                "modelType": "Property",
+                "value": "123",
+                "idShort": "test"
+            },
+            {
+                "modelType": "Operation",
+                "inputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "input"
+                        }
+                    }
+                ],
+                "outputVariables": [
+                    {
+                        "value": {
+                            "modelType": "Property",
+                            "valueType": "xs:int",
+                            "idShort": "result"
+                        }
+                    }
+                ],
+                "idShort": "HelloOperation"
+            },
+            {
+                "modelType": "SubmodelElementCollection",
+                "idShort" : "BaseOperations",
+                "value": [
+                    {
+                        "modelType": "Operation",
+                        "idShort" : "AddOperation",
+                        "inputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort" : "request"
+                                }
+                            }
+                        ],
+                        "outputVariables": [
+                            {
+                                "value": {
+                                    "modelType": "Property",
+                                    "valueType": "xs:string",
+                                    "idShort": "result"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

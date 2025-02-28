@@ -1,0 +1,84 @@
+{
+    "name": "success-test-cursor-and-limit",
+    "initialState": {
+        "assetLinks": {
+            "https://acplt.org/Test:AssetAdministrationShell1": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test1"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ],
+            "https://acplt.org/Test:AssetAdministrationShell2": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test2"
+                },
+                {
+                    "name": "type",
+                    "value": "heater"
+                }
+            ],
+            "https://acplt.org/Test:AssetAdministrationShell3": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test3"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "invocation": {
+        "args": {
+            "limit": 2,
+            "cursor" : "aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGwy"
+        }
+    },
+    "expectedState": {
+        "assetLinks": {
+            "https://acplt.org/Test AssetAdministrationShell1": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test1"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ],
+            "https://acplt.org/Test AssetAdministrationShell2": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test2"
+                },
+                {
+                    "name": "type",
+                    "value": "heater"
+                }
+            ],
+            "https://acplt.org/Test AssetAdministrationShell3": [
+                {
+                    "name": "specificAssetId",
+                    "value": "org::acplt::asset::test3"
+                },
+                {
+                    "name": "type",
+                    "value": "robot"
+                }
+            ]
+        }
+    },
+    "expectedReturnValue": {
+        "paging_metadata": {
+        },
+        "result": [
+            "https://acplt.org/Test AssetAdministrationShell3"
+        ]
+    }
+}

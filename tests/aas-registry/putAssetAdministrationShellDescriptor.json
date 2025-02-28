@@ -1,0 +1,95 @@
+{
+    "name": "success-test",
+    "initialState": {
+        "shellDescriptors": [
+            {
+                "description": [
+                    {
+                        "language": "en-us",
+                        "text": "An Example Asset Administration Shell for the test application"
+                    },
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "administration": {
+                    "version": "0",
+                    "revision": "9"
+                },
+                "assetKind": "Instance",
+                "endpoints": [
+                    {
+                        "interface": "AAS-3.0",
+                        "protocolInformation": {
+                            "href": "http://localhost:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGw",
+                            "endpointProtocol": "http"
+                        }
+                    }
+                ],
+                "globalAssetId": "https://acplt.org/Test_Asset",
+                "idShort": "TestAssetAdministrationShell",
+                "id": "https://acplt.org/Test_AssetAdministrationShell"
+            }
+        ]
+    },
+    "comment": "Removed the en descr and updated the idshort and revision",
+    "invocation" : {
+    "args": {
+        "aasIdentifier": "https://acplt.org/Test_AssetAdministrationShell",
+        "assetAdministrationShellDescriptor": {
+            "description": [
+                {
+                    "language": "de",
+                    "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                }
+            ],
+            "endpoints": [
+                {
+                    "protocolInformation": {
+                        "endpointProtocol": "http",
+                        "href": "http://aas-environment:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGw"
+                    },
+                    "interface": "AAS-3.0"
+                }
+            ],
+            "administration": {
+                "version": "0",
+                "revision": "10"
+            },
+            "assetKind": "Instance",
+            "globalAssetId": "https://acplt.org/Test_Asset",
+            "idShort": "TestAssetAdministrationShell2",
+            "id": "https://acplt.org/Test_AssetAdministrationShell"
+        }
+    }},
+    "expectedState": {
+        "shellDescriptors": [
+            {
+                "description": [
+                    {
+                        "language": "de",
+                        "text": "Ein Beispiel-Verwaltungsschale für eine Test-Anwendung"
+                    }
+                ],
+                "endpoints": [
+                    {
+                        "protocolInformation": {
+                            "endpointProtocol": "http",
+                            "href": "http://aas-environment:8081/shells/aHR0cHM6Ly9hY3BsdC5vcmcvVGVzdF9Bc3NldEFkbWluaXN0cmF0aW9uU2hlbGw"
+                        },
+                        "interface": "AAS-3.0"
+                    }
+                ],
+                "administration": {
+                    "version": "0",
+                    "revision": "10"
+                },
+                "assetKind": "Instance",
+                "globalAssetId": "https://acplt.org/Test_Asset",
+                "idShort": "TestAssetAdministrationShell2",
+                "id": "https://acplt.org/Test_AssetAdministrationShell"
+            }
+        ]
+    }
+}

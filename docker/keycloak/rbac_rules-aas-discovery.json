@@ -1,0 +1,30 @@
+[
+  {
+    "role": "read-only",
+    "action": "READ",
+    "targetInformation": {
+      "@type": "aas-discovery-service",
+      "aasIds": "*",
+      "assetIds": [
+        {
+          "name": "*",
+          "value": "*"
+        }
+      ]
+    }
+  },
+  {
+    "role": "full",
+    "action": ["CREATE", "READ", "UPDATE", "DELETE"],
+    "targetInformation": {
+      "@type": "aas-discovery-service",
+      "aasIds": "*",
+      "assetIds": [
+        {
+          "name": "*",
+          "value": "*"
+        }
+      ]
+    }
+  }
+]

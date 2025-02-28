@@ -3,8 +3,9 @@
 /**/.classpath
 /**/.project
 
-/python/build
 /python/release
 /java/build/generated/openapi
-/java/build/generated/project
+
 /typescript-fetch/build/generated
+/csharp-unity/build/generated
+

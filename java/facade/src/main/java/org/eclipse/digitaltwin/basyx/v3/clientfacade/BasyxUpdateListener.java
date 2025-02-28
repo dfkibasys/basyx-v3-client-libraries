@@ -25,6 +25,7 @@
 package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 public interface BasyxUpdateListener {
@@ -53,7 +54,14 @@ public interface BasyxUpdateListener {
 
 		@Override
 		public void onUpdateSubmodel(Submodel submodel) {
-			
+		}
+		
+		@Override
+		public void onPostSubmodelReference(String shellId, Reference reference) {	
+		}
+		
+		@Override
+		public void onDeleteSubmodelReference(String aasId, String submodelIdentifier) {	
 		}
 	};
 
@@ -68,4 +76,8 @@ public interface BasyxUpdateListener {
 	void onPostSubmodel(Submodel submodel);
 
 	void onUpdateSubmodel(Submodel submodel);
+
+	void onPostSubmodelReference(String shellId, Reference reference);
+
+	void onDeleteSubmodelReference(String aasId, String submodelIdentifier);
 }

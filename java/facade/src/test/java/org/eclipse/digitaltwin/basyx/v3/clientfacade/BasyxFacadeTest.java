@@ -12,10 +12,7 @@ import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultAssetAdministrationShell;
 import org.eclipse.digitaltwin.aas4j.v3.model.impl.DefaultSubmodel;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.cache.CaffeineBasyxClientCache;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxRegistryServiceConfiguration;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.BasyxUpdateConfiguration;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxServiceConfiguration;
-import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.SimpleBasyxUpdateConfiguration;
+import org.eclipse.digitaltwin.basyx.v3.clientfacade.config.*;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.ConflictingIdentifierException;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.exception.IdentifiableNotFoundException;
 import org.junit.After;
@@ -30,73 +27,76 @@ public class BasyxFacadeTest {
 	private final String SM_REGISTRY_URL = "http://localhost:8082";
 	private final String ENVIRONMENT_URL = "http://localhost:8081";
 
-	private final BasyxRegistryServiceConfiguration serviceConf = new SimpleBasyxServiceConfiguration().withAasRegistryUrl(AAS_REGISTRY_URL).withSubmodelRegistryUrl(SM_REGISTRY_URL);
-	private final BasyxUpdateConfiguration updateConf = SimpleBasyxUpdateConfiguration.forEnvironmentUrl(ENVIRONMENT_URL);
+	private final BasyxApiConfiguration apiConfig = new SimpleBasyxApiConfiguration()
+			.withAasRegistryUrl(AAS_REGISTRY_URL)
+			.withSubmodelRegistryUrl(SM_REGISTRY_URL)
+			.withEnvironmentUrl(ENVIRONMENT_URL);
 
-	private final BasyxConnectionManager manager = new DefaultBasyxConnectionManager().withClientCache(new CaffeineBasyxClientCache());
-	private final BasyxUpdateFacade updateFacade = manager.newUpdateFacade(updateConf);
-	private final BasyxServiceFacade facade = manager.newServiceFacade(serviceConf);
+	private final BasyxApiManager apiManager = new DefaultBasyxApiManager(apiConfig);
+	private final BasyxFacadeManager manager = new DefaultBasyxFacadeManager(apiManager).withClientCache(new CaffeineBasyxClientCache());
+	private final BasyxWriteFacade writeFacade = manager.newWriteFacade();
+	private final BasyxReadFacade readFacade = manager.newReadFacade();
 
 	@Before
 	public void setUp() {
-		updateFacade.deleteAllShells();
-		updateFacade.deleteAllSubmodels();
+		writeFacade.deleteAllShells();
+		writeFacade.deleteAllSubmodels();
 	}
 
 	@After
 	public void tearDown() {
-		updateFacade.deleteAllShells();
-		updateFacade.deleteAllSubmodels();
+		writeFacade.deleteAllShells();
+		writeFacade.deleteAllSubmodels();
 	}
 
 	@Test
 	public void testCreation() throws ConflictingIdentifierException {
 		Submodel sm0 = submodel(0, 0);
 		Submodel sm1 = submodel(0, 1);
-		Reference ref0 = updateFacade.postSubmodel(sm0);
-		Reference ref1 = updateFacade.postSubmodel(sm1);
+		Reference ref0 = writeFacade.postSubmodel(sm0);
+		Reference ref1 = writeFacade.postSubmodel(sm1);
 
 		AssetAdministrationShell shell = shell(0, List.of(ref0, ref1));
-		Reference shellRef = updateFacade.postShell(shell);
+		Reference shellRef = writeFacade.postShell(shell);
 		System.out.println(shellRef);
 		
-		assertThrows(ConflictingIdentifierException.class, ()-> updateFacade.postShell(shell));		
+		assertThrows(ConflictingIdentifierException.class, ()-> writeFacade.postShell(shell));
 	}
 
 	@Test
 	public void testDeleteAll() throws ConflictingIdentifierException {
 		initialize();
 
-		assertEquals(10, facade.getAllShells().stream().count());
-		assertEquals(10 * 5, facade.getAllSubmodels().stream().count());
+		assertEquals(10, readFacade.getAllShells().stream().count());
+		assertEquals(10 * 5, readFacade.getAllSubmodels().stream().count());
 
-		updateFacade.deleteAllShells();
-		updateFacade.deleteAllSubmodels();
+		writeFacade.deleteAllShells();
+		writeFacade.deleteAllSubmodels();
 
-		assertEquals(0, facade.getAllShells().stream().count());
-		assertEquals(0, facade.getAllSubmodels().stream().count());
+		assertEquals(0, readFacade.getAllShells().stream().count());
+		assertEquals(0, readFacade.getAllSubmodels().stream().count());
 	}
 
 	@Test
 	public void testFacade() throws ConflictingIdentifierException, IdentifiableNotFoundException {
-		updateFacade.deleteAllShells();
-		updateFacade.deleteAllSubmodels();
+		writeFacade.deleteAllShells();
+		writeFacade.deleteAllSubmodels();
 		initialize();
-		assertEquals(10, facade.getAllShells().stream().count());
-		assertEquals(10 * 5, facade.getAllSubmodels().stream().count());
+		assertEquals(10, readFacade.getAllShells().stream().count());
+		assertEquals(10 * 5, readFacade.getAllSubmodels().stream().count());
 
 		long total = 0;
-		for (AssetAdministrationShell eachShell : facade.getAllShells()) {
-			for (Submodel sm : facade.getAllSubmodels(eachShell)) {
+		for (AssetAdministrationShell eachShell : readFacade.getAllShells()) {
+			for (Submodel sm : readFacade.getAllSubmodels(eachShell)) {
 				total++;
-				updateFacade.deleteSubmodel(sm);
+				writeFacade.deleteSubmodel(sm);
 			}
-			updateFacade.deleteShell(eachShell);
+			writeFacade.deleteShell(eachShell);
 		}
 		assertEquals(10 * 5, total);
 		
-		assertEquals(0, facade.getAllShells().stream().count());
-		assertEquals(0, facade.getAllSubmodels().stream().count());
+		assertEquals(0, readFacade.getAllShells().stream().count());
+		assertEquals(0, readFacade.getAllSubmodels().stream().count());
 
 	}
 
@@ -105,10 +105,10 @@ public class BasyxFacadeTest {
 			List<Reference> refs = new ArrayList<>();
 			for (int j = 0; j < 5; j++) {
 				Submodel sm = submodel(i, j);
-				Reference ref = updateFacade.postSubmodel(sm);
+				Reference ref = writeFacade.postSubmodel(sm);
 				refs.add(ref);
 			}
-			updateFacade.postShell(shell(i, refs));
+			writeFacade.postShell(shell(i, refs));
 		}
 	}
 

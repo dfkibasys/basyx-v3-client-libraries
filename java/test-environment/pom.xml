@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>basyx-java-test-environment</artifactId>
+	<packaging>jar</packaging>
+	<name>basyx-java-test-environment</name>
+
+	<parent>
+		<groupId>org.eclipse.digitaltwin.basyx.v3.clients</groupId>
+		<artifactId>basyx-java-clients-parent</artifactId>
+		<version>0.2.0-SNAPSHOT</version>
+		<relativePath>../parent</relativePath>
+	</parent>
+	<version>0.2.1-SNAPSHOT</version>
+
+	<licenses>
+		<license>
+			<name>MIT</name>
+			<url>https://opensource.org/license/mit/</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Gerhard Sonnenberg</name>
+			<email>gerhard.sonnenberg@dfki.de</email>
+			<organization>DFKI GmbH</organization>
+			<organizationUrl>https://www.dfki.de</organizationUrl>
+		</developer>
+	</developers>
+
+	<dependencies>
+
+		<!--	<dependency>
+			<groupId>org.eclipse.digitaltwin.basyx.v3.clients</groupId>
+			<artifactId>basyx-java-clients</artifactId>
+			<version>0.2.0-SNAPSHOT</version>
+		</dependency>-->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.digitaltwin.aas4j</groupId>
+			<artifactId>aas4j-model</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.digitaltwin.aas4j</groupId>
+			<artifactId>aas4j-dataformat-json</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<version>1.19.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.wiremock.integrations.testcontainers</groupId>
+			<artifactId>wiremock-testcontainers-module</artifactId>
+			<version>1.0-alpha-14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wiremock</groupId>
+			<artifactId>wiremock</artifactId>
+			<version>3.9.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+</project>

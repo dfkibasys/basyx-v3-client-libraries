@@ -27,6 +27,7 @@ package org.eclipse.digitaltwin.basyx.v3.clientfacade;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 
 public class MultiUpdateListenerAdapter implements BasyxUpdateListener {
@@ -41,6 +42,16 @@ public class MultiUpdateListenerAdapter implements BasyxUpdateListener {
 	@Override
 	public void onDeleteShell(AssetAdministrationShell eachShell) {
 		listeners.forEach(l->l.onDeleteShell(eachShell));
+	}
+	
+	@Override
+	public void onPostSubmodelReference(String shellId, Reference ref) {
+		listeners.forEach(l->l.onPostSubmodelReference(shellId, ref));	
+	}
+	
+	@Override
+	public void onDeleteSubmodelReference(String aasId, String submodelIdentifier) {
+		listeners.forEach(l->l.onDeleteSubmodelReference(aasId, submodelIdentifier));
 	}
 
 	@Override

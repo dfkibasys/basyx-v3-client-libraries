@@ -1,35 +1,61 @@
 additionalProperties:
-  npmName: "@basyx/v3-client-fetch"
+  npmName: "@basys/v3-client-ts"
   npmVersion: 0.2.0
   snapshot: true
   prefixParameterInterfaces: true
   supportsES6: true
   stringEnums: true
-  classFilenames: 
-  - AssetAdministrationShellBasicDiscoveryApi
-  - AssetAdministrationShellRegistryApi
-  - AssetAdministrationShellRepositoryApi
-  - AssetAdministrationShellServiceApi
-  - ConceptDescriptionRepositoryApi
-  - SubmodelRegistryApi
-  - SubmodelRepositoryApi
-  - SubmodelServiceApi
-  modelFilenames:
-  - Page
-  - ShellDescriptorQuery
-  - ShellDescriptorSearchRequest
-  - ShellDescriptorSearchResponse
-  - SortDirection
-  - Sorting
-  - SortingPath
-
-# {{#apis}}
-# {{#operations}}
-# export * from './{{ classFilename }}{{importFileExtension}}';
-# {{#useSagaAndRecords}}
-# export * from './{{{ classFilename }}}Sagas{{importFileExtension}}';
-# {{/useSagaAndRecords}}
-# {{/operations}}
-# {{/apis}}
-# {{/apiInfo}}
+  apiPrefix: aasregistry
+  usedApis:
+  - api: AssetAdministrationShellRegistryApi
+    prefix: aasregistry
+  - api: AssetAdministrationShellBasicDiscoveryApi
+    prefix: discovery
+  - api: AssetAdministrationShellRepositoryApi
+    prefix: aasrepo
+  - api: AssetAdministrationShellServiceApi
+    prefix: aasservice
+  - api: ConceptDescriptionRepositoryApi
+    prefix: cdrepo
+  - api: SubmodelRegistryApi
+    prefix: smregistry
+  - api: SubmodelRepositoryApi
+    prefix: smrepo
+  - api: SubmodelServiceApi
+    prefix: smservice
+  modelPrefix: search
+  usedModels:
+  - part1
+  - part2
+  - search
+  - discovery
+  importMappings:
+  - name: SubmodelDescriptor
+    prefix: part2 
+  - name: AssetKind
+    prefix: part1
+  - name: GetAssetAdministrationShellDescriptorsResult
+    prefix: part2
+  - name: GetSubmodelDescriptorsResult
+    prefix: part2
+  - name: AssetAdministrationShellDescriptor
+    prefix: part2
+  - name: ServiceDescription
+    prefix: part2
+files:
+  model/index.mustache:
+    templateType: SupportingFiles
+    destinationFilename: models/search/index.ts
+  model/ObjectSerializerDefs.mustache:
+    templateType: SupportingFiles
+    destinationFilename: models/search/ObjectSerializerDefs.ts
+  types/ObjectParamAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/aasregistry/ObjectParamAPI.ts
+  types/ObservableAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/aasregistry/ObservableAPI.ts
+  types/PromiseAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/aasregistry/PromiseAPI.ts
  

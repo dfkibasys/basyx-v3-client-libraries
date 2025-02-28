@@ -1,7 +1,24 @@
 additionalProperties:
-  npmName: "@basyx/v3-client-fetch"
+  npmName: "@basys/v3-client-ts"
   npmVersion: 0.2.0
   snapshot: true
   prefixParameterInterfaces: true
   supportsES6: true
   stringEnums: true
+  importMappings:
+  - name: ConceptDescription
+    prefix: part1
+  - name: ServiceDescription
+    prefix: part2
+  - name: GetConceptDescriptionsResult
+    prefix: part2
+files:
+  types/ObjectParamAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/cdrepo/ObjectParamAPI.ts
+  types/ObservableAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/cdrepo/ObservableAPI.ts
+  types/PromiseAPI.mustache:
+    templateType: SupportingFiles
+    destinationFilename: types/cdrepo/PromiseAPI.ts

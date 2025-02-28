@@ -1,0 +1,68 @@
+{
+    "name": "conflict-test 409",
+    "initialState": {
+        "shells": [
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "id": "https://acplt.org/Test_AssetAdministrationShell",
+                "idShort": "TestAssetAdministrationShell"
+            }
+        ],
+        "submodels": []
+    },
+    "invocation": {
+        "args": {
+            "aasIdentifier": "https://acplt.org/Test_AssetAdministrationShell",
+            "reference": {
+                "keys": [
+                    {
+                        "type": "Submodel",
+                        "value": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
+                    }
+                ],
+                "type": "ExternalReference"
+            }
+        }
+    },
+    "comment": "Just overridden, no conflict but also no duplicates",
+    "expectedState": {
+        "shells": [
+            {
+                "modelType": "AssetAdministrationShell",
+                "assetInformation": {
+                    "assetKind": "Instance",
+                    "globalAssetId": "https://acplt.org/Test_Asset"
+                },
+                "submodels": [
+                    {
+                        "keys": [
+                            {
+                                "type": "Submodel",
+                                "value": "http://acplt.org/Submodels/Assets/TestAsset/BillOfMaterial"
+                            }
+                        ],
+                        "type": "ExternalReference"
+                    }
+                ],
+                "id": "https://acplt.org/Test_AssetAdministrationShell",
+                "idShort": "TestAssetAdministrationShell"
+            }
+        ]
+    },
+    "expectedErrorStatusCode": 409
+}

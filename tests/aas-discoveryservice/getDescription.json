@@ -1,0 +1,8 @@
+{
+    "name": "success-test",
+    "expectedReturnValue": {
+        "profiles": [
+            "https://admin-shell.io/aas/API/3/0/SubmodelRegistryServiceSpecification/SSP-001"
+        ]
+    }
+}

@@ -1,0 +1,5 @@
+additionalProperties:
+  imports:
+  - import: from basyxclients.models.part1.concept_description import ConceptDescription
+  - import: from basyxclients.models.part2.get_concept_descriptions_result import GetConceptDescriptionsResult
+  - import: from basyxclients.models.part2.service_description import ServiceDescription

@@ -1,0 +1,17 @@
+        _param = self._{{operationId}}_serialize(
+            {{#allParams}}
+            {{paramName}}={{paramName}},
+            {{/allParams}}
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            {{#responses}}
+            {{^isWildcard}}
+            '{{code}}': {{#dataType}}"{{.}}"{{/dataType}}{{^dataType}}None{{/dataType}},
+            {{/isWildcard}}
+            {{/responses}}
+        }

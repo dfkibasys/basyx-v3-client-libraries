@@ -1,0 +1,22 @@
+additionalProperties: 
+  imports:
+  - import: from basyxclients.models.part1.asset_administration_shell import AssetAdministrationShell
+  - import: from basyxclients.models.part1.asset_information import AssetInformation
+  - import: from basyxclients.models.part2.base_operation_result import BaseOperationResult
+  - import: from basyxclients.models.part2.get_path_items_result import GetPathItemsResult
+  - import: from basyxclients.models.part2.get_references_result import GetReferencesResult
+  - import: from basyxclients.models.part2.get_submodel_elements_metadata_result import GetSubmodelElementsMetadataResult
+  - import: from basyxclients.models.part2.get_submodel_elements_result import GetSubmodelElementsResult
+  - import: from basyxclients.models.part2.get_submodel_elements_value_result import GetSubmodelElementsValueResult
+  - import: from basyxclients.models.part2.operation_request import OperationRequest
+  - import: from basyxclients.models.part2.operation_request_value_only import OperationRequestValueOnly
+  - import: from basyxclients.models.part2.operation_result import OperationResult
+  - import: from basyxclients.models.part2.operation_result_value_only import OperationResultValueOnly
+  - import: from basyxclients.models.part1.reference import Reference
+  - import: from basyxclients.models.part2.service_description import ServiceDescription
+  - import: from basyxclients.models.part1.submodel import Submodel
+  - import: from basyxclients.models.part1.submodel_element import SubmodelElement
+  - import: from basyxclients.models.part2.submodel_element_metadata import SubmodelElementMetadata
+  - import: from basyxclients.models.part2.submodel_element_value import SubmodelElementValue
+  - import: from basyxclients.models.part2.submodel_metadata import SubmodelMetadata
+  - import: from basyxclients.models.part2.submodel_value import SubmodelValue

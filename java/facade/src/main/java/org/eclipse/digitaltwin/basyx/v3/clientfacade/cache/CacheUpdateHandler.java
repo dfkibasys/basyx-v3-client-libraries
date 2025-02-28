@@ -25,6 +25,7 @@
 package org.eclipse.digitaltwin.basyx.v3.clientfacade.cache;
 
 import org.eclipse.digitaltwin.aas4j.v3.model.AssetAdministrationShell;
+import org.eclipse.digitaltwin.aas4j.v3.model.Reference;
 import org.eclipse.digitaltwin.aas4j.v3.model.Submodel;
 import org.eclipse.digitaltwin.basyx.v3.clientfacade.BasyxUpdateListener;
 
@@ -57,6 +58,16 @@ public class CacheUpdateHandler implements BasyxUpdateListener {
 	public void onUpdateShell(AssetAdministrationShell shell) {
 		cacheSupplier.get().invalidateShell(shell.getId());
 	}
+	
+	@Override
+	public void onPostSubmodelReference(String shellId, Reference reference) {
+		cacheSupplier.get().invalidateShell(shellId);
+	}
+	
+	@Override
+	public void onDeleteSubmodelReference(String aasId, String submodelIdentifier) {
+		cacheSupplier.get().invalidateShell(aasId);
+	}	
 	
 	@Override
 	public void onPostSubmodel(Submodel submodel) {
