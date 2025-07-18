@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBytes, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
-from basyxclients.models.part1.reference import Reference
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -123,4 +122,7 @@ class EventPayload(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.reference import Reference
+# TODO: Rewrite to not use raise_errors
+EventPayload.model_rebuild(raise_errors=False)
 

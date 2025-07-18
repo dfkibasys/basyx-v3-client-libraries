@@ -118,8 +118,10 @@ services:
       BASYX_FEATURE_AUTHORIZATION_JWTBEARERTOKENPROVIDER: keycloak
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/EclipseBaSyx
       BASYX_FEATURE_AUTHORIZATION_RBAC_FILE: file:/rbac/rbac_rules.json
+      BASYX_ENVIRONMENT: file:/application/files/aasx/
     volumes:
       - ./keycloak/rbac_rules-environment.json:/rbac/rbac_rules.json:ro
+      - ./aasx/:/application/files/aasx/
     depends_on:
       aas-registry:
         condition: service_healthy
@@ -127,7 +129,7 @@ services:
         condition: service_healthy
 
   submodel-service:
-    image: "eclipsebasyx/submodel-service:test"
+    image: "eclipsebasyx/submodel-service:${BASYX_VERSION}"
     container_name: submodel-service
     restart: always
     ports:

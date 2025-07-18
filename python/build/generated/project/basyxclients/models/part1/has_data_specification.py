@@ -74,9 +74,9 @@ class HasDataSpecification(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in embedded_data_specifications (list)
         _items = []
         if self.embedded_data_specifications:
-            for _item in self.embedded_data_specifications:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_embedded_data_specifications in self.embedded_data_specifications:
+                if _item_embedded_data_specifications:
+                    _items.append(_item_embedded_data_specifications.to_dict())
             _dict['embeddedDataSpecifications'] = _items
         return _dict
 
@@ -94,4 +94,7 @@ class HasDataSpecification(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+# TODO: Rewrite to not use raise_errors
+HasDataSpecification.model_rebuild(raise_errors=False)
 

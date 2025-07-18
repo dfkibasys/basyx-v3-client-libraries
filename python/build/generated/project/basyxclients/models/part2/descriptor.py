@@ -75,23 +75,23 @@ class Descriptor(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in description (list)
         _items = []
         if self.description:
-            for _item in self.description:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_description in self.description:
+                if _item_description:
+                    _items.append(_item_description.to_dict())
             _dict['description'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in display_name (list)
         _items = []
         if self.display_name:
-            for _item in self.display_name:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_display_name in self.display_name:
+                if _item_display_name:
+                    _items.append(_item_display_name.to_dict())
             _dict['displayName'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in extensions (list)
         _items = []
         if self.extensions:
-            for _item in self.extensions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_extensions in self.extensions:
+                if _item_extensions:
+                    _items.append(_item_extensions.to_dict())
             _dict['extensions'] = _items
         return _dict
 

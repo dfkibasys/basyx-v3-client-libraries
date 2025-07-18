@@ -102,4 +102,7 @@ class EntityValue(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.entity_type import EntityType
+# TODO: Rewrite to not use raise_errors
+EntityValue.model_rebuild(raise_errors=False)
 

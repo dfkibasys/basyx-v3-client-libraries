@@ -21,8 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.model_type import ModelType
-from basyxclients.models.part1.qualifier import Qualifier
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -76,9 +74,9 @@ class Qualifiable(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in qualifiers (list)
         _items = []
         if self.qualifiers:
-            for _item in self.qualifiers:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_qualifiers in self.qualifiers:
+                if _item_qualifiers:
+                    _items.append(_item_qualifiers.to_dict())
             _dict['qualifiers'] = _items
         return _dict
 
@@ -97,4 +95,8 @@ class Qualifiable(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.model_type import ModelType
+from basyxclients.models.part1.qualifier import Qualifier
+# TODO: Rewrite to not use raise_errors
+Qualifiable.model_rebuild(raise_errors=False)
 

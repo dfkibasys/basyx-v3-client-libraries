@@ -1,0 +1,144 @@
+---
+openapi: "3.0.3"
+info:
+  title: "DotAAS Part 2 | HTTP/REST | Discovery Service Specification"
+  description: "The entire Full Profile of the Discovery Service Specification as\
+    \ part of the [Specification of the Asset Administration Shell: Part 2](http://industrialdigitaltwin.org/en/content-hub).\
+    \  \nPublisher: Industrial Digital Twin Association (IDTA) April 2023"
+  contact:
+    name: "Industrial Digital Twin Association (IDTA)"
+    email: "info@idtwin.org"
+  license:
+    name: "CC BY 4.0"
+    url: "https://creativecommons.org/licenses/by/4.0/"
+  version: "V3.0.1_SSP-001"
+servers: []
+paths:
+  /lookup/shells:
+    get:
+      tags:
+      - "Asset Administration Shell Basic Discovery API"
+      summary: "Returns a list of Asset Administration Shell ids linked to specific\
+        \ Asset identifiers"
+      operationId: "GetAllShellIdsByAssetLinks"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetAllAssetAdministrationShellIdsByAssetLink/3/0"
+      parameters:
+      - $ref: "./model-part2.yaml#/components/parameters/AssetIds"
+      - $ref: "./model-part2.yaml#/components/parameters/Limit"
+      - $ref: "./model-part2.yaml#/components/parameters/Cursor"
+      responses:
+        "200":
+          description: "Requested Asset Administration Shell ids"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAllAssetLinksResult"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /lookup/shells/{aasIdentifier}:
+    parameters:
+    - $ref: "./model-part2.yaml#/components/parameters/AssetAdministrationShellIdentifier"
+    get:
+      tags:
+      - "Asset Administration Shell Basic Discovery API"
+      summary: "Returns a list of specific Asset identifiers based on an Asset Administration\
+        \ Shell id to edit discoverable content"
+      operationId: "GetAssetLinksByShellId"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/GetAllAssetLinksById/3/0"
+      responses:
+        "200":
+          description: "Requested specific Asset identifiers"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "./model-part1.yaml#/components/schemas/SpecificAssetId"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    post:
+      tags:
+      - "Asset Administration Shell Basic Discovery API"
+      summary: "Creates specific Asset identifiers linked to an Asset Administration\
+        \ Shell to edit discoverable content"
+      operationId: "PostAssetLinksByShellId"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/PostAllAssetLinksById/3/0"
+      requestBody:
+        description: "A list of specific Asset identifiers"
+        content:
+          application/json:
+            schema:
+              type: "array"
+              items:
+                $ref: "./model-part1.yaml#/components/schemas/SpecificAssetId"
+        required: true
+      responses:
+        "201":
+          description: "Specific Asset identifiers created successfully"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "./model-part1.yaml#/components/schemas/SpecificAssetId"
+        "400":
+          $ref: "./model-part2.yaml#/components/responses/bad-request"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        "409":
+          $ref: "./model-part2.yaml#/components/responses/conflict"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+    delete:
+      tags:
+      - "Asset Administration Shell Basic Discovery API"
+      summary: "Deletes all specific Asset identifiers linked to an Asset Administration\
+        \ Shell to edit discoverable content"
+      operationId: "DeleteAssetLinksByShellId"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/DeleteAllAssetLinksById/3/0"
+      responses:
+        "204":
+          description: "Specific Asset identifiers deleted successfully"
+        "404":
+          $ref: "./model-part2.yaml#/components/responses/not-found"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+  /description:
+    get:
+      tags:
+      - "Description API"
+      summary: "Returns the self-describing information of a network resource (ServiceDescription)"
+      operationId: "GetDescription"
+      x-semanticIds:
+      - "https://admin-shell.io/aas/API/Descriptor/GetDescription/3/0"
+      responses:
+        "200":
+          description: "Requested Description"
+          content:
+            application/json:
+              schema:
+                $ref: "./model-part2.yaml#/components/schemas/ServiceDescription"
+        default:
+          $ref: "./model-part2.yaml#/components/responses/default"
+components:
+  schemas:
+    GetAllAssetLinksResult:
+      type: "object"
+      allOf:
+      - $ref: "./model-part2.yaml#/components/schemas/PagedResult"
+      - type: "object"
+        properties:
+          result:
+            type: "array"
+            items:
+              type: "string"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.discovery.get_all_asset_links_result import GetAllAssetLinksResult"
+      - "from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata"

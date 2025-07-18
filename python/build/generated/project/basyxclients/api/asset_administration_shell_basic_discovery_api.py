@@ -17,7 +17,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt, St
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from basyxclients.models.discovery.paged_result_or_string_items import PagedResultOrStringItems
+from basyxclients.models.discovery.get_all_asset_links_result import GetAllAssetLinksResult
 from basyxclients.models.part2.service_description import ServiceDescription
 from basyxclients.models.part1.specific_asset_id import SpecificAssetId
 
@@ -25,6 +25,7 @@ from basyxclients.api_client import ApiClient, RequestSerialized
 from basyxclients.api_response import ApiResponse
 from basyxclients.rest import RESTResponseType
 
+import base64
 from base64 import urlsafe_b64encode
 
 class AssetAdministrationShellBasicDiscoveryApi:
@@ -41,7 +42,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
 
 
     @validate_call
-    def delete_all_asset_links_by_id(
+    def delete_asset_links_by_shell_id(
         self,
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
@@ -85,12 +86,8 @@ class AssetAdministrationShellBasicDiscoveryApi:
         """ # noqa: E501
 
 
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-        return self.__delete_all_asset_links_by_id (
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        return self.__delete_asset_links_by_shell_id (
         aas_identifier,
         _request_timeout,
         _request_auth,
@@ -100,8 +97,9 @@ class AssetAdministrationShellBasicDiscoveryApi:
         )
 
     @validate_call
-    def __delete_all_asset_links_by_id(
+    def __delete_asset_links_by_shell_id(
         self,
+
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
             None,
@@ -116,7 +114,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        _param = self._delete_all_asset_links_by_id_serialize(
+        _param = self._delete_asset_links_by_shell_id_serialize(
             aas_identifier=aas_identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -139,7 +137,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
         ).data
 
     @validate_call
-    def delete_all_asset_links_by_id_with_http_info(
+    def delete_asset_links_by_shell_id_with_http_info(
         self,
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
@@ -155,7 +153,63 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        _param = self._delete_all_asset_links_by_id_serialize(
+        """Deletes all specific Asset identifiers linked to an Asset Administration Shell to edit discoverable content
+
+
+        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type aas_identifier: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        return self.__delete_asset_links_by_shell_id_with_http_info (
+            aas_identifier,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __delete_asset_links_by_shell_id_with_http_info(
+        self,
+
+        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        _param = self._delete_asset_links_by_shell_id_serialize(
             aas_identifier=aas_identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -167,66 +221,6 @@ class AssetAdministrationShellBasicDiscoveryApi:
             '204': None,
             '404': "Result",
         }
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-
-        return self.__delete_all_asset_links_by_id_with_http_info (self,
-            aas_identifier,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __delete_all_asset_links_by_id_with_http_info(
-        self,
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Deletes all specific Asset identifiers linked to an Asset Administration Shell to edit discoverable content
-
-
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -237,59 +231,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
             response_types_map=_response_types_map,
         )
 
-
-    @validate_call
-    def delete_all_asset_links_by_id_without_preload_content(
-        self,
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Deletes all specific Asset identifiers linked to an Asset Administration Shell to edit discoverable content
-
-
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _delete_all_asset_links_by_id_serialize(
+    def _delete_asset_links_by_shell_id_serialize(
         self,
         aas_identifier,
         _request_auth,
@@ -350,9 +292,9 @@ class AssetAdministrationShellBasicDiscoveryApi:
 
 
     @validate_call
-    def get_all_asset_administration_shell_ids_by_asset_link(
+    def get_all_shell_ids_by_asset_links(
         self,
-        asset_ids: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)")] = None,
+        asset_ids: Annotated[Optional[List[SpecificAssetId]], Field(description="A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)")] = None,
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
         _request_timeout: Union[
@@ -367,12 +309,12 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOrStringItems:
+    ) -> GetAllAssetLinksResult:
         """Returns a list of Asset Administration Shell ids linked to specific Asset identifiers
 
 
         :param asset_ids: A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)
-        :type asset_ids: List[bytearray]
+        :type asset_ids: str
         :param limit: The maximum number of elements in the response array
         :type limit: int
         :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
@@ -400,16 +342,8 @@ class AssetAdministrationShellBasicDiscoveryApi:
         """ # noqa: E501
 
 
-        asset_ids_list = asset_ids
-        asset_ids = []
-        for eachasset_ids in asset_ids_list:
-            if isinstance(eachasset_ids, str):
-                eachasset_ids_bytes = eachasset_ids.encode('utf-8')
-                eachasset_ids = base64.standard_b64encode(eachasset_ids_bytes)
-            else:
-                eachasset_ids = base64.standard_b64encode(eachasset_ids)
-            asset_ids.append(eachasset_ids)
-        return self.__get_all_asset_administration_shell_ids_by_asset_link (
+        asset_ids = ApiClient.base64_url_encode_object_list(asset_ids)
+        return self.__get_all_shell_ids_by_asset_links (
         asset_ids,
         limit,
         cursor,
@@ -421,10 +355,13 @@ class AssetAdministrationShellBasicDiscoveryApi:
         )
 
     @validate_call
-    def __get_all_asset_administration_shell_ids_by_asset_link(
+    def __get_all_shell_ids_by_asset_links(
         self,
-        asset_ids: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)")] = None,
+        asset_ids: Optional[List[str]] = None,
+
+
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
         _request_timeout: Union[
             None,
@@ -438,8 +375,8 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOrStringItems:
-        _param = self._get_all_asset_administration_shell_ids_by_asset_link_serialize(
+    ) -> GetAllAssetLinksResult:
+        _param = self._get_all_shell_ids_by_asset_links_serialize(
             asset_ids=asset_ids,
             limit=limit,
             cursor=cursor,
@@ -450,7 +387,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOrStringItems",
+            '200': "GetAllAssetLinksResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -463,9 +400,9 @@ class AssetAdministrationShellBasicDiscoveryApi:
         ).data
 
     @validate_call
-    def get_all_asset_administration_shell_ids_by_asset_link_with_http_info(
+    def get_all_shell_ids_by_asset_links_with_http_info(
         self,
-        asset_ids: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)")] = None,
+        asset_ids: Annotated[Optional[List[SpecificAssetId]], Field(description="A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)")] = None,
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
         _request_timeout: Union[
@@ -480,31 +417,40 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOrStringItems]:
-        _param = self._get_all_asset_administration_shell_ids_by_asset_link_serialize(
-            asset_ids=asset_ids,
-            limit=limit,
-            cursor=cursor,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
+    ) -> ApiResponse[GetAllAssetLinksResult]:
+        """Returns a list of Asset Administration Shell ids linked to specific Asset identifiers
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOrStringItems",
-        }
-        asset_ids_list = asset_ids
-        asset_ids = []
-        for eachasset_ids in asset_ids_list:
-            if isinstance(eachasset_ids, str):
-                eachasset_ids_bytes = eachasset_ids.encode('utf-8')
-                eachasset_ids = base64.standard_b64encode(eachasset_ids_bytes)
-            else:
-                eachasset_ids = base64.standard_b64encode(eachasset_ids)
-            asset_ids.append(eachasset_ids)
 
-        return self.__get_all_asset_administration_shell_ids_by_asset_link_with_http_info (self,
+        :param asset_ids: A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)
+        :type asset_ids: str
+        :param limit: The maximum number of elements in the response array
+        :type limit: int
+        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
+        :type cursor: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        asset_ids = ApiClient.base64_url_encode_object_list(asset_ids)
+        return self.__get_all_shell_ids_by_asset_links_with_http_info (
             asset_ids,
             limit,
             cursor,
@@ -517,10 +463,13 @@ class AssetAdministrationShellBasicDiscoveryApi:
 
 
     @validate_call
-    def __get_all_asset_administration_shell_ids_by_asset_link_with_http_info(
+    def __get_all_shell_ids_by_asset_links_with_http_info(
         self,
-        asset_ids: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)")] = None,
+        asset_ids: Optional[List[str]] = None,
+
+
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
         _request_timeout: Union[
             None,
@@ -534,38 +483,20 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOrStringItems]:
-        """Returns a list of Asset Administration Shell ids linked to specific Asset identifiers
+    ) -> ApiResponse[GetAllAssetLinksResult]:
+        _param = self._get_all_shell_ids_by_asset_links_serialize(
+            asset_ids=asset_ids,
+            limit=limit,
+            cursor=cursor,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
 
-
-        :param asset_ids: A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)
-        :type asset_ids: List[bytearray]
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetAllAssetLinksResult",
+        }
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -576,65 +507,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
             response_types_map=_response_types_map,
         )
 
-
-    @validate_call
-    def get_all_asset_administration_shell_ids_by_asset_link_without_preload_content(
-        self,
-        asset_ids: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns a list of Asset Administration Shell ids linked to specific Asset identifiers
-
-
-        :param asset_ids: A list of specific Asset identifiers. Each Asset identifier is a base64-url-encoded [SpecificAssetId](./model-part1.yaml#/components/schemas/SpecificAssetId)
-        :type asset_ids: List[bytearray]
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_all_asset_administration_shell_ids_by_asset_link_serialize(
+    def _get_all_shell_ids_by_asset_links_serialize(
         self,
         asset_ids,
         limit,
@@ -708,7 +581,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
 
 
     @validate_call
-    def get_all_asset_links_by_id(
+    def get_asset_links_by_shell_id(
         self,
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
@@ -752,12 +625,8 @@ class AssetAdministrationShellBasicDiscoveryApi:
         """ # noqa: E501
 
 
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-        return self.__get_all_asset_links_by_id (
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        return self.__get_asset_links_by_shell_id (
         aas_identifier,
         _request_timeout,
         _request_auth,
@@ -767,8 +636,9 @@ class AssetAdministrationShellBasicDiscoveryApi:
         )
 
     @validate_call
-    def __get_all_asset_links_by_id(
+    def __get_asset_links_by_shell_id(
         self,
+
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
             None,
@@ -783,7 +653,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> List[SpecificAssetId]:
-        _param = self._get_all_asset_links_by_id_serialize(
+        _param = self._get_asset_links_by_shell_id_serialize(
             aas_identifier=aas_identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -806,7 +676,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
         ).data
 
     @validate_call
-    def get_all_asset_links_by_id_with_http_info(
+    def get_asset_links_by_shell_id_with_http_info(
         self,
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
@@ -822,7 +692,63 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[List[SpecificAssetId]]:
-        _param = self._get_all_asset_links_by_id_serialize(
+        """Returns a list of specific Asset identifiers based on an Asset Administration Shell id to edit discoverable content
+
+
+        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type aas_identifier: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        return self.__get_asset_links_by_shell_id_with_http_info (
+            aas_identifier,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_asset_links_by_shell_id_with_http_info(
+        self,
+
+        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[List[SpecificAssetId]]:
+        _param = self._get_asset_links_by_shell_id_serialize(
             aas_identifier=aas_identifier,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -834,66 +760,6 @@ class AssetAdministrationShellBasicDiscoveryApi:
             '200': "List[SpecificAssetId]",
             '404': "Result",
         }
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-
-        return self.__get_all_asset_links_by_id_with_http_info (self,
-            aas_identifier,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_all_asset_links_by_id_with_http_info(
-        self,
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[SpecificAssetId]]:
-        """Returns a list of specific Asset identifiers based on an Asset Administration Shell id to edit discoverable content
-
-
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -904,59 +770,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
             response_types_map=_response_types_map,
         )
 
-
-    @validate_call
-    def get_all_asset_links_by_id_without_preload_content(
-        self,
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns a list of specific Asset identifiers based on an Asset Administration Shell id to edit discoverable content
-
-
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_all_asset_links_by_id_serialize(
+    def _get_asset_links_by_shell_id_serialize(
         self,
         aas_identifier,
         _request_auth,
@@ -1118,18 +932,32 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ServiceDescription]:
-        _param = self._get_description_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
+        """Returns the self-describing information of a network resource (ServiceDescription)
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ServiceDescription",
-        }
 
-        return self.__get_description_with_http_info (self,
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__get_description_with_http_info (
             _request_timeout,
             _request_auth,
             _content_type,
@@ -1154,31 +982,16 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ServiceDescription]:
-        """Returns the self-describing information of a network resource (ServiceDescription)
+        _param = self._get_description_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
 
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ServiceDescription",
+        }
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -1188,55 +1001,6 @@ class AssetAdministrationShellBasicDiscoveryApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_description_without_preload_content(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the self-describing information of a network resource (ServiceDescription)
-
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_description_serialize(
         self,
@@ -1296,7 +1060,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
 
 
     @validate_call
-    def post_all_asset_links_by_id(
+    def post_asset_links_by_shell_id(
         self,
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
         specific_asset_id: Annotated[List[SpecificAssetId], Field(description="A list of specific Asset identifiers")],
@@ -1343,12 +1107,8 @@ class AssetAdministrationShellBasicDiscoveryApi:
         """ # noqa: E501
 
 
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-        return self.__post_all_asset_links_by_id (
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        return self.__post_asset_links_by_shell_id (
         aas_identifier,
         specific_asset_id,
         _request_timeout,
@@ -1359,9 +1119,11 @@ class AssetAdministrationShellBasicDiscoveryApi:
         )
 
     @validate_call
-    def __post_all_asset_links_by_id(
+    def __post_asset_links_by_shell_id(
         self,
+
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+
         specific_asset_id: Annotated[List[SpecificAssetId], Field(description="A list of specific Asset identifiers")],
         _request_timeout: Union[
             None,
@@ -1376,7 +1138,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> List[SpecificAssetId]:
-        _param = self._post_all_asset_links_by_id_serialize(
+        _param = self._post_asset_links_by_shell_id_serialize(
             aas_identifier=aas_identifier,
             specific_asset_id=specific_asset_id,
             _request_auth=_request_auth,
@@ -1402,7 +1164,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
         ).data
 
     @validate_call
-    def post_all_asset_links_by_id_with_http_info(
+    def post_asset_links_by_shell_id_with_http_info(
         self,
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
         specific_asset_id: Annotated[List[SpecificAssetId], Field(description="A list of specific Asset identifiers")],
@@ -1419,7 +1181,68 @@ class AssetAdministrationShellBasicDiscoveryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[List[SpecificAssetId]]:
-        _param = self._post_all_asset_links_by_id_serialize(
+        """Creates specific Asset identifiers linked to an Asset Administration Shell to edit discoverable content
+
+
+        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type aas_identifier: bytearray
+        :param specific_asset_id: A list of specific Asset identifiers (required)
+        :type specific_asset_id: List[SpecificAssetId]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        return self.__post_asset_links_by_shell_id_with_http_info (
+            aas_identifier,
+            specific_asset_id,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __post_asset_links_by_shell_id_with_http_info(
+        self,
+
+        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        specific_asset_id: Annotated[List[SpecificAssetId], Field(description="A list of specific Asset identifiers")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[List[SpecificAssetId]]:
+        _param = self._post_asset_links_by_shell_id_serialize(
             aas_identifier=aas_identifier,
             specific_asset_id=specific_asset_id,
             _request_auth=_request_auth,
@@ -1434,70 +1257,6 @@ class AssetAdministrationShellBasicDiscoveryApi:
             '404': "Result",
             '409': "Result",
         }
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-
-        return self.__post_all_asset_links_by_id_with_http_info (self,
-            aas_identifier,
-            specific_asset_id,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __post_all_asset_links_by_id_with_http_info(
-        self,
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        specific_asset_id: Annotated[List[SpecificAssetId], Field(description="A list of specific Asset identifiers")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[SpecificAssetId]]:
-        """Creates specific Asset identifiers linked to an Asset Administration Shell to edit discoverable content
-
-
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param specific_asset_id: A list of specific Asset identifiers (required)
-        :type specific_asset_id: List[SpecificAssetId]
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -1508,62 +1267,7 @@ class AssetAdministrationShellBasicDiscoveryApi:
             response_types_map=_response_types_map,
         )
 
-
-    @validate_call
-    def post_all_asset_links_by_id_without_preload_content(
-        self,
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        specific_asset_id: Annotated[List[SpecificAssetId], Field(description="A list of specific Asset identifiers")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Creates specific Asset identifiers linked to an Asset Administration Shell to edit discoverable content
-
-
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param specific_asset_id: A list of specific Asset identifiers (required)
-        :type specific_asset_id: List[SpecificAssetId]
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _post_all_asset_links_by_id_serialize(
+    def _post_asset_links_by_shell_id_serialize(
         self,
         aas_identifier,
         specific_asset_id,

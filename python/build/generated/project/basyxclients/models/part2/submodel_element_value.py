@@ -18,17 +18,8 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, Dict, List, Optional
-from basyxclients.models.part2.annotated_relationship_element_value import AnnotatedRelationshipElementValue
-from basyxclients.models.part2.basic_event_element_value import BasicEventElementValue
-from basyxclients.models.part2.blob_value import BlobValue
-from basyxclients.models.part2.entity_value import EntityValue
-from basyxclients.models.part2.file_value import FileValue
-from basyxclients.models.part2.property_value import PropertyValue
-from basyxclients.models.part2.range_value import RangeValue
-from basyxclients.models.part2.reference_value import ReferenceValue
-from basyxclients.models.part2.relationship_element_value import RelationshipElementValue
 from pydantic import StrictStr, Field
-from typing import Union, List, Optional, Dict
+from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 SUBMODELELEMENTVALUE_ONE_OF_SCHEMAS = ["AnnotatedRelationshipElementValue", "BasicEventElementValue", "BlobValue", "EntityValue", "FileValue", "PropertyValue", "RangeValue", "ReferenceValue", "RelationshipElementValue", "object"]
@@ -60,7 +51,7 @@ class SubmodelElementValue(BaseModel):
     # data type: object
     oneof_schema_11_validator: Optional[Dict[str, Any]] = Field(default=None, description="Since patternProperties and propertyNames are not supported by OpenApi yet, the ValueOnly serialization for this elements works with the key-attribute as the JSON-property name and the value-attribute as the corresponding value.")
     actual_instance: Optional[Union[AnnotatedRelationshipElementValue, BasicEventElementValue, BlobValue, EntityValue, FileValue, PropertyValue, RangeValue, ReferenceValue, RelationshipElementValue, object]] = None
-    one_of_schemas: List[str] = Field(default=Literal["AnnotatedRelationshipElementValue", "BasicEventElementValue", "BlobValue", "EntityValue", "FileValue", "PropertyValue", "RangeValue", "ReferenceValue", "RelationshipElementValue", "object"])
+    one_of_schemas: Set[str] = { "AnnotatedRelationshipElementValue", "BasicEventElementValue", "BlobValue", "EntityValue", "FileValue", "PropertyValue", "RangeValue", "ReferenceValue", "RelationshipElementValue", "object" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -267,4 +258,15 @@ class SubmodelElementValue(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
+from basyxclients.models.part2.annotated_relationship_element_value import AnnotatedRelationshipElementValue
+from basyxclients.models.part2.basic_event_element_value import BasicEventElementValue
+from basyxclients.models.part2.blob_value import BlobValue
+from basyxclients.models.part2.entity_value import EntityValue
+from basyxclients.models.part2.file_value import FileValue
+from basyxclients.models.part2.property_value import PropertyValue
+from basyxclients.models.part2.range_value import RangeValue
+from basyxclients.models.part2.reference_value import ReferenceValue
+from basyxclients.models.part2.relationship_element_value import RelationshipElementValue
+# TODO: Rewrite to not use raise_errors
+SubmodelElementValue.model_rebuild(raise_errors=False)
 

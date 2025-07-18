@@ -73,9 +73,9 @@ class SubmodelValue(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in submodel_elements (list)
         _items = []
         if self.submodel_elements:
-            for _item in self.submodel_elements:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_submodel_elements in self.submodel_elements:
+                if _item_submodel_elements:
+                    _items.append(_item_submodel_elements.to_dict())
             _dict['submodelElements'] = _items
         return _dict
 
@@ -93,4 +93,7 @@ class SubmodelValue(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.submodel_element import SubmodelElement
+# TODO: Rewrite to not use raise_errors
+SubmodelValue.model_rebuild(raise_errors=False)
 

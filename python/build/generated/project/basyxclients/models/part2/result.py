@@ -20,7 +20,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from basyxclients.models.part2.message import Message
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -73,9 +72,9 @@ class Result(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in messages (list)
         _items = []
         if self.messages:
-            for _item in self.messages:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_messages in self.messages:
+                if _item_messages:
+                    _items.append(_item_messages.to_dict())
             _dict['messages'] = _items
         return _dict
 
@@ -93,4 +92,7 @@ class Result(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part2.message import Message
+# TODO: Rewrite to not use raise_errors
+Result.model_rebuild(raise_errors=False)
 

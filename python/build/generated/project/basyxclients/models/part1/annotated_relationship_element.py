@@ -18,16 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.data_element_choice import DataElementChoice
-from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
-from basyxclients.models.part1.extension import Extension
-from basyxclients.models.part1.lang_string_name_type import LangStringNameType
-from basyxclients.models.part1.lang_string_text_type import LangStringTextType
-from basyxclients.models.part1.qualifier import Qualifier
-from basyxclients.models.part1.reference import Reference
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -40,7 +33,7 @@ class AnnotatedRelationshipElement(BaseModel):
     id_short: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=128)]] = Field(default=None, alias="idShort")
     display_name: Optional[Annotated[List[LangStringNameType], Field(min_length=1)]] = Field(default=None, alias="displayName")
     description: Optional[Annotated[List[LangStringTextType], Field(min_length=1)]] = None
-    model_type: Annotated[str, Field(strict=True)] = Field(alias="modelType")
+    model_type: StrictStr = Field(alias="modelType")
     semantic_id: Optional[Reference] = Field(default=None, alias="semanticId")
     supplemental_semantic_ids: Optional[Annotated[List[Reference], Field(min_length=1)]] = Field(default=None, alias="supplementalSemanticIds")
     qualifiers: Optional[Annotated[List[Qualifier], Field(min_length=1)]] = None
@@ -61,10 +54,10 @@ class AnnotatedRelationshipElement(BaseModel):
         return value
 
     @field_validator('model_type')
-    def model_type_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if not re.match(r"AnnotatedRelationshipElement", value):
-            raise ValueError(r"must validate the regular expression /AnnotatedRelationshipElement/")
+    def model_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['AnnotatedRelationshipElement']):
+            raise ValueError("must be one of enum values ('AnnotatedRelationshipElement')")
         return value
 
     model_config = ConfigDict(
@@ -109,23 +102,23 @@ class AnnotatedRelationshipElement(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in extensions (list)
         _items = []
         if self.extensions:
-            for _item in self.extensions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_extensions in self.extensions:
+                if _item_extensions:
+                    _items.append(_item_extensions.to_dict())
             _dict['extensions'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in display_name (list)
         _items = []
         if self.display_name:
-            for _item in self.display_name:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_display_name in self.display_name:
+                if _item_display_name:
+                    _items.append(_item_display_name.to_dict())
             _dict['displayName'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in description (list)
         _items = []
         if self.description:
-            for _item in self.description:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_description in self.description:
+                if _item_description:
+                    _items.append(_item_description.to_dict())
             _dict['description'] = _items
         # override the default output from pydantic by calling `to_dict()` of semantic_id
         if self.semantic_id:
@@ -133,23 +126,23 @@ class AnnotatedRelationshipElement(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in supplemental_semantic_ids (list)
         _items = []
         if self.supplemental_semantic_ids:
-            for _item in self.supplemental_semantic_ids:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_supplemental_semantic_ids in self.supplemental_semantic_ids:
+                if _item_supplemental_semantic_ids:
+                    _items.append(_item_supplemental_semantic_ids.to_dict())
             _dict['supplementalSemanticIds'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in qualifiers (list)
         _items = []
         if self.qualifiers:
-            for _item in self.qualifiers:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_qualifiers in self.qualifiers:
+                if _item_qualifiers:
+                    _items.append(_item_qualifiers.to_dict())
             _dict['qualifiers'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in embedded_data_specifications (list)
         _items = []
         if self.embedded_data_specifications:
-            for _item in self.embedded_data_specifications:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_embedded_data_specifications in self.embedded_data_specifications:
+                if _item_embedded_data_specifications:
+                    _items.append(_item_embedded_data_specifications.to_dict())
             _dict['embeddedDataSpecifications'] = _items
         # override the default output from pydantic by calling `to_dict()` of first
         if self.first:
@@ -160,9 +153,9 @@ class AnnotatedRelationshipElement(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in annotations (list)
         _items = []
         if self.annotations:
-            for _item in self.annotations:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_annotations in self.annotations:
+                if _item_annotations:
+                    _items.append(_item_annotations.to_dict())
             _dict['annotations'] = _items
         return _dict
 
@@ -192,4 +185,13 @@ class AnnotatedRelationshipElement(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.data_element_choice import DataElementChoice
+from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+from basyxclients.models.part1.extension import Extension
+from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+from basyxclients.models.part1.qualifier import Qualifier
+from basyxclients.models.part1.reference import Reference
+# TODO: Rewrite to not use raise_errors
+AnnotatedRelationshipElement.model_rebuild(raise_errors=False)
 

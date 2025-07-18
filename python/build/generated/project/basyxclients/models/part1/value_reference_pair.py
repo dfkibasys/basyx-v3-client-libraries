@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
-from basyxclients.models.part1.reference import Reference
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -99,4 +98,7 @@ class ValueReferencePair(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.reference import Reference
+# TODO: Rewrite to not use raise_errors
+ValueReferencePair.model_rebuild(raise_errors=False)
 

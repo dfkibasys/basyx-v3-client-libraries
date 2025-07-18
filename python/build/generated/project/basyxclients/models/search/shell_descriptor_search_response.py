@@ -74,9 +74,9 @@ class ShellDescriptorSearchResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in hits (list)
         _items = []
         if self.hits:
-            for _item in self.hits:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_hits in self.hits:
+                if _item_hits:
+                    _items.append(_item_hits.to_dict())
             _dict['hits'] = _items
         return _dict
 

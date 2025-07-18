@@ -20,8 +20,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from basyxclients.models.part2.asset_administration_shell_metadata import AssetAdministrationShellMetadata
-from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -78,9 +76,9 @@ class GetAssetAdministrationShellsMetadataResult(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in result (list)
         _items = []
         if self.result:
-            for _item in self.result:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_result in self.result:
+                if _item_result:
+                    _items.append(_item_result.to_dict())
             _dict['result'] = _items
         return _dict
 
@@ -99,4 +97,9 @@ class GetAssetAdministrationShellsMetadataResult(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part2.asset_administration_shell_metadata import AssetAdministrationShellMetadata
+from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+from basyxclients.models.part2.asset_administration_shell_descriptor import AssetAdministrationShellDescriptor
+# TODO: Rewrite to not use raise_errors
+GetAssetAdministrationShellsMetadataResult.model_rebuild(raise_errors=False)
 

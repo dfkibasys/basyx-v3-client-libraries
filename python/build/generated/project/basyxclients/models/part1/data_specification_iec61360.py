@@ -21,13 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.data_type_iec61360 import DataTypeIec61360
-from basyxclients.models.part1.lang_string_definition_type_iec61360 import LangStringDefinitionTypeIec61360
-from basyxclients.models.part1.lang_string_preferred_name_type_iec61360 import LangStringPreferredNameTypeIec61360
-from basyxclients.models.part1.lang_string_short_name_type_iec61360 import LangStringShortNameTypeIec61360
-from basyxclients.models.part1.level_type import LevelType
-from basyxclients.models.part1.reference import Reference
-from basyxclients.models.part1.value_list import ValueList
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -142,16 +135,16 @@ class DataSpecificationIec61360(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in preferred_name (list)
         _items = []
         if self.preferred_name:
-            for _item in self.preferred_name:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_preferred_name in self.preferred_name:
+                if _item_preferred_name:
+                    _items.append(_item_preferred_name.to_dict())
             _dict['preferredName'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in short_name (list)
         _items = []
         if self.short_name:
-            for _item in self.short_name:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_short_name in self.short_name:
+                if _item_short_name:
+                    _items.append(_item_short_name.to_dict())
             _dict['shortName'] = _items
         # override the default output from pydantic by calling `to_dict()` of unit_id
         if self.unit_id:
@@ -159,9 +152,9 @@ class DataSpecificationIec61360(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in definition (list)
         _items = []
         if self.definition:
-            for _item in self.definition:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_definition in self.definition:
+                if _item_definition:
+                    _items.append(_item_definition.to_dict())
             _dict['definition'] = _items
         # override the default output from pydantic by calling `to_dict()` of value_list
         if self.value_list:
@@ -197,4 +190,13 @@ class DataSpecificationIec61360(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.data_type_iec61360 import DataTypeIec61360
+from basyxclients.models.part1.lang_string_definition_type_iec61360 import LangStringDefinitionTypeIec61360
+from basyxclients.models.part1.lang_string_preferred_name_type_iec61360 import LangStringPreferredNameTypeIec61360
+from basyxclients.models.part1.lang_string_short_name_type_iec61360 import LangStringShortNameTypeIec61360
+from basyxclients.models.part1.level_type import LevelType
+from basyxclients.models.part1.reference import Reference
+from basyxclients.models.part1.value_list import ValueList
+# TODO: Rewrite to not use raise_errors
+DataSpecificationIec61360.model_rebuild(raise_errors=False)
 

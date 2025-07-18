@@ -21,15 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.administrative_information import AdministrativeInformation
-from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
-from basyxclients.models.part1.extension import Extension
-from basyxclients.models.part1.lang_string_name_type import LangStringNameType
-from basyxclients.models.part1.lang_string_text_type import LangStringTextType
-from basyxclients.models.part1.modelling_kind import ModellingKind
-from basyxclients.models.part1.qualifier import Qualifier
-from basyxclients.models.part1.reference import Reference
-from basyxclients.models.part1.submodel_element_choice import SubmodelElementChoice
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -112,23 +103,23 @@ class Submodel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in extensions (list)
         _items = []
         if self.extensions:
-            for _item in self.extensions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_extensions in self.extensions:
+                if _item_extensions:
+                    _items.append(_item_extensions.to_dict())
             _dict['extensions'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in display_name (list)
         _items = []
         if self.display_name:
-            for _item in self.display_name:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_display_name in self.display_name:
+                if _item_display_name:
+                    _items.append(_item_display_name.to_dict())
             _dict['displayName'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in description (list)
         _items = []
         if self.description:
-            for _item in self.description:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_description in self.description:
+                if _item_description:
+                    _items.append(_item_description.to_dict())
             _dict['description'] = _items
         # override the default output from pydantic by calling `to_dict()` of administration
         if self.administration:
@@ -139,30 +130,30 @@ class Submodel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in supplemental_semantic_ids (list)
         _items = []
         if self.supplemental_semantic_ids:
-            for _item in self.supplemental_semantic_ids:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_supplemental_semantic_ids in self.supplemental_semantic_ids:
+                if _item_supplemental_semantic_ids:
+                    _items.append(_item_supplemental_semantic_ids.to_dict())
             _dict['supplementalSemanticIds'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in qualifiers (list)
         _items = []
         if self.qualifiers:
-            for _item in self.qualifiers:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_qualifiers in self.qualifiers:
+                if _item_qualifiers:
+                    _items.append(_item_qualifiers.to_dict())
             _dict['qualifiers'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in embedded_data_specifications (list)
         _items = []
         if self.embedded_data_specifications:
-            for _item in self.embedded_data_specifications:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_embedded_data_specifications in self.embedded_data_specifications:
+                if _item_embedded_data_specifications:
+                    _items.append(_item_embedded_data_specifications.to_dict())
             _dict['embeddedDataSpecifications'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in submodel_elements (list)
         _items = []
         if self.submodel_elements:
-            for _item in self.submodel_elements:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_submodel_elements in self.submodel_elements:
+                if _item_submodel_elements:
+                    _items.append(_item_submodel_elements.to_dict())
             _dict['submodelElements'] = _items
         return _dict
 
@@ -193,4 +184,15 @@ class Submodel(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.administrative_information import AdministrativeInformation
+from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+from basyxclients.models.part1.extension import Extension
+from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+from basyxclients.models.part1.modelling_kind import ModellingKind
+from basyxclients.models.part1.qualifier import Qualifier
+from basyxclients.models.part1.reference import Reference
+from basyxclients.models.part1.submodel_element_choice import SubmodelElementChoice
+# TODO: Rewrite to not use raise_errors
+Submodel.model_rebuild(raise_errors=False)
 

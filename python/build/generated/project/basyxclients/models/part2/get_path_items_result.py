@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -92,4 +91,7 @@ class GetPathItemsResult(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata
+# TODO: Rewrite to not use raise_errors
+GetPathItemsResult.model_rebuild(raise_errors=False)
 

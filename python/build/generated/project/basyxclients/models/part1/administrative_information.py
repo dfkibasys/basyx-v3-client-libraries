@@ -21,8 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
-from basyxclients.models.part1.reference import Reference
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -109,9 +107,9 @@ class AdministrativeInformation(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in embedded_data_specifications (list)
         _items = []
         if self.embedded_data_specifications:
-            for _item in self.embedded_data_specifications:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_embedded_data_specifications in self.embedded_data_specifications:
+                if _item_embedded_data_specifications:
+                    _items.append(_item_embedded_data_specifications.to_dict())
             _dict['embeddedDataSpecifications'] = _items
         # override the default output from pydantic by calling `to_dict()` of creator
         if self.creator:
@@ -136,4 +134,8 @@ class AdministrativeInformation(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+from basyxclients.models.part1.reference import Reference
+# TODO: Rewrite to not use raise_errors
+AdministrativeInformation.model_rebuild(raise_errors=False)
 

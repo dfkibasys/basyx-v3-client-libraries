@@ -96,4 +96,7 @@ class AnnotatedRelationshipElementValue(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part2.reference_value import ReferenceValue
+# TODO: Rewrite to not use raise_errors
+AnnotatedRelationshipElementValue.model_rebuild(raise_errors=False)
 

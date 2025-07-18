@@ -19,7 +19,7 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional, Union
 from pydantic import StrictStr, Field
-from typing import Union, List, Optional, Dict
+from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 PROPERTYVALUE_ONE_OF_SCHEMAS = ["bool", "float", "str"]
@@ -35,13 +35,18 @@ class PropertyValue(BaseModel):
     # data type: bool
     oneof_schema_3_validator: Optional[StrictBool] = None
     actual_instance: Optional[Union[bool, float, str]] = None
-    one_of_schemas: List[str] = Field(default=Literal["bool", "float", "str"])
+    one_of_schemas: Set[str] = { "bool", "float", "str" }
 
     model_config = ConfigDict(
         validate_assignment=True,
         protected_namespaces=(),
     )
 
+    discriminator_value_class_map: Dict[str, str] = {
+        'string': 'StringValue',
+        'number': 'NumberValue',
+        'boolean': 'BooleanValue'
+    }
 
     def __init__(self, *args, **kwargs) -> None:
         if args:
@@ -95,6 +100,41 @@ class PropertyValue(BaseModel):
         instance = cls.model_construct()
         error_messages = []
         match = 0
+
+        # use oneOf discriminator to lookup the data type
+        _data_type = json.loads(json_str).get("type")
+        if not _data_type:
+            raise ValueError("Failed to lookup data type from the field `type` in the input.")
+
+        # check if data type is `BooleanValue`
+        if _data_type == "boolean":
+            instance.actual_instance = BooleanValue.from_json(json_str)
+            return instance
+
+        # check if data type is `NumberValue`
+        if _data_type == "number":
+            instance.actual_instance = NumberValue.from_json(json_str)
+            return instance
+
+        # check if data type is `StringValue`
+        if _data_type == "string":
+            instance.actual_instance = StringValue.from_json(json_str)
+            return instance
+
+        # check if data type is `BooleanValue`
+        if _data_type == "BooleanValue":
+            instance.actual_instance = BooleanValue.from_json(json_str)
+            return instance
+
+        # check if data type is `NumberValue`
+        if _data_type == "NumberValue":
+            instance.actual_instance = NumberValue.from_json(json_str)
+            return instance
+
+        # check if data type is `StringValue`
+        if _data_type == "StringValue":
+            instance.actual_instance = StringValue.from_json(json_str)
+            return instance
 
         # deserialize data into str
         try:

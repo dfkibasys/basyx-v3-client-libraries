@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
-from basyxclients.models.part2.protocol_information import ProtocolInformation
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -92,4 +91,7 @@ class Endpoint(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part2.protocol_information import ProtocolInformation
+# TODO: Rewrite to not use raise_errors
+Endpoint.model_rebuild(raise_errors=False)
 

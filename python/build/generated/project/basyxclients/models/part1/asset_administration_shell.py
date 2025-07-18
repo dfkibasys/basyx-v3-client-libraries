@@ -18,16 +18,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.data_element_choice import DataElementChoice
-from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
-from basyxclients.models.part1.extension import Extension
-from basyxclients.models.part1.lang_string_name_type import LangStringNameType
-from basyxclients.models.part1.lang_string_text_type import LangStringTextType
-from basyxclients.models.part1.qualifier import Qualifier
-from basyxclients.models.part1.reference import Reference
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -46,7 +39,7 @@ class AssetAdministrationShell(BaseModel):
     embedded_data_specifications: Optional[Annotated[List[EmbeddedDataSpecification], Field(min_length=1)]] = Field(default=None, alias="embeddedDataSpecifications")
     derived_from: Optional[Reference] = Field(default=None, alias="derivedFrom")
     asset_information: AssetInformation = Field(alias="assetInformation")
-    submodels: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = None
+    submodels: Optional[Annotated[List[Reference], Field(min_length=1)]] = None
     __properties: ClassVar[List[str]] = ["extensions", "category", "idShort", "displayName", "description", "modelType", "administration", "id", "embeddedDataSpecifications", "derivedFrom", "assetInformation", "submodels"]
 
     @field_validator('id_short')
@@ -108,23 +101,23 @@ class AssetAdministrationShell(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in extensions (list)
         _items = []
         if self.extensions:
-            for _item in self.extensions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_extensions in self.extensions:
+                if _item_extensions:
+                    _items.append(_item_extensions.to_dict())
             _dict['extensions'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in display_name (list)
         _items = []
         if self.display_name:
-            for _item in self.display_name:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_display_name in self.display_name:
+                if _item_display_name:
+                    _items.append(_item_display_name.to_dict())
             _dict['displayName'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in description (list)
         _items = []
         if self.description:
-            for _item in self.description:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_description in self.description:
+                if _item_description:
+                    _items.append(_item_description.to_dict())
             _dict['description'] = _items
         # override the default output from pydantic by calling `to_dict()` of administration
         if self.administration:
@@ -132,9 +125,9 @@ class AssetAdministrationShell(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in embedded_data_specifications (list)
         _items = []
         if self.embedded_data_specifications:
-            for _item in self.embedded_data_specifications:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_embedded_data_specifications in self.embedded_data_specifications:
+                if _item_embedded_data_specifications:
+                    _items.append(_item_embedded_data_specifications.to_dict())
             _dict['embeddedDataSpecifications'] = _items
         # override the default output from pydantic by calling `to_dict()` of derived_from
         if self.derived_from:
@@ -145,9 +138,9 @@ class AssetAdministrationShell(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in submodels (list)
         _items = []
         if self.submodels:
-            for _item in self.submodels:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_submodels in self.submodels:
+                if _item_submodels:
+                    _items.append(_item_submodels.to_dict())
             _dict['submodels'] = _items
         return _dict
 
@@ -176,4 +169,15 @@ class AssetAdministrationShell(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.data_element_choice import DataElementChoice
+from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+from basyxclients.models.part1.extension import Extension
+from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+from basyxclients.models.part1.qualifier import Qualifier
+from basyxclients.models.part1.reference import Reference
+from basyxclients.models.part1.administrative_information import AdministrativeInformation
+from basyxclients.models.part1.asset_information import AssetInformation
+# TODO: Rewrite to not use raise_errors
+AssetAdministrationShell.model_rebuild(raise_errors=False)
 

@@ -1,4 +1,6 @@
+useOneOfDiscriminatorLookup: true
 additionalProperties: 
+  useOneOfDiscriminatorLookup: true
   imports:
   - import: from basyxclients.models.part2.base_operation_result import BaseOperationResult
   - import: from basyxclients.models.part2.get_path_items_result import GetPathItemsResult

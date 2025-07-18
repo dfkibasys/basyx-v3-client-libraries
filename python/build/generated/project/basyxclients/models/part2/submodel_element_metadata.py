@@ -18,20 +18,8 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from basyxclients.models.part2.basic_event_element_metadata import BasicEventElementMetadata
-from basyxclients.models.part2.entity_metadata import EntityMetadata
-from basyxclients.models.part2.file_metadata import FileMetadata
-from basyxclients.models.part2.multi_language_property_metadata import MultiLanguagePropertyMetadata
-from basyxclients.models.part2.operation_metadata import OperationMetadata
-from basyxclients.models.part2.property_metadata import PropertyMetadata
-from basyxclients.models.part2.range_metadata import RangeMetadata
-from basyxclients.models.part2.reference_element_metadata import ReferenceElementMetadata
-from basyxclients.models.part2.relationship_element_metadata import RelationshipElementMetadata
-from basyxclients.models.part2.submodel_element_attributes import SubmodelElementAttributes
-from basyxclients.models.part2.submodel_element_collection_metadata import SubmodelElementCollectionMetadata
-from basyxclients.models.part2.submodel_element_list_metadata import SubmodelElementListMetadata
 from pydantic import StrictStr, Field
-from typing import Union, List, Optional, Dict
+from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 SUBMODELELEMENTMETADATA_ONE_OF_SCHEMAS = ["SubmodelElementAttributes"]
@@ -69,7 +57,7 @@ class SubmodelElementMetadata(BaseModel):
     # data type: SubmodelElementCollectionMetadata
     oneof_schema_14_validator: Optional[SubmodelElementCollectionMetadata] = None
     actual_instance: Optional[Union[SubmodelElementAttributes]] = None
-    one_of_schemas: List[str] = Field(default=Literal["SubmodelElementAttributes"])
+    one_of_schemas: Set[str] = { "SubmodelElementAttributes" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -301,4 +289,20 @@ class SubmodelElementMetadata(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
+from basyxclients.models.part2.basic_event_element_metadata import BasicEventElementMetadata
+from basyxclients.models.part2.entity_metadata import EntityMetadata
+from basyxclients.models.part2.file_metadata import FileMetadata
+from basyxclients.models.part2.multi_language_property_metadata import MultiLanguagePropertyMetadata
+from basyxclients.models.part2.operation_metadata import OperationMetadata
+from basyxclients.models.part2.property_metadata import PropertyMetadata
+from basyxclients.models.part2.range_metadata import RangeMetadata
+from basyxclients.models.part2.reference_element_metadata import ReferenceElementMetadata
+from basyxclients.models.part2.relationship_element_metadata import RelationshipElementMetadata
+from basyxclients.models.part2.submodel_element_attributes import SubmodelElementAttributes
+from basyxclients.models.part2.submodel_element_collection_metadata import SubmodelElementCollectionMetadata
+from basyxclients.models.part2.submodel_element_list_metadata import SubmodelElementListMetadata
+from basyxclients.models.part1.data_type_def_xsd import DataTypeDefXsd
+from basyxclients.models.part2.capability_metadata import CapabilityMetadata
+# TODO: Rewrite to not use raise_errors
+SubmodelElementMetadata.model_rebuild(raise_errors=False)
 

@@ -15,4 +15,4 @@
 
 
 # import models into model package
-from basyxclients.models.discovery.paged_result_or_string_items import PagedResultOrStringItems
+from basyxclients.models.discovery.get_all_asset_links_result import GetAllAssetLinksResult

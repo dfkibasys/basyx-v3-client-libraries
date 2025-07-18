@@ -1,4 +1,8 @@
 - op: add
-  path: /components/schemas/PagedResultOrStringItems/x-py-model-imports
+  path: /components/schemas/GetAllAssetLinksResult/x-py-model-imports
+  value: []
+- op: add
+  path: /components/schemas/GetAllAssetLinksResult/x-py-postponed-model-imports
   value: 
+  - from basyxclients.models.discovery.get_all_asset_links_result import GetAllAssetLinksResult
   - from basyxclients.models.part2.paged_result_paging_metadata import PagedResultPagingMetadata

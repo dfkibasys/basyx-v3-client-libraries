@@ -21,9 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.asset_kind import AssetKind
-from basyxclients.models.part1.resource import Resource
-from basyxclients.models.part1.specific_asset_id import SpecificAssetId
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -100,9 +97,9 @@ class AssetInformation(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in specific_asset_ids (list)
         _items = []
         if self.specific_asset_ids:
-            for _item in self.specific_asset_ids:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_specific_asset_ids in self.specific_asset_ids:
+                if _item_specific_asset_ids:
+                    _items.append(_item_specific_asset_ids.to_dict())
             _dict['specificAssetIds'] = _items
         # override the default output from pydantic by calling `to_dict()` of default_thumbnail
         if self.default_thumbnail:
@@ -127,4 +124,9 @@ class AssetInformation(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.asset_kind import AssetKind
+from basyxclients.models.part1.resource import Resource
+from basyxclients.models.part1.specific_asset_id import SpecificAssetId
+# TODO: Rewrite to not use raise_errors
+AssetInformation.model_rebuild(raise_errors=False)
 

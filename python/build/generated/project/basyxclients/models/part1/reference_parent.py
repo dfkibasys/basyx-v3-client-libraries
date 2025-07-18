@@ -21,8 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
-from basyxclients.models.part1.key import Key
-from basyxclients.models.part1.reference_types import ReferenceTypes
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -76,9 +74,9 @@ class ReferenceParent(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in keys (list)
         _items = []
         if self.keys:
-            for _item in self.keys:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_keys in self.keys:
+                if _item_keys:
+                    _items.append(_item_keys.to_dict())
             _dict['keys'] = _items
         return _dict
 
@@ -97,4 +95,8 @@ class ReferenceParent(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.key import Key
+from basyxclients.models.part1.reference_types import ReferenceTypes
+# TODO: Rewrite to not use raise_errors
+ReferenceParent.model_rebuild(raise_errors=False)
 

@@ -18,10 +18,8 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from basyxclients.models.part1.annotated_relationship_element import AnnotatedRelationshipElement
-from basyxclients.models.part1.relationship_element import RelationshipElement
 from pydantic import StrictStr, Field
-from typing import Union, List, Optional, Dict
+from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 RELATIONSHIPELEMENTCHOICE_ONE_OF_SCHEMAS = ["AnnotatedRelationshipElement", "RelationshipElement"]
@@ -35,13 +33,17 @@ class RelationshipElementChoice(BaseModel):
     # data type: AnnotatedRelationshipElement
     oneof_schema_2_validator: Optional[AnnotatedRelationshipElement] = None
     actual_instance: Optional[Union[AnnotatedRelationshipElement, RelationshipElement]] = None
-    one_of_schemas: List[str] = Field(default=Literal["AnnotatedRelationshipElement", "RelationshipElement"])
+    one_of_schemas: Set[str] = { "AnnotatedRelationshipElement", "RelationshipElement" }
 
     model_config = ConfigDict(
         validate_assignment=True,
         protected_namespaces=(),
     )
 
+    discriminator_value_class_map: Dict[str, str] = {
+        'RelationshipElement': 'RelationshipElement',
+        'AnnotatedRelationshipElement': 'AnnotatedRelationshipElement'
+    }
 
     def __init__(self, *args, **kwargs) -> None:
         if args:
@@ -87,6 +89,21 @@ class RelationshipElementChoice(BaseModel):
         instance = cls.model_construct()
         error_messages = []
         match = 0
+
+        # use oneOf discriminator to lookup the data type
+        _data_type = json.loads(json_str).get("modelType")
+        if not _data_type:
+            raise ValueError("Failed to lookup data type from the field `modelType` in the input.")
+
+        # check if data type is `AnnotatedRelationshipElement`
+        if _data_type == "AnnotatedRelationshipElement":
+            instance.actual_instance = AnnotatedRelationshipElement.from_json(json_str)
+            return instance
+
+        # check if data type is `RelationshipElement`
+        if _data_type == "RelationshipElement":
+            instance.actual_instance = RelationshipElement.from_json(json_str)
+            return instance
 
         # deserialize data into RelationshipElement
         try:
@@ -135,4 +152,20 @@ class RelationshipElementChoice(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
+from basyxclients.models.part1.annotated_relationship_element import AnnotatedRelationshipElement
+from basyxclients.models.part1.basic_event_element import BasicEventElement
+from basyxclients.models.part1.blob import Blob
+from basyxclients.models.part1.capability import Capability
+from basyxclients.models.part1.file import File
+from basyxclients.models.part1.model_property import ModelProperty
+from basyxclients.models.part1.multi_language_property import MultiLanguageProperty
+from basyxclients.models.part1.range import Range
+from basyxclients.models.part1.reference_element import ReferenceElement
+from basyxclients.models.part1.relationship_element import RelationshipElement
+from basyxclients.models.part1.submodel_element_collection import SubmodelElementCollection
+from basyxclients.models.part1.submodel_element_list import SubmodelElementList
+from basyxclients.models.part1.operation import Operation
+from basyxclients.models.part1.entity import Entity
+# TODO: Rewrite to not use raise_errors
+RelationshipElementChoice.model_rebuild(raise_errors=False)
 

@@ -1,4 +1,8 @@
+infoName: "DFKI GmbH"
+infoEmail: "info@dfki.de"
+useOneOfDiscriminatorLookup: true
 additionalProperties:
+  useOneOfDiscriminatorLookup: true
   packageVersion: 0.2.0
   projectName: basyx-v3-clients
   imports:
