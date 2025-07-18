@@ -1,0 +1,1479 @@
+---
+openapi: "3.0.3"
+info:
+  title: "DotAAS Part 1 | Metamodel | Schemas"
+  description: "The schemas implementing the [Specification of the Asset Administration\
+    \ Shell: Part 1](http://industrialdigitaltwin.org/en/content-hub).  \nPublisher:\
+    \ Industrial Digital Twin Association (IDTA) 2023"
+  contact:
+    name: "Industrial Digital Twin Association (IDTA)"
+    email: "info@idtwin.org"
+  license:
+    name: "CC BY 4.0"
+    url: "https://creativecommons.org/licenses/by/4.0/"
+  version: "V3.0.1"
+components:
+  schemas:
+    AasSubmodelElements:
+      type: "string"
+      enum:
+      - "AnnotatedRelationshipElement"
+      - "BasicEventElement"
+      - "Blob"
+      - "Capability"
+      - "DataElement"
+      - "Entity"
+      - "EventElement"
+      - "File"
+      - "MultiLanguageProperty"
+      - "Operation"
+      - "Property"
+      - "Range"
+      - "ReferenceElement"
+      - "RelationshipElement"
+      - "SubmodelElement"
+      - "SubmodelElementCollection"
+      - "SubmodelElementList"
+    AbstractLangString:
+      type: "object"
+      properties:
+        language:
+          type: "string"
+          pattern: "^(([a-zA-Z]{2,3}(-[a-zA-Z]{3}(-[a-zA-Z]{3}){2})?|[a-zA-Z]{4}|[a-zA-Z]{5,8})(-[a-zA-Z]{4})?(-([a-zA-Z]{2}|[0-9]{3}))?(-(([a-zA-Z0-9]){5,8}|[0-9]([a-zA-Z0-9]){3}))*(-[0-9A-WY-Za-wy-z](-([a-zA-Z0-9]){2,8})+)*(-[xX](-([a-zA-Z0-9]){1,8})+)?|[xX](-([a-zA-Z0-9]){1,8})+|((en-GB-oed|i-ami|i-bnn|i-default|i-enochian|i-hak|i-klingon|i-lux|i-mingo|i-navajo|i-pwn|i-tao|i-tay|i-tsu|sgn-BE-FR|sgn-BE-NL|sgn-CH-DE)|(art-lojban|cel-gaulish|no-bok|no-nyn|zh-guoyu|zh-hakka|zh-min|zh-min-nan|zh-xiang)))$"
+      required:
+      - "language"
+    AdministrativeInformation:
+      allOf:
+      - $ref: "#/components/schemas/HasDataSpecification"
+      - properties:
+          version:
+            type: "string"
+            pattern: "^(0|[1-9][0-9]{0,3})$"
+          revision:
+            type: "string"
+            pattern: "^(0|[1-9][0-9]{0,3})$"
+          creator:
+            $ref: "#/components/schemas/Reference"
+          templateId:
+            type: "string"
+            minLength: 1
+            maxLength: 2000
+            pattern: "^([\\t\\n\\r \\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+              ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.reference import Reference"
+    AnnotatedRelationshipElement:
+      type: "object"
+      title: "AnnotatedRelationshipElement"
+      x-discriminator-value: "AnnotatedRelationshipElement"
+      allOf:
+      - $ref: "#/components/schemas/RelationshipElement_abstract"
+      - type: "object"
+        properties:
+          annotations:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/DataElement_choice"
+            minItems: 1
+          modelType:
+            type: "string"
+            enum:
+            - "AnnotatedRelationshipElement"
+        required:
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.data_element_choice import DataElementChoice"
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    AssetAdministrationShell:
+      allOf:
+      - $ref: "#/components/schemas/Identifiable"
+      - $ref: "#/components/schemas/HasDataSpecification"
+      - properties:
+          derivedFrom:
+            $ref: "#/components/schemas/Reference"
+          assetInformation:
+            $ref: "#/components/schemas/AssetInformation"
+          submodels:
+            type: "array"
+            items:
+              minLength: 1
+              $ref: "#/components/schemas/Reference"
+            minItems: 1
+          modelType:
+            type: "string"
+            pattern: "AssetAdministrationShell"
+        required:
+        - "assetInformation"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.data_element_choice import DataElementChoice"
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+      - "from basyxclients.models.part1.administrative_information import AdministrativeInformation"
+      - "from basyxclients.models.part1.asset_information import AssetInformation"
+    AssetInformation:
+      type: "object"
+      properties:
+        assetKind:
+          $ref: "#/components/schemas/AssetKind"
+        globalAssetId:
+          type: "string"
+          minLength: 1
+          maxLength: 2000
+          pattern: "^([\\t\\n\\r -퟿-�]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\\
+            udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+        specificAssetIds:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SpecificAssetId"
+          minItems: 1
+        assetType:
+          type: "string"
+          minLength: 1
+          maxLength: 2000
+          pattern: "^([\\t\\n\\r -퟿-�]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\\
+            udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+        defaultThumbnail:
+          $ref: "#/components/schemas/Resource"
+      required:
+      - "assetKind"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.asset_kind import AssetKind"
+      - "from basyxclients.models.part1.resource import Resource"
+      - "from basyxclients.models.part1.specific_asset_id import SpecificAssetId"
+    AssetKind:
+      type: "string"
+      enum:
+      - "Instance"
+      - "NotApplicable"
+      - "Type"
+    BasicEventElement:
+      type: "object"
+      title: "BasicEventElement"
+      x-discriminator-value: "BasicEventElement"
+      allOf:
+      - $ref: "#/components/schemas/EventElement"
+      - type: "object"
+        properties:
+          observed:
+            $ref: "#/components/schemas/Reference"
+          direction:
+            $ref: "#/components/schemas/Direction"
+          state:
+            $ref: "#/components/schemas/StateOfEvent"
+          messageTopic:
+            type: "string"
+            minLength: 1
+            maxLength: 255
+          messageBroker:
+            $ref: "#/components/schemas/Reference"
+          lastUpdate:
+            type: "string"
+            pattern: "^-?(([1-9][0-9][0-9][0-9]+)|(0[0-9][0-9][0-9]))-((0[1-9])|(1[0-2]))-((0[1-9])|([12][0-9])|(3[01]))T(((([01][0-9])|(2[0-3])):[0-5][0-9]:([0-5][0-9])(\\\
+              .[0-9]+)?)|24:00:00(\\.0+)?)(Z|\\+00:00|-00:00)$"
+          minInterval:
+            type: "string"
+            pattern: "^-?P((([0-9]+Y([0-9]+M)?([0-9]+D)?|([0-9]+M)([0-9]+D)?|([0-9]+D))(T(([0-9]+H)([0-9]+M)?([0-9]+(\\\
+              .[0-9]+)?S)?|([0-9]+M)([0-9]+(\\.[0-9]+)?S)?|([0-9]+(\\.[0-9]+)?S)))?)|(T(([0-9]+H)([0-9]+M)?([0-9]+(\\\
+              .[0-9]+)?S)?|([0-9]+M)([0-9]+(\\.[0-9]+)?S)?|([0-9]+(\\.[0-9]+)?S))))$"
+          maxInterval:
+            type: "string"
+            pattern: "^-?P((([0-9]+Y([0-9]+M)?([0-9]+D)?|([0-9]+M)([0-9]+D)?|([0-9]+D))(T(([0-9]+H)([0-9]+M)?([0-9]+(\\\
+              .[0-9]+)?S)?|([0-9]+M)([0-9]+(\\.[0-9]+)?S)?|([0-9]+(\\.[0-9]+)?S)))?)|(T(([0-9]+H)([0-9]+M)?([0-9]+(\\\
+              .[0-9]+)?S)?|([0-9]+M)([0-9]+(\\.[0-9]+)?S)?|([0-9]+(\\.[0-9]+)?S))))$"
+          modelType:
+            type: "string"
+            enum:
+            - "BasicEventElement"
+        required:
+        - "observed"
+        - "direction"
+        - "state"
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.direction import Direction"
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+      - "from basyxclients.models.part1.state_of_event import StateOfEvent"
+    Blob:
+      type: "object"
+      title: "Blob"
+      x-discriminator-value: "Blob"
+      allOf:
+      - $ref: "#/components/schemas/DataElement"
+      - type: "object"
+        properties:
+          value:
+            type: "string"
+            format: "byte"
+          contentType:
+            type: "string"
+          modelType:
+            type: "string"
+            enum:
+            - "Blob"
+        required:
+        - "contentType"
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    Capability:
+      type: "object"
+      title: "Capability"
+      x-discriminator-value: "Capability"
+      allOf:
+      - $ref: "#/components/schemas/SubmodelElement"
+      - type: "object"
+        properties:
+          modelType:
+            type: "string"
+            enum:
+            - "Capability"
+        required:
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    ConceptDescription:
+      allOf:
+      - $ref: "#/components/schemas/Identifiable"
+      - $ref: "#/components/schemas/HasDataSpecification"
+      - properties:
+          isCaseOf:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/Reference"
+            minItems: 1
+          modelType:
+            type: "string"
+            pattern: "ConceptDescription"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.administrative_information import AdministrativeInformation"
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.reference import Reference"
+    DataElement:
+      allOf:
+      - $ref: "#/components/schemas/SubmodelElement"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.model_type import ModelType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    DataElement_choice:
+      oneOf:
+      - $ref: "#/components/schemas/Blob"
+      - $ref: "#/components/schemas/File"
+      - $ref: "#/components/schemas/MultiLanguageProperty"
+      - $ref: "#/components/schemas/Property"
+      - $ref: "#/components/schemas/Range"
+      - $ref: "#/components/schemas/ReferenceElement"
+      discriminator:
+        propertyName: "modelType"
+        mapping:
+          Blob: "#/components/schemas/Blob"
+          File: "#/components/schemas/File"
+          MultiLanguageProperty: "#/components/schemas/MultiLanguageProperty"
+          Property: "#/components/schemas/Property"
+          Range: "#/components/schemas/Range"
+          ReferenceElement: "#/components/schemas/ReferenceElement"
+      x-discriminator-children:
+      - discriminatorValue: "Blob"
+        className: "Blob"
+      - discriminatorValue: "File"
+        className: "File"
+      - discriminatorValue: "MultiLanguageProperty"
+        className: "MultiLanguageProperty"
+      - discriminatorValue: "Property"
+        className: "ModelProperty"
+      - discriminatorValue: "Range"
+        className: "Range"
+      - discriminatorValue: "ReferenceElement"
+        className: "ReferenceElement"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.blob import Blob"
+      - "from basyxclients.models.part1.file import File"
+      - "from basyxclients.models.part1.model_property import ModelProperty"
+      - "from basyxclients.models.part1.multi_language_property import MultiLanguageProperty"
+      - "from basyxclients.models.part1.range import Range"
+      - "from basyxclients.models.part1.reference_element import ReferenceElement"
+    DataSpecificationContent:
+      type: "object"
+      required:
+      - "modelType"
+      oneOf:
+      - $ref: "#/components/schemas/DataSpecificationIec61360"
+      discriminator:
+        propertyName: "modelType"
+        mapping:
+          DataSpecificationIec61360: "#/components/schemas/DataSpecificationIec61360"
+      x-discriminator-children:
+      - discriminatorValue: "DataSpecificationIec61360"
+        className: "DataSpecificationIec61360"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.data_specification_iec61360 import DataSpecificationIec61360"
+    DataSpecificationIec61360:
+      type: "object"
+      required:
+      - "preferredName"
+      - "modelType"
+      properties:
+        preferredName:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/LangStringPreferredNameTypeIec61360"
+          minItems: 1
+        shortName:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/LangStringShortNameTypeIec61360"
+          minItems: 1
+        unit:
+          type: "string"
+          minLength: 1
+          pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+            ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+        unitId:
+          $ref: "#/components/schemas/Reference"
+        sourceOfDefinition:
+          type: "string"
+          minLength: 1
+          pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+            ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+        symbol:
+          type: "string"
+          minLength: 1
+          pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+            ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+        dataType:
+          $ref: "#/components/schemas/DataTypeIec61360"
+        definition:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/LangStringDefinitionTypeIec61360"
+          minItems: 1
+        valueFormat:
+          type: "string"
+          minLength: 1
+          pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+            ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+        valueList:
+          $ref: "#/components/schemas/ValueList"
+        value:
+          type: "string"
+          minLength: 1
+          maxLength: 2000
+          pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+            ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+        levelType:
+          $ref: "#/components/schemas/LevelType"
+        modelType:
+          type: "string"
+          default: "DataSpecificationIec61360"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.data_type_iec61360 import DataTypeIec61360"
+      - "from basyxclients.models.part1.lang_string_definition_type_iec61360 import\
+        \ LangStringDefinitionTypeIec61360"
+      - "from basyxclients.models.part1.lang_string_preferred_name_type_iec61360 import\
+        \ LangStringPreferredNameTypeIec61360"
+      - "from basyxclients.models.part1.lang_string_short_name_type_iec61360 import\
+        \ LangStringShortNameTypeIec61360"
+      - "from basyxclients.models.part1.level_type import LevelType"
+      - "from basyxclients.models.part1.reference import Reference"
+      - "from basyxclients.models.part1.value_list import ValueList"
+    DataTypeDefXsd:
+      type: "string"
+      enum:
+      - "xs:anyURI"
+      - "xs:base64Binary"
+      - "xs:boolean"
+      - "xs:byte"
+      - "xs:date"
+      - "xs:dateTime"
+      - "xs:decimal"
+      - "xs:double"
+      - "xs:duration"
+      - "xs:float"
+      - "xs:gDay"
+      - "xs:gMonth"
+      - "xs:gMonthDay"
+      - "xs:gYear"
+      - "xs:gYearMonth"
+      - "xs:hexBinary"
+      - "xs:int"
+      - "xs:integer"
+      - "xs:long"
+      - "xs:negativeInteger"
+      - "xs:nonNegativeInteger"
+      - "xs:nonPositiveInteger"
+      - "xs:positiveInteger"
+      - "xs:short"
+      - "xs:string"
+      - "xs:time"
+      - "xs:unsignedByte"
+      - "xs:unsignedInt"
+      - "xs:unsignedLong"
+      - "xs:unsignedShort"
+    DataTypeIec61360:
+      type: "string"
+      enum:
+      - "BLOB"
+      - "BOOLEAN"
+      - "DATE"
+      - "FILE"
+      - "HTML"
+      - "INTEGER_COUNT"
+      - "INTEGER_CURRENCY"
+      - "INTEGER_MEASURE"
+      - "IRDI"
+      - "IRI"
+      - "RATIONAL"
+      - "RATIONAL_MEASURE"
+      - "REAL_COUNT"
+      - "REAL_CURRENCY"
+      - "REAL_MEASURE"
+      - "STRING"
+      - "STRING_TRANSLATABLE"
+      - "TIME"
+      - "TIMESTAMP"
+    Direction:
+      type: "string"
+      enum:
+      - "input"
+      - "output"
+    EmbeddedDataSpecification:
+      type: "object"
+      properties:
+        dataSpecification:
+          $ref: "#/components/schemas/Reference"
+        dataSpecificationContent:
+          $ref: "#/components/schemas/DataSpecificationContent"
+      required:
+      - "dataSpecification"
+      - "dataSpecificationContent"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.data_specification_iec61360 import DataSpecificationIec61360"
+      - "from basyxclients.models.part1.reference import Reference"
+    Entity:
+      type: "object"
+      title: "Entity"
+      x-discriminator-value: "Entity"
+      allOf:
+      - $ref: "#/components/schemas/SubmodelElement"
+      - type: "object"
+        properties:
+          statements:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/SubmodelElement_choice"
+            minItems: 1
+          entityType:
+            $ref: "#/components/schemas/EntityType"
+          globalAssetId:
+            type: "string"
+            minLength: 1
+            maxLength: 2000
+          specificAssetIds:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/SpecificAssetId"
+            minItems: 1
+          modelType:
+            type: "string"
+            enum:
+            - "Entity"
+        required:
+        - "entityType"
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.entity_type import EntityType"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+      - "from basyxclients.models.part1.specific_asset_id import SpecificAssetId"
+      - "from basyxclients.models.part1.submodel_element_choice import SubmodelElementChoice"
+    EntityType:
+      type: "string"
+      enum:
+      - "CoManagedEntity"
+      - "SelfManagedEntity"
+    Environment:
+      type: "object"
+      properties:
+        assetAdministrationShells:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/AssetAdministrationShell"
+          minItems: 1
+        submodels:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Submodel"
+          minItems: 1
+        conceptDescriptions:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ConceptDescription"
+          minItems: 1
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.asset_administration_shell import AssetAdministrationShell"
+      - "from basyxclients.models.part1.concept_description import ConceptDescription"
+      - "from basyxclients.models.part1.submodel import Submodel"
+    EventElement:
+      allOf:
+      - $ref: "#/components/schemas/SubmodelElement"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.model_type import ModelType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    EventPayload:
+      type: "object"
+      properties:
+        source:
+          $ref: "#/components/schemas/Reference"
+        sourceSemanticId:
+          $ref: "#/components/schemas/Reference"
+        observableReference:
+          $ref: "#/components/schemas/Reference"
+        observableSemanticId:
+          $ref: "#/components/schemas/Reference"
+        topic:
+          type: "string"
+          minLength: 1
+          maxLength: 255
+        subjectId:
+          $ref: "#/components/schemas/Reference"
+        timeStamp:
+          type: "string"
+          pattern: "^-?(([1-9][0-9][0-9][0-9]+)|(0[0-9][0-9][0-9]))-((0[1-9])|(1[0-2]))-((0[1-9])|([12][0-9])|(3[01]))T(((([01][0-9])|(2[0-3])):[0-5][0-9]:([0-5][0-9])(\\\
+            .[0-9]+)?)|24:00:00(\\.0+)?)(Z|\\+00:00|-00:00)$"
+        payload:
+          type: "string"
+          format: "byte"
+      required:
+      - "source"
+      - "observableReference"
+      - "timeStamp"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.reference import Reference"
+    Extension:
+      allOf:
+      - $ref: "#/components/schemas/HasSemantics"
+      - properties:
+          name:
+            type: "string"
+            minLength: 1
+            maxLength: 128
+            pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+              ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+          valueType:
+            $ref: "#/components/schemas/DataTypeDefXsd"
+          value:
+            type: "string"
+          refersTo:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/Reference"
+            minItems: 1
+        required:
+        - "name"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.data_type_def_xsd import DataTypeDefXsd"
+      - "from basyxclients.models.part1.reference import Reference"
+    File:
+      type: "object"
+      title: "File"
+      x-discriminator-value: "File"
+      allOf:
+      - $ref: "#/components/schemas/DataElement"
+      - type: "object"
+        properties:
+          value:
+            type: "string"
+          contentType:
+            type: "string"
+          modelType:
+            type: "string"
+            enum:
+            - "File"
+        required:
+        - "contentType"
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    HasDataSpecification:
+      type: "object"
+      properties:
+        embeddedDataSpecifications:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/EmbeddedDataSpecification"
+          minItems: 1
+      x-py-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+    HasExtensions:
+      type: "object"
+      properties:
+        extensions:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Extension"
+          minItems: 1
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.extension import Extension"
+    HasKind:
+      type: "object"
+      properties:
+        kind:
+          $ref: "#/components/schemas/ModellingKind"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.modelling_kind import ModellingKind"
+    HasSemantics:
+      type: "object"
+      properties:
+        semanticId:
+          $ref: "#/components/schemas/Reference"
+        supplementalSemanticIds:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Reference"
+          minItems: 1
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.reference import Reference"
+    Identifiable:
+      allOf:
+      - $ref: "#/components/schemas/Referable"
+      - properties:
+          administration:
+            $ref: "#/components/schemas/AdministrativeInformation"
+          id:
+            type: "string"
+            minLength: 1
+            maxLength: 2000
+        required:
+        - "id"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.administrative_information import AdministrativeInformation"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.model_type import ModelType"
+    Key:
+      type: "object"
+      properties:
+        type:
+          $ref: "#/components/schemas/KeyTypes"
+        value:
+          type: "string"
+          minLength: 1
+          maxLength: 2000
+      required:
+      - "type"
+      - "value"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.key_types import KeyTypes"
+    KeyTypes:
+      type: "string"
+      enum:
+      - "AnnotatedRelationshipElement"
+      - "AssetAdministrationShell"
+      - "BasicEventElement"
+      - "Blob"
+      - "Capability"
+      - "ConceptDescription"
+      - "DataElement"
+      - "Entity"
+      - "EventElement"
+      - "File"
+      - "FragmentReference"
+      - "GlobalReference"
+      - "Identifiable"
+      - "MultiLanguageProperty"
+      - "Operation"
+      - "Property"
+      - "Range"
+      - "Referable"
+      - "ReferenceElement"
+      - "RelationshipElement"
+      - "Submodel"
+      - "SubmodelElement"
+      - "SubmodelElementCollection"
+      - "SubmodelElementList"
+    LangStringDefinitionTypeIec61360:
+      allOf:
+      - $ref: "#/components/schemas/AbstractLangString"
+      - properties:
+          text:
+            maxLength: 1023
+            minLength: 1
+            pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+              ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+            type: "string"
+        required:
+        - "text"
+    LangStringNameType:
+      allOf:
+      - $ref: "#/components/schemas/AbstractLangString"
+      - properties:
+          text:
+            maxLength: 128
+            minLength: 1
+            pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+              ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+            type: "string"
+        required:
+        - "text"
+    LangStringPreferredNameTypeIec61360:
+      allOf:
+      - $ref: "#/components/schemas/AbstractLangString"
+      - properties:
+          text:
+            maxLength: 255
+            minLength: 1
+            pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+              ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+            type: "string"
+        required:
+        - "text"
+    LangStringShortNameTypeIec61360:
+      allOf:
+      - $ref: "#/components/schemas/AbstractLangString"
+      - properties:
+          text:
+            maxLength: 18
+            minLength: 1
+            pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+              ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+            type: "string"
+        required:
+        - "text"
+    LangStringTextType:
+      allOf:
+      - $ref: "#/components/schemas/AbstractLangString"
+      - properties:
+          text:
+            maxLength: 1023
+            minLength: 1
+            type: "string"
+            pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+              ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+        required:
+        - "text"
+    LevelType:
+      type: "object"
+      properties:
+        min:
+          type: "boolean"
+        nom:
+          type: "boolean"
+        typ:
+          type: "boolean"
+        max:
+          type: "boolean"
+      required:
+      - "min"
+      - "nom"
+      - "typ"
+      - "max"
+    ModelType:
+      type: "string"
+      enum:
+      - "AnnotatedRelationshipElement"
+      - "AssetAdministrationShell"
+      - "BasicEventElement"
+      - "Blob"
+      - "Capability"
+      - "ConceptDescription"
+      - "DataSpecificationIec61360"
+      - "Entity"
+      - "File"
+      - "MultiLanguageProperty"
+      - "Operation"
+      - "Property"
+      - "Range"
+      - "ReferenceElement"
+      - "RelationshipElement"
+      - "Submodel"
+      - "SubmodelElementCollection"
+      - "SubmodelElementList"
+    ModellingKind:
+      type: "string"
+      enum:
+      - "Instance"
+      - "Template"
+    MultiLanguageProperty:
+      type: "object"
+      title: "MultiLanguageProperty"
+      x-discriminator-value: "MultiLanguageProperty"
+      allOf:
+      - $ref: "#/components/schemas/DataElement"
+      - type: "object"
+        properties:
+          value:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/LangStringTextType"
+            minItems: 1
+          valueId:
+            $ref: "#/components/schemas/Reference"
+          modelType:
+            type: "string"
+            enum:
+            - "MultiLanguageProperty"
+        required:
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    Operation:
+      type: "object"
+      title: "Operation"
+      x-discriminator-value: "Operation"
+      allOf:
+      - $ref: "#/components/schemas/SubmodelElement"
+      - type: "object"
+        properties:
+          inputVariables:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/OperationVariable"
+            minItems: 1
+          outputVariables:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/OperationVariable"
+            minItems: 1
+          inoutputVariables:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/OperationVariable"
+            minItems: 1
+          modelType:
+            type: "string"
+            enum:
+            - "Operation"
+        required:
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.operation_variable import OperationVariable"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    OperationVariable:
+      type: "object"
+      properties:
+        value:
+          $ref: "#/components/schemas/SubmodelElement_choice"
+      required:
+      - "value"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.submodel_element_choice import SubmodelElementChoice"
+    Property:
+      type: "object"
+      title: "Property"
+      x-discriminator-value: "Property"
+      allOf:
+      - $ref: "#/components/schemas/DataElement"
+      - type: "object"
+        properties:
+          valueType:
+            $ref: "#/components/schemas/DataTypeDefXsd"
+          value:
+            type: "string"
+          valueId:
+            $ref: "#/components/schemas/Reference"
+          modelType:
+            type: "string"
+            enum:
+            - "Property"
+        required:
+        - "valueType"
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.data_type_def_xsd import DataTypeDefXsd"
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    Qualifiable:
+      type: "object"
+      properties:
+        qualifiers:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Qualifier"
+          minItems: 1
+        modelType:
+          $ref: "#/components/schemas/ModelType"
+      required:
+      - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.model_type import ModelType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+    Qualifier:
+      allOf:
+      - $ref: "#/components/schemas/HasSemantics"
+      - properties:
+          kind:
+            $ref: "#/components/schemas/QualifierKind"
+          type:
+            type: "string"
+            minLength: 1
+            maxLength: 128
+          valueType:
+            $ref: "#/components/schemas/DataTypeDefXsd"
+          value:
+            type: "string"
+          valueId:
+            $ref: "#/components/schemas/Reference"
+        required:
+        - "type"
+        - "valueType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.data_type_def_xsd import DataTypeDefXsd"
+      - "from basyxclients.models.part1.qualifier_kind import QualifierKind"
+      - "from basyxclients.models.part1.reference import Reference"
+    QualifierKind:
+      type: "string"
+      enum:
+      - "ConceptQualifier"
+      - "TemplateQualifier"
+      - "ValueQualifier"
+    Range:
+      type: "object"
+      title: "Range"
+      x-discriminator-value: "Range"
+      allOf:
+      - $ref: "#/components/schemas/DataElement"
+      - type: "object"
+        properties:
+          valueType:
+            $ref: "#/components/schemas/DataTypeDefXsd"
+          min:
+            type: "string"
+          max:
+            type: "string"
+          modelType:
+            type: "string"
+            enum:
+            - "Range"
+        required:
+        - "valueType"
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.data_type_def_xsd import DataTypeDefXsd"
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    Referable:
+      allOf:
+      - $ref: "#/components/schemas/HasExtensions"
+      - properties:
+          category:
+            type: "string"
+            minLength: 1
+            maxLength: 128
+          idShort:
+            type: "string"
+            minLength: 1
+            maxLength: 128
+            pattern: "^[a-zA-Z][a-zA-Z0-9_]*$"
+          displayName:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/LangStringNameType"
+            minItems: 1
+          description:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/LangStringTextType"
+            minItems: 1
+          modelType:
+            $ref: "#/components/schemas/ModelType"
+        required:
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.model_type import ModelType"
+    Reference:
+      allOf:
+      - $ref: "#/components/schemas/ReferenceParent"
+      - properties:
+          referredSemanticId:
+            $ref: "#/components/schemas/ReferenceParent"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.key import Key"
+      - "from basyxclients.models.part1.reference_parent import ReferenceParent"
+      - "from basyxclients.models.part1.reference_types import ReferenceTypes"
+    ReferenceParent:
+      type: "object"
+      properties:
+        type:
+          $ref: "#/components/schemas/ReferenceTypes"
+        keys:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Key"
+          minItems: 1
+      required:
+      - "type"
+      - "keys"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.key import Key"
+      - "from basyxclients.models.part1.reference_types import ReferenceTypes"
+    ReferenceElement:
+      type: "object"
+      title: "ReferenceElement"
+      x-discriminator-value: "ReferenceElement"
+      allOf:
+      - $ref: "#/components/schemas/DataElement"
+      - type: "object"
+        properties:
+          value:
+            $ref: "#/components/schemas/Reference"
+          modelType:
+            type: "string"
+            enum:
+            - "ReferenceElement"
+        required:
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    ReferenceTypes:
+      type: "string"
+      enum:
+      - "ExternalReference"
+      - "ModelReference"
+    RelationshipElement:
+      type: "object"
+      title: "RelationshipElement"
+      x-discriminator-value: "RelationshipElement"
+      allOf:
+      - $ref: "#/components/schemas/RelationshipElement_abstract"
+      - type: "object"
+        properties:
+          modelType:
+            type: "string"
+            enum:
+            - "RelationshipElement"
+        required:
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    RelationshipElement_abstract:
+      allOf:
+      - $ref: "#/components/schemas/SubmodelElement"
+      - properties:
+          first:
+            $ref: "#/components/schemas/Reference"
+          second:
+            $ref: "#/components/schemas/Reference"
+        required:
+        - "first"
+        - "second"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.model_type import ModelType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    RelationshipElement_choice:
+      oneOf:
+      - $ref: "#/components/schemas/RelationshipElement"
+      - $ref: "#/components/schemas/AnnotatedRelationshipElement"
+      discriminator:
+        propertyName: "modelType"
+        mapping:
+          RelationshipElement: "#/components/schemas/RelationshipElement"
+          AnnotatedRelationshipElement: "#/components/schemas/AnnotatedRelationshipElement"
+      x-discriminator-children:
+      - discriminatorValue: "RelationshipElement"
+        className: "RelationshipElement"
+      - discriminatorValue: "AnnotatedRelationshipElement"
+        className: "AnnotatedRelationshipElement"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.annotated_relationship_element import AnnotatedRelationshipElement"
+      - "from basyxclients.models.part1.basic_event_element import BasicEventElement"
+      - "from basyxclients.models.part1.blob import Blob"
+      - "from basyxclients.models.part1.capability import Capability"
+      - "from basyxclients.models.part1.file import File"
+      - "from basyxclients.models.part1.model_property import ModelProperty"
+      - "from basyxclients.models.part1.multi_language_property import MultiLanguageProperty"
+      - "from basyxclients.models.part1.range import Range"
+      - "from basyxclients.models.part1.reference_element import ReferenceElement"
+      - "from basyxclients.models.part1.relationship_element import RelationshipElement"
+      - "from basyxclients.models.part1.submodel_element_collection import SubmodelElementCollection"
+      - "from basyxclients.models.part1.submodel_element_list import SubmodelElementList"
+      - "from basyxclients.models.part1.operation import Operation"
+      - "from basyxclients.models.part1.entity import Entity"
+    Resource:
+      type: "object"
+      properties:
+        path:
+          type: "string"
+          minLength: 1
+          maxLength: 2000
+        contentType:
+          type: "string"
+          minLength: 1
+          maxLength: 100
+          pattern: "^([!#$%&'*+\\-.^_`|~0-9a-zA-Z])+/([!#$%&'*+\\-.^_`|~0-9a-zA-Z])+([\
+            \ \\t]*;[ \\t]*([!#$%&'*+\\-.^_`|~0-9a-zA-Z])+=(([!#$%&'*+\\-.^_`|~0-9a-zA-Z])+|\"\
+            (([\\t !#-\\[\\]-~]|[\x80-ÿ])|\\\\([\\t !-~]|[\x80-ÿ]))*\"))*$"
+      required:
+      - "path"
+    SpecificAssetId:
+      allOf:
+      - $ref: "#/components/schemas/HasSemantics"
+      - properties:
+          name:
+            type: "string"
+            minLength: 1
+            maxLength: 64
+            pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+              ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+          value:
+            type: "string"
+            minLength: 1
+            maxLength: 2000
+            pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+              ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+          externalSubjectId:
+            $ref: "#/components/schemas/Reference"
+        required:
+        - "name"
+        - "value"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.reference import Reference"
+    StateOfEvent:
+      type: "string"
+      enum:
+      - "off"
+      - "on"
+    Submodel:
+      allOf:
+      - $ref: "#/components/schemas/Identifiable"
+      - $ref: "#/components/schemas/HasKind"
+      - $ref: "#/components/schemas/HasSemantics"
+      - $ref: "#/components/schemas/Qualifiable"
+      - $ref: "#/components/schemas/HasDataSpecification"
+      - properties:
+          submodelElements:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/SubmodelElement_choice"
+            minItems: 1
+          modelType:
+            type: "string"
+            pattern: "Submodel"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.administrative_information import AdministrativeInformation"
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.modelling_kind import ModellingKind"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+      - "from basyxclients.models.part1.submodel_element_choice import SubmodelElementChoice"
+    SubmodelElement:
+      allOf:
+      - $ref: "#/components/schemas/Referable"
+      - $ref: "#/components/schemas/HasSemantics"
+      - $ref: "#/components/schemas/Qualifiable"
+      - $ref: "#/components/schemas/HasDataSpecification"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.model_type import ModelType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+      - "from basyxclients.models.part1.data_type_def_xsd import DataTypeDefXsd"
+    SubmodelElementCollection:
+      type: "object"
+      title: "SubmodelElementCollection"
+      x-discriminator-value: "SubmodelElementCollection"
+      allOf:
+      - $ref: "#/components/schemas/SubmodelElement"
+      - type: "object"
+        properties:
+          value:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/SubmodelElement_choice"
+            minItems: 1
+          modelType:
+            type: "string"
+            enum:
+            - "SubmodelElementCollection"
+        required:
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.submodel_element_choice import SubmodelElementChoice"
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+    SubmodelElementList:
+      type: "object"
+      title: "SubmodelElementList"
+      x-discriminator-value: "SubmodelElementList"
+      allOf:
+      - $ref: "#/components/schemas/SubmodelElement"
+      - type: "object"
+        properties:
+          orderRelevant:
+            type: "boolean"
+          semanticIdListElement:
+            $ref: "#/components/schemas/Reference"
+          typeValueListElement:
+            $ref: "#/components/schemas/AasSubmodelElements"
+          valueTypeListElement:
+            $ref: "#/components/schemas/DataTypeDefXsd"
+          value:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/SubmodelElement_choice"
+            minItems: 1
+          modelType:
+            type: "string"
+            enum:
+            - "SubmodelElementList"
+        required:
+        - "typeValueListElement"
+        - "modelType"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.aas_submodel_elements import AasSubmodelElements"
+      - "from basyxclients.models.part1.data_type_def_xsd import DataTypeDefXsd"
+      - "from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification"
+      - "from basyxclients.models.part1.extension import Extension"
+      - "from basyxclients.models.part1.lang_string_name_type import LangStringNameType"
+      - "from basyxclients.models.part1.lang_string_text_type import LangStringTextType"
+      - "from basyxclients.models.part1.qualifier import Qualifier"
+      - "from basyxclients.models.part1.reference import Reference"
+      - "from basyxclients.models.part1.submodel_element_choice import SubmodelElementChoice"
+    SubmodelElement_choice:
+      oneOf:
+      - $ref: "#/components/schemas/RelationshipElement"
+      - $ref: "#/components/schemas/AnnotatedRelationshipElement"
+      - $ref: "#/components/schemas/BasicEventElement"
+      - $ref: "#/components/schemas/Blob"
+      - $ref: "#/components/schemas/Capability"
+      - $ref: "#/components/schemas/Entity"
+      - $ref: "#/components/schemas/File"
+      - $ref: "#/components/schemas/MultiLanguageProperty"
+      - $ref: "#/components/schemas/Operation"
+      - $ref: "#/components/schemas/Property"
+      - $ref: "#/components/schemas/Range"
+      - $ref: "#/components/schemas/ReferenceElement"
+      - $ref: "#/components/schemas/SubmodelElementCollection"
+      - $ref: "#/components/schemas/SubmodelElementList"
+      discriminator:
+        propertyName: "modelType"
+        mapping:
+          RelationshipElement: "#/components/schemas/RelationshipElement"
+          AnnotatedRelationshipElement: "#/components/schemas/AnnotatedRelationshipElement"
+          BasicEventElement: "#/components/schemas/BasicEventElement"
+          Blob: "#/components/schemas/Blob"
+          Capability: "#/components/schemas/Capability"
+          Entity: "#/components/schemas/Entity"
+          File: "#/components/schemas/File"
+          MultiLanguageProperty: "#/components/schemas/MultiLanguageProperty"
+          Operation: "#/components/schemas/Operation"
+          Property: "#/components/schemas/Property"
+          Range: "#/components/schemas/Range"
+          ReferenceElement: "#/components/schemas/ReferenceElement"
+          SubmodelElementCollection: "#/components/schemas/SubmodelElementCollection"
+          SubmodelElementList: "#/components/schemas/SubmodelElementList"
+      x-discriminator-children:
+      - discriminatorValue: "RelationshipElement"
+        className: "RelationshipElement"
+      - discriminatorValue: "AnnotatedRelationshipElement"
+        className: "AnnotatedRelationshipElement"
+      - discriminatorValue: "BasicEventElement"
+        className: "BasicEventElement"
+      - discriminatorValue: "Blob"
+        className: "Blob"
+      - discriminatorValue: "Capability"
+        className: "Capability"
+      - discriminatorValue: "Entity"
+        className: "Entity"
+      - discriminatorValue: "File"
+        className: "File"
+      - discriminatorValue: "MultiLanguageProperty"
+        className: "MultiLanguageProperty"
+      - discriminatorValue: "Operation"
+        className: "Operation"
+      - discriminatorValue: "Property"
+        className: "ModelProperty"
+      - discriminatorValue: "Range"
+        className: "Range"
+      - discriminatorValue: "ReferenceElement"
+        className: "ReferenceElement"
+      - discriminatorValue: "SubmodelElementCollection"
+        className: "SubmodelElementCollection"
+      - discriminatorValue: "SubmodelElementList"
+        className: "SubmodelElementList"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.annotated_relationship_element import AnnotatedRelationshipElement"
+      - "from basyxclients.models.part1.basic_event_element import BasicEventElement"
+      - "from basyxclients.models.part1.blob import Blob"
+      - "from basyxclients.models.part1.capability import Capability"
+      - "from basyxclients.models.part1.file import File"
+      - "from basyxclients.models.part1.model_property import ModelProperty"
+      - "from basyxclients.models.part1.multi_language_property import MultiLanguageProperty"
+      - "from basyxclients.models.part1.range import Range"
+      - "from basyxclients.models.part1.reference_element import ReferenceElement"
+      - "from basyxclients.models.part1.relationship_element import RelationshipElement"
+      - "from basyxclients.models.part1.entity import Entity"
+      - "from basyxclients.models.part1.operation import Operation"
+      - "from basyxclients.models.part1.model_property import ModelProperty"
+      - "from basyxclients.models.part1.submodel_element_collection import SubmodelElementCollection"
+      - "from basyxclients.models.part1.submodel_element_list import SubmodelElementList"
+    ValueList:
+      type: "object"
+      properties:
+        valueReferencePairs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ValueReferencePair"
+          minItems: 1
+      required:
+      - "valueReferencePairs"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.value_reference_pair import ValueReferencePair"
+    ValueReferencePair:
+      type: "object"
+      properties:
+        value:
+          type: "string"
+          minLength: 1
+          maxLength: 2000
+          pattern: "^([\\t\\n\\r -\\ud7ff\\ue000-\\ufffd]|\\ud800[\\udc00-\\udfff]|[\\\
+            ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
+        valueId:
+          $ref: "#/components/schemas/Reference"
+      required:
+      - "value"
+      - "valueId"
+      x-py-model-imports: []
+      x-py-postponed-model-imports:
+      - "from basyxclients.models.part1.reference import Reference"
+paths: {}

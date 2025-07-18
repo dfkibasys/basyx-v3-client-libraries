@@ -21,11 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.administrative_information import AdministrativeInformation
-from basyxclients.models.part1.extension import Extension
-from basyxclients.models.part1.lang_string_name_type import LangStringNameType
-from basyxclients.models.part1.lang_string_text_type import LangStringTextType
-from basyxclients.models.part1.model_type import ModelType
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -95,23 +90,23 @@ class Identifiable(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in extensions (list)
         _items = []
         if self.extensions:
-            for _item in self.extensions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_extensions in self.extensions:
+                if _item_extensions:
+                    _items.append(_item_extensions.to_dict())
             _dict['extensions'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in display_name (list)
         _items = []
         if self.display_name:
-            for _item in self.display_name:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_display_name in self.display_name:
+                if _item_display_name:
+                    _items.append(_item_display_name.to_dict())
             _dict['displayName'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in description (list)
         _items = []
         if self.description:
-            for _item in self.description:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_description in self.description:
+                if _item_description:
+                    _items.append(_item_description.to_dict())
             _dict['description'] = _items
         # override the default output from pydantic by calling `to_dict()` of administration
         if self.administration:
@@ -139,4 +134,11 @@ class Identifiable(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.administrative_information import AdministrativeInformation
+from basyxclients.models.part1.extension import Extension
+from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+from basyxclients.models.part1.model_type import ModelType
+# TODO: Rewrite to not use raise_errors
+Identifiable.model_rebuild(raise_errors=False)
 

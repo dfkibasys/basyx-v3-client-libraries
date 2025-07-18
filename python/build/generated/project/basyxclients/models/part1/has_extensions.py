@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.extension import Extension
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -74,9 +73,9 @@ class HasExtensions(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in extensions (list)
         _items = []
         if self.extensions:
-            for _item in self.extensions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_extensions in self.extensions:
+                if _item_extensions:
+                    _items.append(_item_extensions.to_dict())
             _dict['extensions'] = _items
         return _dict
 
@@ -94,4 +93,7 @@ class HasExtensions(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.extension import Extension
+# TODO: Rewrite to not use raise_errors
+HasExtensions.model_rebuild(raise_errors=False)
 

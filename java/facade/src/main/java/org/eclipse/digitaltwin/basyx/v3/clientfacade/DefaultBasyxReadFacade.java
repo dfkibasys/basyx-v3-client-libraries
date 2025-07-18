@@ -202,12 +202,18 @@ class DefaultBasyxReadFacade implements BasyxReadFacade {
 	}
 
 	private Optional<Submodel> fetchSubmodelById(String id) {
-		SubmodelDescriptor descriptor = smRegistryApi.getSubmodelDescriptorById(id);
-		return endpointResolver.resolveSubmodel(apiManager.getMapper(), descriptor.getEndpoints(), this::fetchSubmodelById);
+		try {
+			SubmodelDescriptor descriptor = smRegistryApi.getSubmodelDescriptorById(id);
+			return endpointResolver.resolveSubmodel(apiManager.getMapper(), descriptor.getEndpoints(), this::fetchSubmodelById);
+		} catch (ApiException ex) {
+			if (ex.getCode() == HttpStatus.SC_NOT_FOUND) {
+				return Optional.empty();
+			}
+			throw ex;
+		}
 	}
 
 	private Optional<Submodel> fetchSubmodelById(String baseUrl, String id) {
-		//
 		SubmodelRepositoryApi repoApi = apiManager.getSubmodelRepositoryApi(baseUrl);
 		try {
 			return Optional.of(repoApi.getSubmodel(id, null, null));
@@ -262,8 +268,15 @@ class DefaultBasyxReadFacade implements BasyxReadFacade {
 	}
 
 	private Optional<AssetAdministrationShell> fetchShellById(String id) {
-		AssetAdministrationShellDescriptor descriptor = aasRegistryApi.getAssetAdministrationShellDescriptor(id);
-		return endpointResolver.resolveShell(apiManager.getMapper(), descriptor.getEndpoints(), this::fetchShellById);
+		try {
+			AssetAdministrationShellDescriptor descriptor = aasRegistryApi.getAssetAdministrationShellDescriptor(id);
+			return endpointResolver.resolveShell(apiManager.getMapper(), descriptor.getEndpoints(), this::fetchShellById);
+		} catch (ApiException ex) {
+			if (ex.getCode() == HttpStatus.SC_NOT_FOUND) {
+				return Optional.empty();
+			}
+			throw ex;
+		}
 	}
 
 	private Optional<AssetAdministrationShell> fetchShellById(String baseUrl, String id) {

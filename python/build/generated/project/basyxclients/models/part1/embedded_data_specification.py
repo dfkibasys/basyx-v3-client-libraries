@@ -20,8 +20,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
-from basyxclients.models.part1.data_specification_content import DataSpecificationContent
-from basyxclients.models.part1.reference import Reference
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +28,7 @@ class EmbeddedDataSpecification(BaseModel):
     EmbeddedDataSpecification
     """ # noqa: E501
     data_specification: Reference = Field(alias="dataSpecification")
-    data_specification_content: DataSpecificationContent = Field(alias="dataSpecificationContent")
+    data_specification_content: DataSpecificationIec61360 = Field(alias="dataSpecificationContent")
     __properties: ClassVar[List[str]] = ["dataSpecification", "dataSpecificationContent"]
 
     model_config = ConfigDict(
@@ -91,8 +89,13 @@ class EmbeddedDataSpecification(BaseModel):
 
         _obj = cls.model_validate({
             "dataSpecification": Reference.from_dict(obj["dataSpecification"]) if obj.get("dataSpecification") is not None else None,
-            "dataSpecificationContent": DataSpecificationContent.from_dict(obj["dataSpecificationContent"]) if obj.get("dataSpecificationContent") is not None else None
+            "dataSpecificationContent": DataSpecificationIec61360.from_dict(obj["dataSpecificationContent"]) if obj.get("dataSpecificationContent") is not None else None
         })
         return _obj
 
+from basyxclients.models.part1.embedded_data_specification import EmbeddedDataSpecification
+from basyxclients.models.part1.data_specification_iec61360 import DataSpecificationIec61360
+from basyxclients.models.part1.reference import Reference
+# TODO: Rewrite to not use raise_errors
+EmbeddedDataSpecification.model_rebuild(raise_errors=False)
 

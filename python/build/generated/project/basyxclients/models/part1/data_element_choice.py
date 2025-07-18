@@ -18,14 +18,8 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from basyxclients.models.part1.blob import Blob
-from basyxclients.models.part1.file import File
-from basyxclients.models.part1.model_property import ModelProperty
-from basyxclients.models.part1.multi_language_property import MultiLanguageProperty
-from basyxclients.models.part1.range import Range
-from basyxclients.models.part1.reference_element import ReferenceElement
 from pydantic import StrictStr, Field
-from typing import Union, List, Optional, Dict
+from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 DATAELEMENTCHOICE_ONE_OF_SCHEMAS = ["Blob", "File", "ModelProperty", "MultiLanguageProperty", "Range", "ReferenceElement"]
@@ -47,13 +41,21 @@ class DataElementChoice(BaseModel):
     # data type: ReferenceElement
     oneof_schema_6_validator: Optional[ReferenceElement] = None
     actual_instance: Optional[Union[Blob, File, ModelProperty, MultiLanguageProperty, Range, ReferenceElement]] = None
-    one_of_schemas: List[str] = Field(default=Literal["Blob", "File", "ModelProperty", "MultiLanguageProperty", "Range", "ReferenceElement"])
+    one_of_schemas: Set[str] = { "Blob", "File", "ModelProperty", "MultiLanguageProperty", "Range", "ReferenceElement" }
 
     model_config = ConfigDict(
         validate_assignment=True,
         protected_namespaces=(),
     )
 
+    discriminator_value_class_map: Dict[str, str] = {
+        'Blob': 'Blob',
+        'File': 'File',
+        'MultiLanguageProperty': 'MultiLanguageProperty',
+        'Property': 'ModelProperty',
+        'Range': 'Range',
+        'ReferenceElement': 'ReferenceElement'
+    }
 
     def __init__(self, *args, **kwargs) -> None:
         if args:
@@ -119,6 +121,41 @@ class DataElementChoice(BaseModel):
         instance = cls.model_construct()
         error_messages = []
         match = 0
+
+        # use oneOf discriminator to lookup the data type
+        _data_type = json.loads(json_str).get("modelType")
+        if not _data_type:
+            raise ValueError("Failed to lookup data type from the field `modelType` in the input.")
+
+        # check if data type is `Blob`
+        if _data_type == "Blob":
+            instance.actual_instance = Blob.from_json(json_str)
+            return instance
+
+        # check if data type is `File`
+        if _data_type == "File":
+            instance.actual_instance = File.from_json(json_str)
+            return instance
+
+        # check if data type is `MultiLanguageProperty`
+        if _data_type == "MultiLanguageProperty":
+            instance.actual_instance = MultiLanguageProperty.from_json(json_str)
+            return instance
+
+        # check if data type is `ModelProperty`
+        if _data_type == "Property":
+            instance.actual_instance = ModelProperty.from_json(json_str)
+            return instance
+
+        # check if data type is `Range`
+        if _data_type == "Range":
+            instance.actual_instance = Range.from_json(json_str)
+            return instance
+
+        # check if data type is `ReferenceElement`
+        if _data_type == "ReferenceElement":
+            instance.actual_instance = ReferenceElement.from_json(json_str)
+            return instance
 
         # deserialize data into Blob
         try:
@@ -191,4 +228,12 @@ class DataElementChoice(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
+from basyxclients.models.part1.blob import Blob
+from basyxclients.models.part1.file import File
+from basyxclients.models.part1.model_property import ModelProperty
+from basyxclients.models.part1.multi_language_property import MultiLanguageProperty
+from basyxclients.models.part1.range import Range
+from basyxclients.models.part1.reference_element import ReferenceElement
+# TODO: Rewrite to not use raise_errors
+DataElementChoice.model_rebuild(raise_errors=False)
 

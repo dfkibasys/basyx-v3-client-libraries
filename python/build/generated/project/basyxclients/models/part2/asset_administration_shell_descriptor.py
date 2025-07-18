@@ -21,14 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.administrative_information import AdministrativeInformation
-from basyxclients.models.part1.asset_kind import AssetKind
-from basyxclients.models.part2.endpoint import Endpoint
-from basyxclients.models.part1.extension import Extension
-from basyxclients.models.part1.lang_string_name_type import LangStringNameType
-from basyxclients.models.part1.lang_string_text_type import LangStringTextType
-from basyxclients.models.part1.specific_asset_id import SpecificAssetId
-from basyxclients.models.part2.submodel_descriptor import SubmodelDescriptor
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -119,23 +111,23 @@ class AssetAdministrationShellDescriptor(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in description (list)
         _items = []
         if self.description:
-            for _item in self.description:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_description in self.description:
+                if _item_description:
+                    _items.append(_item_description.to_dict())
             _dict['description'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in display_name (list)
         _items = []
         if self.display_name:
-            for _item in self.display_name:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_display_name in self.display_name:
+                if _item_display_name:
+                    _items.append(_item_display_name.to_dict())
             _dict['displayName'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in extensions (list)
         _items = []
         if self.extensions:
-            for _item in self.extensions:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_extensions in self.extensions:
+                if _item_extensions:
+                    _items.append(_item_extensions.to_dict())
             _dict['extensions'] = _items
         # override the default output from pydantic by calling `to_dict()` of administration
         if self.administration:
@@ -143,23 +135,23 @@ class AssetAdministrationShellDescriptor(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in endpoints (list)
         _items = []
         if self.endpoints:
-            for _item in self.endpoints:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_endpoints in self.endpoints:
+                if _item_endpoints:
+                    _items.append(_item_endpoints.to_dict())
             _dict['endpoints'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in specific_asset_ids (list)
         _items = []
         if self.specific_asset_ids:
-            for _item in self.specific_asset_ids:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_specific_asset_ids in self.specific_asset_ids:
+                if _item_specific_asset_ids:
+                    _items.append(_item_specific_asset_ids.to_dict())
             _dict['specificAssetIds'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in submodel_descriptors (list)
         _items = []
         if self.submodel_descriptors:
-            for _item in self.submodel_descriptors:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_submodel_descriptors in self.submodel_descriptors:
+                if _item_submodel_descriptors:
+                    _items.append(_item_submodel_descriptors.to_dict())
             _dict['submodelDescriptors'] = _items
         return _dict
 
@@ -188,4 +180,14 @@ class AssetAdministrationShellDescriptor(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.administrative_information import AdministrativeInformation
+from basyxclients.models.part1.asset_kind import AssetKind
+from basyxclients.models.part2.endpoint import Endpoint
+from basyxclients.models.part1.extension import Extension
+from basyxclients.models.part1.lang_string_name_type import LangStringNameType
+from basyxclients.models.part1.lang_string_text_type import LangStringTextType
+from basyxclients.models.part1.specific_asset_id import SpecificAssetId
+from basyxclients.models.part2.submodel_descriptor import SubmodelDescriptor
+# TODO: Rewrite to not use raise_errors
+AssetAdministrationShellDescriptor.model_rebuild(raise_errors=False)
 

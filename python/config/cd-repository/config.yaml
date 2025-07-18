@@ -1,4 +1,6 @@
+useOneOfDiscriminatorLookup: true
 additionalProperties:
+  useOneOfDiscriminatorLookup: true
   imports:
   - import: from basyxclients.models.part1.concept_description import ConceptDescription
   - import: from basyxclients.models.part2.get_concept_descriptions_result import GetConceptDescriptionsResult

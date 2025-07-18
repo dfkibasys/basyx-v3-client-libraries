@@ -6,7 +6,7 @@
 
         {{#allParams}}
         :param {{paramName}}:{{#description}} {{{.}}}{{/description}}{{#required}} (required){{/required}}{{#optional}}(optional){{/optional}}
-        :type {{paramName}}: {{dataType}}{{#optional}}, optional{{/optional}}
+        :type {{paramName}}: {{#vendorExtensions.x-utf8-base64-url-encoded-json-as-string}}str{{/vendorExtensions.x-utf8-base64-url-encoded-json-as-string}}{{^vendorExtensions.x-utf8-base64-url-encoded-json-as-string}}{{dataType}}{{/vendorExtensions.x-utf8-base64-url-encoded-json-as-string}}{{#optional}}, optional{{/optional}}
         {{/allParams}}
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

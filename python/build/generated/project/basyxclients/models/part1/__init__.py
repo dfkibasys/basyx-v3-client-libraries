@@ -28,7 +28,6 @@ from basyxclients.models.part1.capability import Capability
 from basyxclients.models.part1.concept_description import ConceptDescription
 from basyxclients.models.part1.data_element import DataElement
 from basyxclients.models.part1.data_element_choice import DataElementChoice
-from basyxclients.models.part1.data_specification_content import DataSpecificationContent
 from basyxclients.models.part1.data_specification_iec61360 import DataSpecificationIec61360
 from basyxclients.models.part1.data_type_def_xsd import DataTypeDefXsd
 from basyxclients.models.part1.data_type_iec61360 import DataTypeIec61360

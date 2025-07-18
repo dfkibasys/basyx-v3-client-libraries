@@ -134,6 +134,8 @@
   path: /components/schemas/LangStringTextType/allOf/1/required
   value:  
   - text
+- op: remove
+  path: /components/schemas/AssetAdministrationShell/allOf/2/properties/submodels/items/type
 - op: add
   path: /components/schemas/LangStringTextType/allOf/1/properties/text/minLength
   value: 1
@@ -163,6 +165,9 @@
   path: /paths
   value: {}
 
+
+
+
 - op: add
   path: /components/schemas/SubmodelElement_choice/discriminator
   value:
@@ -182,6 +187,25 @@
       ReferenceElement: '#/components/schemas/ReferenceElement'
       SubmodelElementCollection: '#/components/schemas/SubmodelElementCollection'
       SubmodelElementList: '#/components/schemas/SubmodelElementList'
+- op: add
+  path: /components/schemas/DataElement_choice/discriminator
+  value:
+    propertyName: modelType
+    mapping:
+      Blob: '#/components/schemas/Blob'
+      File: '#/components/schemas/File'
+      MultiLanguageProperty: '#/components/schemas/MultiLanguageProperty'
+      Property: '#/components/schemas/Property'
+      Range: '#/components/schemas/Range'
+      ReferenceElement: '#/components/schemas/ReferenceElement'
+
+- op: add
+  path: /components/schemas/RelationshipElement_choice/discriminator
+  value:
+    propertyName: modelType
+    mapping:
+      RelationshipElement: '#/components/schemas/RelationshipElement'
+      AnnotatedRelationshipElement: '#/components/schemas/AnnotatedRelationshipElement'
 
 # # Remove patterns pattern because of entity in yaml patch plugin
 
@@ -232,3 +256,7 @@
   path: /components/schemas/Resource/properties/contentType/pattern
 - op: remove
   path: /components/schemas/Resource/properties/contentType/allOf
+
+# for now we remove it, the server because the server side does not add a file:// prefix we do not want to validate it on client side for now
+- op: remove
+  path: /components/schemas/Resource/properties/path/pattern

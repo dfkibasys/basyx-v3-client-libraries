@@ -37,11 +37,13 @@ from basyxclients.models.part2.submodel_element_metadata import SubmodelElementM
 from basyxclients.models.part2.submodel_element_value import SubmodelElementValue
 from basyxclients.models.part2.submodel_metadata import SubmodelMetadata
 from basyxclients.models.part2.submodel_value import SubmodelValue
+from basyxclients.models.part1.operation_variable import OperationVariable
 
 from basyxclients.api_client import ApiClient, RequestSerialized
 from basyxclients.api_response import ApiResponse
 from basyxclients.rest import RESTResponseType
 
+import base64
 from base64 import urlsafe_b64encode
 
 class AssetAdministrationShellServiceApi:
@@ -105,11 +107,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__delete_file_by_path (
         submodel_identifier,
         id_short_path,
@@ -123,7 +121,9 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __delete_file_by_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
         _request_timeout: Union[
             None,
@@ -183,6 +183,67 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Deletes file content of an existing submodel element at a specified path within submodel elements hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__delete_file_by_path_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __delete_file_by_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._delete_file_by_path_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -200,70 +261,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__delete_file_by_path_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __delete_file_by_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Deletes file content of an existing submodel element at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -273,61 +270,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def delete_file_by_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Deletes file content of an existing submodel element at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _delete_file_by_path_serialize(
         self,
@@ -437,11 +379,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__delete_submodel_by_id (
         submodel_identifier,
         _request_timeout,
@@ -454,6 +392,7 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __delete_submodel_by_id(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
             None,
@@ -511,6 +450,62 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Deletes the submodel from the Asset Administration Shell.
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__delete_submodel_by_id_with_http_info (
+            submodel_identifier,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __delete_submodel_by_id_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._delete_submodel_by_id_serialize(
             submodel_identifier=submodel_identifier,
             _request_auth=_request_auth,
@@ -527,66 +522,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__delete_submodel_by_id_with_http_info (self,
-            submodel_identifier,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __delete_submodel_by_id_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Deletes the submodel from the Asset Administration Shell.
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -596,58 +531,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def delete_submodel_by_id_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Deletes the submodel from the Asset Administration Shell.
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _delete_submodel_by_id_serialize(
         self,
@@ -757,11 +640,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__delete_submodel_element_by_path (
         submodel_identifier,
         id_short_path,
@@ -775,7 +654,9 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __delete_submodel_element_by_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
         _request_timeout: Union[
             None,
@@ -835,6 +716,67 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Deletes a submodel element at a specified path within the submodel elements hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__delete_submodel_element_by_path_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __delete_submodel_element_by_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._delete_submodel_element_by_path_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -852,70 +794,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__delete_submodel_element_by_path_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __delete_submodel_element_by_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Deletes a submodel element at a specified path within the submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -925,61 +803,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def delete_submodel_element_by_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Deletes a submodel element at a specified path within the submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _delete_submodel_element_by_path_serialize(
         self,
@@ -1089,11 +912,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__delete_submodel_reference_by_id (
         submodel_identifier,
         _request_timeout,
@@ -1106,6 +925,7 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __delete_submodel_reference_by_id(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
             None,
@@ -1163,6 +983,62 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Deletes the submodel reference from the Asset Administration Shell. Does not delete the submodel itself!
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__delete_submodel_reference_by_id_with_http_info (
+            submodel_identifier,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __delete_submodel_reference_by_id_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._delete_submodel_reference_by_id_serialize(
             submodel_identifier=submodel_identifier,
             _request_auth=_request_auth,
@@ -1179,66 +1055,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__delete_submodel_reference_by_id_with_http_info (self,
-            submodel_identifier,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __delete_submodel_reference_by_id_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Deletes the submodel reference from the Asset Administration Shell. Does not delete the submodel itself!
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -1248,58 +1064,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def delete_submodel_reference_by_id_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Deletes the submodel reference from the Asset Administration Shell. Does not delete the submodel itself!
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _delete_submodel_reference_by_id_serialize(
         self,
@@ -1468,23 +1232,32 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        _param = self._delete_thumbnail_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
+        """delete_thumbnail
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
-            '400': "Result",
-            '401': "Result",
-            '403': "Result",
-            '404': "Result",
-            '500': "Result",
-        }
 
-        return self.__delete_thumbnail_with_http_info (self,
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__delete_thumbnail_with_http_info (
             _request_timeout,
             _request_auth,
             _content_type,
@@ -1509,31 +1282,21 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """delete_thumbnail
+        _param = self._delete_thumbnail_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
 
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': None,
+            '400': "Result",
+            '401': "Result",
+            '403': "Result",
+            '404': "Result",
+            '500': "Result",
+        }
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -1543,55 +1306,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def delete_thumbnail_without_preload_content(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """delete_thumbnail
-
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _delete_thumbnail_serialize(
         self,
@@ -1715,8 +1429,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __generate_serialization_by_ids(
         self,
+
         aas_ids: Annotated[Optional[List[StrictStr]], Field(description="The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)")] = None,
+
         submodel_ids: Annotated[Optional[List[StrictStr]], Field(description="The Submodels' unique ids (UTF8-BASE64-URL-encoded)")] = None,
+
         include_concept_descriptions: Annotated[Optional[StrictBool], Field(description="Include Concept Descriptions?")] = None,
         _request_timeout: Union[
             None,
@@ -1778,6 +1495,71 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[bytearray]:
+        """Returns an appropriate serialization based on the specified format (see SerializationFormat)
+
+
+        :param aas_ids: The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)
+        :type aas_ids: List[str]
+        :param submodel_ids: The Submodels' unique ids (UTF8-BASE64-URL-encoded)
+        :type submodel_ids: List[str]
+        :param include_concept_descriptions: Include Concept Descriptions?
+        :type include_concept_descriptions: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__generate_serialization_by_ids_with_http_info (
+            aas_ids,
+            submodel_ids,
+            include_concept_descriptions,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __generate_serialization_by_ids_with_http_info(
+        self,
+
+        aas_ids: Annotated[Optional[List[StrictStr]], Field(description="The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)")] = None,
+
+        submodel_ids: Annotated[Optional[List[StrictStr]], Field(description="The Submodels' unique ids (UTF8-BASE64-URL-encoded)")] = None,
+
+        include_concept_descriptions: Annotated[Optional[StrictBool], Field(description="Include Concept Descriptions?")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[bytearray]:
         _param = self._generate_serialization_by_ids_serialize(
             aas_ids=aas_ids,
             submodel_ids=submodel_ids,
@@ -1796,69 +1578,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-
-        return self.__generate_serialization_by_ids_with_http_info (self,
-            aas_ids,
-            submodel_ids,
-            include_concept_descriptions,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __generate_serialization_by_ids_with_http_info(
-        self,
-        aas_ids: Annotated[Optional[List[StrictStr]], Field(description="The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)")] = None,
-        submodel_ids: Annotated[Optional[List[StrictStr]], Field(description="The Submodels' unique ids (UTF8-BASE64-URL-encoded)")] = None,
-        include_concept_descriptions: Annotated[Optional[StrictBool], Field(description="Include Concept Descriptions?")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[bytearray]:
-        """Returns an appropriate serialization based on the specified format (see SerializationFormat)
-
-
-        :param aas_ids: The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)
-        :type aas_ids: List[str]
-        :param submodel_ids: The Submodels' unique ids (UTF8-BASE64-URL-encoded)
-        :type submodel_ids: List[str]
-        :param include_concept_descriptions: Include Concept Descriptions?
-        :type include_concept_descriptions: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -1868,64 +1587,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def generate_serialization_by_ids_without_preload_content(
-        self,
-        aas_ids: Annotated[Optional[List[StrictStr]], Field(description="The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)")] = None,
-        submodel_ids: Annotated[Optional[List[StrictStr]], Field(description="The Submodels' unique ids (UTF8-BASE64-URL-encoded)")] = None,
-        include_concept_descriptions: Annotated[Optional[StrictBool], Field(description="Include Concept Descriptions?")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns an appropriate serialization based on the specified format (see SerializationFormat)
-
-
-        :param aas_ids: The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)
-        :type aas_ids: List[str]
-        :param submodel_ids: The Submodels' unique ids (UTF8-BASE64-URL-encoded)
-        :type submodel_ids: List[str]
-        :param include_concept_descriptions: Include Concept Descriptions?
-        :type include_concept_descriptions: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _generate_serialization_by_ids_serialize(
         self,
@@ -2060,11 +1721,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_all_submodel_elements (
         submodel_identifier,
         limit,
@@ -2081,10 +1738,15 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_all_submodel_elements(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
         extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
         _request_timeout: Union[
             None,
@@ -2150,6 +1812,82 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetSubmodelElementsResult]:
+        """Returns all submodel elements including their hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param limit: The maximum number of elements in the response array
+        :type limit: int
+        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
+        :type cursor: str
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param extent: Determines to which extent the resource is being serialized
+        :type extent: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_all_submodel_elements_with_http_info (
+            submodel_identifier,
+            limit,
+            cursor,
+            level,
+            extent,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_all_submodel_elements_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
+        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
+        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetSubmodelElementsResult]:
         _param = self._get_all_submodel_elements_serialize(
             submodel_identifier=submodel_identifier,
             limit=limit,
@@ -2170,82 +1908,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_all_submodel_elements_with_http_info (self,
-            submodel_identifier,
-            limit,
-            cursor,
-            level,
-            extent,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_all_submodel_elements_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetSubmodelElementsResult]:
-        """Returns all submodel elements including their hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -2255,70 +1917,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_all_submodel_elements_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns all submodel elements including their hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_all_submodel_elements_serialize(
         self,
@@ -2454,11 +2052,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_all_submodel_elements_metadata (
         submodel_identifier,
         limit,
@@ -2474,9 +2068,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_all_submodel_elements_metadata(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -2540,6 +2138,77 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetSubmodelElementsMetadataResult]:
+        """Returns all submodel elements including their hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param limit: The maximum number of elements in the response array
+        :type limit: int
+        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
+        :type cursor: str
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_all_submodel_elements_metadata_with_http_info (
+            submodel_identifier,
+            limit,
+            cursor,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_all_submodel_elements_metadata_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
+        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetSubmodelElementsMetadataResult]:
         _param = self._get_all_submodel_elements_metadata_serialize(
             submodel_identifier=submodel_identifier,
             limit=limit,
@@ -2559,78 +2228,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_all_submodel_elements_metadata_with_http_info (self,
-            submodel_identifier,
-            limit,
-            cursor,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_all_submodel_elements_metadata_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetSubmodelElementsMetadataResult]:
-        """Returns all submodel elements including their hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -2640,67 +2237,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_all_submodel_elements_metadata_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns all submodel elements including their hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_all_submodel_elements_metadata_serialize(
         self,
@@ -2831,11 +2367,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_all_submodel_elements_path (
         submodel_identifier,
         limit,
@@ -2851,9 +2383,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_all_submodel_elements_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -2917,6 +2453,77 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetPathItemsResult]:
+        """Returns all submodel elements including their hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param limit: The maximum number of elements in the response array
+        :type limit: int
+        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
+        :type cursor: str
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_all_submodel_elements_path_with_http_info (
+            submodel_identifier,
+            limit,
+            cursor,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_all_submodel_elements_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
+        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetPathItemsResult]:
         _param = self._get_all_submodel_elements_path_serialize(
             submodel_identifier=submodel_identifier,
             limit=limit,
@@ -2936,78 +2543,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_all_submodel_elements_path_with_http_info (self,
-            submodel_identifier,
-            limit,
-            cursor,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_all_submodel_elements_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetPathItemsResult]:
-        """Returns all submodel elements including their hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -3017,67 +2552,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_all_submodel_elements_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns all submodel elements including their hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_all_submodel_elements_path_serialize(
         self,
@@ -3208,11 +2682,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_all_submodel_elements_reference (
         submodel_identifier,
         limit,
@@ -3228,9 +2698,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_all_submodel_elements_reference(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -3294,6 +2768,77 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetReferencesResult]:
+        """Returns all submodel elements as a list of References
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param limit: The maximum number of elements in the response array
+        :type limit: int
+        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
+        :type cursor: str
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_all_submodel_elements_reference_with_http_info (
+            submodel_identifier,
+            limit,
+            cursor,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_all_submodel_elements_reference_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
+        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetReferencesResult]:
         _param = self._get_all_submodel_elements_reference_serialize(
             submodel_identifier=submodel_identifier,
             limit=limit,
@@ -3313,78 +2858,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_all_submodel_elements_reference_with_http_info (self,
-            submodel_identifier,
-            limit,
-            cursor,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_all_submodel_elements_reference_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetReferencesResult]:
-        """Returns all submodel elements as a list of References
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -3394,67 +2867,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_all_submodel_elements_reference_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns all submodel elements as a list of References
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_all_submodel_elements_reference_serialize(
         self,
@@ -3588,11 +3000,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_all_submodel_elements_value_only (
         submodel_identifier,
         limit,
@@ -3609,10 +3017,15 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_all_submodel_elements_value_only(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
         extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
         _request_timeout: Union[
             None,
@@ -3678,6 +3091,82 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetSubmodelElementsValueResult]:
+        """Returns all submodel elements including their hierarchy in the ValueOnly representation
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param limit: The maximum number of elements in the response array
+        :type limit: int
+        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
+        :type cursor: str
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param extent: Determines to which extent the resource is being serialized
+        :type extent: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_all_submodel_elements_value_only_with_http_info (
+            submodel_identifier,
+            limit,
+            cursor,
+            level,
+            extent,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_all_submodel_elements_value_only_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
+        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
+        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetSubmodelElementsValueResult]:
         _param = self._get_all_submodel_elements_value_only_serialize(
             submodel_identifier=submodel_identifier,
             limit=limit,
@@ -3698,82 +3187,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_all_submodel_elements_value_only_with_http_info (self,
-            submodel_identifier,
-            limit,
-            cursor,
-            level,
-            extent,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_all_submodel_elements_value_only_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetSubmodelElementsValueResult]:
-        """Returns all submodel elements including their hierarchy in the ValueOnly representation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -3783,70 +3196,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_all_submodel_elements_value_only_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns all submodel elements including their hierarchy in the ValueOnly representation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_all_submodel_elements_value_only_serialize(
         self,
@@ -3989,7 +3338,9 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_all_submodel_references(
         self,
+
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
         _request_timeout: Union[
             None,
@@ -4048,6 +3399,66 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetReferencesResult]:
+        """Returns all submodel references
+
+
+        :param limit: The maximum number of elements in the response array
+        :type limit: int
+        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
+        :type cursor: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__get_all_submodel_references_with_http_info (
+            limit,
+            cursor,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_all_submodel_references_with_http_info(
+        self,
+
+        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
+        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetReferencesResult]:
         _param = self._get_all_submodel_references_serialize(
             limit=limit,
             cursor=cursor,
@@ -4064,65 +3475,6 @@ class AssetAdministrationShellServiceApi:
             '403': "Result",
             '500': "Result",
         }
-
-        return self.__get_all_submodel_references_with_http_info (self,
-            limit,
-            cursor,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_all_submodel_references_with_http_info(
-        self,
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetReferencesResult]:
-        """Returns all submodel references
-
-
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -4132,61 +3484,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_all_submodel_references_without_preload_content(
-        self,
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns all submodel references
-
-
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_all_submodel_references_serialize(
         self,
@@ -4361,22 +3658,32 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[AssetAdministrationShell]:
-        _param = self._get_asset_administration_shell_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
+        """Returns a specific Asset Administration Shell
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AssetAdministrationShell",
-            '400': "Result",
-            '401': "Result",
-            '403': "Result",
-            '500': "Result",
-        }
 
-        return self.__get_asset_administration_shell_with_http_info (self,
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__get_asset_administration_shell_with_http_info (
             _request_timeout,
             _request_auth,
             _content_type,
@@ -4401,31 +3708,20 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[AssetAdministrationShell]:
-        """Returns a specific Asset Administration Shell
+        _param = self._get_asset_administration_shell_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
 
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AssetAdministrationShell",
+            '400': "Result",
+            '401': "Result",
+            '403': "Result",
+            '500': "Result",
+        }
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -4435,55 +3731,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_asset_administration_shell_without_preload_content(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns a specific Asset Administration Shell
-
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_asset_administration_shell_serialize(
         self,
@@ -4648,22 +3895,32 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[Reference]:
-        _param = self._get_asset_administration_shell_reference_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
+        """Returns a specific Asset Administration Shell as a Reference
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Reference",
-            '400': "Result",
-            '401': "Result",
-            '403': "Result",
-            '500': "Result",
-        }
 
-        return self.__get_asset_administration_shell_reference_with_http_info (self,
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__get_asset_administration_shell_reference_with_http_info (
             _request_timeout,
             _request_auth,
             _content_type,
@@ -4688,31 +3945,20 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[Reference]:
-        """Returns a specific Asset Administration Shell as a Reference
+        _param = self._get_asset_administration_shell_reference_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
 
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Reference",
+            '400': "Result",
+            '401': "Result",
+            '403': "Result",
+            '500': "Result",
+        }
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -4722,55 +3968,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_asset_administration_shell_reference_without_preload_content(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns a specific Asset Administration Shell as a Reference
-
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_asset_administration_shell_reference_serialize(
         self,
@@ -4935,22 +4132,32 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[AssetInformation]:
-        _param = self._get_asset_information_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
+        """Returns the Asset Information
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AssetInformation",
-            '400': "Result",
-            '401': "Result",
-            '403': "Result",
-            '500': "Result",
-        }
 
-        return self.__get_asset_information_with_http_info (self,
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__get_asset_information_with_http_info (
             _request_timeout,
             _request_auth,
             _content_type,
@@ -4975,31 +4182,20 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[AssetInformation]:
-        """Returns the Asset Information
+        _param = self._get_asset_information_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
 
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AssetInformation",
+            '400': "Result",
+            '401': "Result",
+            '403': "Result",
+            '500': "Result",
+        }
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -5009,55 +4205,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_asset_information_without_preload_content(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the Asset Information
-
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_asset_information_serialize(
         self,
@@ -5220,20 +4367,32 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ServiceDescription]:
-        _param = self._get_description_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
+        """Returns the self-describing information of a network resource (ServiceDescription)
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ServiceDescription",
-            '401': "Result",
-            '403': "Result",
-        }
 
-        return self.__get_description_with_http_info (self,
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__get_description_with_http_info (
             _request_timeout,
             _request_auth,
             _content_type,
@@ -5258,31 +4417,18 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ServiceDescription]:
-        """Returns the self-describing information of a network resource (ServiceDescription)
+        _param = self._get_description_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
 
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ServiceDescription",
+            '401': "Result",
+            '403': "Result",
+        }
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -5292,55 +4438,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_description_without_preload_content(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the self-describing information of a network resource (ServiceDescription)
-
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_description_serialize(
         self,
@@ -5447,11 +4544,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_file_by_path (
         submodel_identifier,
         id_short_path,
@@ -5465,7 +4558,9 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_file_by_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
         _request_timeout: Union[
             None,
@@ -5525,6 +4620,67 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[bytearray]:
+        """Downloads file content from a specific submodel element from the Submodel at a specified path
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_file_by_path_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_file_by_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[bytearray]:
         _param = self._get_file_by_path_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -5542,70 +4698,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_file_by_path_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_file_by_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[bytearray]:
-        """Downloads file content from a specific submodel element from the Submodel at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -5615,61 +4707,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_file_by_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Downloads file content from a specific submodel element from the Submodel at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_file_by_path_serialize(
         self,
@@ -5789,21 +4826,9 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-        if isinstance(handle_id, str):
-            handle_id_bytes = data.encode('utf-8')
-            handle_id = base64.standard_b64encode(handle_id_bytes)
-        else:
-            handle_id = base64.standard_b64encode(handle_id)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        handle_id = ApiClient.base64_url_encode(handle_id)
         return self.__get_operation_async_result (
         submodel_identifier,
         aas_identifier,
@@ -5819,9 +4844,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_operation_async_result(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
             None,
@@ -5885,6 +4914,79 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[OperationResult]:
+        """Returns the Operation result of an asynchronous invoked Operation
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type aas_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param handle_id: The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded) (required)
+        :type handle_id: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        handle_id = ApiClient.base64_url_encode(handle_id)
+        return self.__get_operation_async_result_with_http_info (
+            submodel_identifier,
+            aas_identifier,
+            id_short_path,
+            handle_id,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_operation_async_result_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[OperationResult]:
         _param = self._get_operation_async_result_serialize(
             submodel_identifier=submodel_identifier,
             aas_identifier=aas_identifier,
@@ -5904,88 +5006,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-        if isinstance(handle_id, str):
-            handle_id_bytes = data.encode('utf-8')
-            handle_id = base64.standard_b64encode(handle_id_bytes)
-        else:
-            handle_id = base64.standard_b64encode(handle_id)
-
-        return self.__get_operation_async_result_with_http_info (self,
-            submodel_identifier,
-            aas_identifier,
-            id_short_path,
-            handle_id,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_operation_async_result_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[OperationResult]:
-        """Returns the Operation result of an asynchronous invoked Operation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param handle_id: The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded) (required)
-        :type handle_id: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -5995,67 +5015,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_operation_async_result_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the Operation result of an asynchronous invoked Operation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param handle_id: The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded) (required)
-        :type handle_id: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_operation_async_result_serialize(
         self,
@@ -6180,21 +5139,9 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-        if isinstance(handle_id, str):
-            handle_id_bytes = data.encode('utf-8')
-            handle_id = base64.standard_b64encode(handle_id_bytes)
-        else:
-            handle_id = base64.standard_b64encode(handle_id)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        handle_id = ApiClient.base64_url_encode(handle_id)
         return self.__get_operation_async_result_value_only (
         submodel_identifier,
         aas_identifier,
@@ -6210,9 +5157,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_operation_async_result_value_only(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
             None,
@@ -6276,6 +5227,79 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[OperationResultValueOnly]:
+        """Returns the value of the Operation result of an asynchronous invoked Operation
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type aas_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param handle_id: The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded) (required)
+        :type handle_id: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        handle_id = ApiClient.base64_url_encode(handle_id)
+        return self.__get_operation_async_result_value_only_with_http_info (
+            submodel_identifier,
+            aas_identifier,
+            id_short_path,
+            handle_id,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_operation_async_result_value_only_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[OperationResultValueOnly]:
         _param = self._get_operation_async_result_value_only_serialize(
             submodel_identifier=submodel_identifier,
             aas_identifier=aas_identifier,
@@ -6295,88 +5319,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-        if isinstance(handle_id, str):
-            handle_id_bytes = data.encode('utf-8')
-            handle_id = base64.standard_b64encode(handle_id_bytes)
-        else:
-            handle_id = base64.standard_b64encode(handle_id)
-
-        return self.__get_operation_async_result_value_only_with_http_info (self,
-            submodel_identifier,
-            aas_identifier,
-            id_short_path,
-            handle_id,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_operation_async_result_value_only_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[OperationResultValueOnly]:
-        """Returns the value of the Operation result of an asynchronous invoked Operation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param handle_id: The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded) (required)
-        :type handle_id: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -6386,67 +5328,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_operation_async_result_value_only_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the value of the Operation result of an asynchronous invoked Operation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param handle_id: The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded) (required)
-        :type handle_id: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_operation_async_result_value_only_serialize(
         self,
@@ -6571,21 +5452,9 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-        if isinstance(handle_id, str):
-            handle_id_bytes = data.encode('utf-8')
-            handle_id = base64.standard_b64encode(handle_id_bytes)
-        else:
-            handle_id = base64.standard_b64encode(handle_id)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        handle_id = ApiClient.base64_url_encode(handle_id)
         return self.__get_operation_async_status (
         submodel_identifier,
         aas_identifier,
@@ -6601,9 +5470,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_operation_async_status(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
             None,
@@ -6668,6 +5541,79 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[BaseOperationResult]:
+        """Returns the status of an asynchronously invoked Operation
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type aas_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param handle_id: The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded) (required)
+        :type handle_id: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        aas_identifier = ApiClient.base64_url_encode(aas_identifier)
+        handle_id = ApiClient.base64_url_encode(handle_id)
+        return self.__get_operation_async_status_with_http_info (
+            submodel_identifier,
+            aas_identifier,
+            id_short_path,
+            handle_id,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_operation_async_status_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[BaseOperationResult]:
         _param = self._get_operation_async_status_serialize(
             submodel_identifier=submodel_identifier,
             aas_identifier=aas_identifier,
@@ -6688,88 +5634,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-        if isinstance(aas_identifier, str):
-            aas_identifier_bytes = data.encode('utf-8')
-            aas_identifier = base64.standard_b64encode(aas_identifier_bytes)
-        else:
-            aas_identifier = base64.standard_b64encode(aas_identifier)
-        if isinstance(handle_id, str):
-            handle_id_bytes = data.encode('utf-8')
-            handle_id = base64.standard_b64encode(handle_id_bytes)
-        else:
-            handle_id = base64.standard_b64encode(handle_id)
-
-        return self.__get_operation_async_status_with_http_info (self,
-            submodel_identifier,
-            aas_identifier,
-            id_short_path,
-            handle_id,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_operation_async_status_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[BaseOperationResult]:
-        """Returns the status of an asynchronously invoked Operation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param handle_id: The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded) (required)
-        :type handle_id: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -6779,67 +5643,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_operation_async_status_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        aas_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        handle_id: Annotated[Union[StrictBytes, StrictStr], Field(description="The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the status of an asynchronously invoked Operation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param aas_identifier: The Asset Administration Shell’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type aas_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param handle_id: The returned handle id of an operation's asynchronous invocation used to request the current state of the operation’s execution (UTF8-BASE64-URL-encoded) (required)
-        :type handle_id: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_operation_async_status_serialize(
         self,
@@ -6961,11 +5764,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel (
         submodel_identifier,
         level,
@@ -6980,8 +5779,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
         extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
         _request_timeout: Union[
             None,
@@ -7043,6 +5845,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[Submodel]:
+        """Returns the Submodel
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param extent: Determines to which extent the resource is being serialized
+        :type extent: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_with_http_info (
+            submodel_identifier,
+            level,
+            extent,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
+        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[Submodel]:
         _param = self._get_submodel_serialize(
             submodel_identifier=submodel_identifier,
             level=level,
@@ -7061,74 +5929,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_with_http_info (self,
-            submodel_identifier,
-            level,
-            extent,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Submodel]:
-        """Returns the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -7138,64 +5938,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_serialize(
         self,
@@ -7321,11 +6063,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel_element_by_path (
         submodel_identifier,
         id_short_path,
@@ -7341,9 +6079,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel_element_by_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
         extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
         _request_timeout: Union[
             None,
@@ -7407,6 +6149,77 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[SubmodelElement]:
+        """Returns a specific submodel element from the Submodel at a specified path
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param extent: Determines to which extent the resource is being serialized
+        :type extent: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_element_by_path_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            level,
+            extent,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_element_by_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
+        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SubmodelElement]:
         _param = self._get_submodel_element_by_path_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -7426,78 +6239,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_element_by_path_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            level,
-            extent,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_element_by_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SubmodelElement]:
-        """Returns a specific submodel element from the Submodel at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -7507,67 +6248,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_element_by_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns a specific submodel element from the Submodel at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_element_by_path_serialize(
         self,
@@ -7693,11 +6373,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel_element_by_path_metadata (
         submodel_identifier,
         id_short_path,
@@ -7712,8 +6388,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel_element_by_path_metadata(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -7775,6 +6454,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[SubmodelElementMetadata]:
+        """Returns the metadata attributes if a specific submodel element from the Submodel at a specified path
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_element_by_path_metadata_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_element_by_path_metadata_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SubmodelElementMetadata]:
         _param = self._get_submodel_element_by_path_metadata_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -7793,74 +6538,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_element_by_path_metadata_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_element_by_path_metadata_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SubmodelElementMetadata]:
-        """Returns the metadata attributes if a specific submodel element from the Submodel at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -7870,64 +6547,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_element_by_path_metadata_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the metadata attributes if a specific submodel element from the Submodel at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_element_by_path_metadata_serialize(
         self,
@@ -8048,11 +6667,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel_element_by_path_path (
         submodel_identifier,
         id_short_path,
@@ -8067,8 +6682,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel_element_by_path_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -8130,6 +6748,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[str]:
+        """Returns a specific submodel element from the Submodel at a specified path in the Path notation
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_element_by_path_path_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_element_by_path_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[str]:
         _param = self._get_submodel_element_by_path_path_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -8148,74 +6832,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_element_by_path_path_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_element_by_path_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[str]:
-        """Returns a specific submodel element from the Submodel at a specified path in the Path notation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -8225,64 +6841,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_element_by_path_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns a specific submodel element from the Submodel at a specified path in the Path notation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_element_by_path_path_serialize(
         self,
@@ -8400,11 +6958,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel_element_by_path_reference (
         submodel_identifier,
         id_short_path,
@@ -8418,7 +6972,9 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel_element_by_path_reference(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
         _request_timeout: Union[
             None,
@@ -8478,6 +7034,67 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[Reference]:
+        """Returns the Reference of a specific submodel element from the Submodel at a specified path in the ValueOnly representation
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_element_by_path_reference_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_element_by_path_reference_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[Reference]:
         _param = self._get_submodel_element_by_path_reference_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -8495,70 +7112,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_element_by_path_reference_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_element_by_path_reference_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Reference]:
-        """Returns the Reference of a specific submodel element from the Submodel at a specified path in the ValueOnly representation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -8568,61 +7121,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_element_by_path_reference_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the Reference of a specific submodel element from the Submodel at a specified path in the ValueOnly representation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_element_by_path_reference_serialize(
         self,
@@ -8738,11 +7236,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel_element_by_path_value_only (
         submodel_identifier,
         id_short_path,
@@ -8757,8 +7251,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel_element_by_path_value_only(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -8820,6 +7317,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[SubmodelElementValue]:
+        """Returns a specific submodel element from the Submodel at a specified path in the ValueOnly representation
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_element_by_path_value_only_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_element_by_path_value_only_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SubmodelElementValue]:
         _param = self._get_submodel_element_by_path_value_only_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -8838,74 +7401,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_element_by_path_value_only_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_element_by_path_value_only_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SubmodelElementValue]:
-        """Returns a specific submodel element from the Submodel at a specified path in the ValueOnly representation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -8915,64 +7410,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_element_by_path_value_only_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns a specific submodel element from the Submodel at a specified path in the ValueOnly representation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_element_by_path_value_only_serialize(
         self,
@@ -9090,11 +7527,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel_metadata (
         submodel_identifier,
         level,
@@ -9108,7 +7541,9 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel_metadata(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -9168,6 +7603,67 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[SubmodelMetadata]:
+        """Returns the Submodel's metadata elements
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_metadata_with_http_info (
+            submodel_identifier,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_metadata_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SubmodelMetadata]:
         _param = self._get_submodel_metadata_serialize(
             submodel_identifier=submodel_identifier,
             level=level,
@@ -9185,70 +7681,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_metadata_with_http_info (self,
-            submodel_identifier,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_metadata_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SubmodelMetadata]:
-        """Returns the Submodel's metadata elements
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -9258,61 +7690,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_metadata_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the Submodel's metadata elements
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_metadata_serialize(
         self,
@@ -9427,11 +7804,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel_metadata_reference (
         submodel_identifier,
         level,
@@ -9445,7 +7818,9 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel_metadata_reference(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -9505,6 +7880,67 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[Reference]:
+        """Returns the Submodel as a Reference
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_metadata_reference_with_http_info (
+            submodel_identifier,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_metadata_reference_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[Reference]:
         _param = self._get_submodel_metadata_reference_serialize(
             submodel_identifier=submodel_identifier,
             level=level,
@@ -9522,70 +7958,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_metadata_reference_with_http_info (self,
-            submodel_identifier,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_metadata_reference_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Reference]:
-        """Returns the Submodel as a Reference
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -9595,61 +7967,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_metadata_reference_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the Submodel as a Reference
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_metadata_reference_serialize(
         self,
@@ -9764,11 +8081,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel_path (
         submodel_identifier,
         level,
@@ -9782,7 +8095,9 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -9842,6 +8157,67 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[List[str]]:
+        """Returns the Submodel's metadata elements
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_path_with_http_info (
+            submodel_identifier,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[List[str]]:
         _param = self._get_submodel_path_serialize(
             submodel_identifier=submodel_identifier,
             level=level,
@@ -9859,70 +8235,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_path_with_http_info (self,
-            submodel_identifier,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[str]]:
-        """Returns the Submodel's metadata elements
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -9932,61 +8244,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the Submodel's metadata elements
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_path_serialize(
         self,
@@ -10104,11 +8361,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__get_submodel_value_only (
         submodel_identifier,
         level,
@@ -10123,8 +8376,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __get_submodel_value_only(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
         extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
         _request_timeout: Union[
             None,
@@ -10186,6 +8442,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[SubmodelValue]:
+        """Returns the Submodel's ValueOnly representation
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param extent: Determines to which extent the resource is being serialized
+        :type extent: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__get_submodel_value_only_with_http_info (
+            submodel_identifier,
+            level,
+            extent,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_submodel_value_only_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+
+        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SubmodelValue]:
         _param = self._get_submodel_value_only_serialize(
             submodel_identifier=submodel_identifier,
             level=level,
@@ -10204,74 +8526,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__get_submodel_value_only_with_http_info (self,
-            submodel_identifier,
-            level,
-            extent,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_submodel_value_only_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SubmodelValue]:
-        """Returns the Submodel's ValueOnly representation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -10281,64 +8535,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_submodel_value_only_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        extent: Annotated[Optional[StrictStr], Field(description="Determines to which extent the resource is being serialized")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the Submodel's ValueOnly representation
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param extent: Determines to which extent the resource is being serialized
-        :type extent: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_submodel_value_only_serialize(
         self,
@@ -10517,23 +8713,32 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[bytearray]:
-        _param = self._get_thumbnail_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
+        """get_thumbnail
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
-            '400': "Result",
-            '401': "Result",
-            '403': "Result",
-            '404': "Result",
-            '500': "Result",
-        }
 
-        return self.__get_thumbnail_with_http_info (self,
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__get_thumbnail_with_http_info (
             _request_timeout,
             _request_auth,
             _content_type,
@@ -10558,31 +8763,21 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[bytearray]:
-        """get_thumbnail
+        _param = self._get_thumbnail_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
 
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "bytearray",
+            '400': "Result",
+            '401': "Result",
+            '403': "Result",
+            '404': "Result",
+            '500': "Result",
+        }
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -10592,55 +8787,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_thumbnail_without_preload_content(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """get_thumbnail
-
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_thumbnail_serialize(
         self,
@@ -10751,11 +8897,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__invoke_operation_async (
         submodel_identifier,
         id_short_path,
@@ -10770,8 +8912,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __invoke_operation_async(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         operation_request: Annotated[OperationRequest, Field(description="Operation request object")],
         _request_timeout: Union[
             None,
@@ -10833,6 +8978,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Asynchronously invokes an Operation at a specified path
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param operation_request: Operation request object (required)
+        :type operation_request: OperationRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__invoke_operation_async_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            operation_request,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __invoke_operation_async_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        operation_request: Annotated[OperationRequest, Field(description="Operation request object")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._invoke_operation_async_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -10851,74 +9062,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__invoke_operation_async_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            operation_request,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __invoke_operation_async_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        operation_request: Annotated[OperationRequest, Field(description="Operation request object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Asynchronously invokes an Operation at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param operation_request: Operation request object (required)
-        :type operation_request: OperationRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -10928,64 +9071,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def invoke_operation_async_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        operation_request: Annotated[OperationRequest, Field(description="Operation request object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Asynchronously invokes an Operation at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param operation_request: Operation request object (required)
-        :type operation_request: OperationRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _invoke_operation_async_serialize(
         self,
@@ -11117,11 +9202,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__invoke_operation_async_value_only (
         submodel_identifier,
         id_short_path,
@@ -11136,8 +9217,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __invoke_operation_async_value_only(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         operation_request_value_only: Annotated[OperationRequestValueOnly, Field(description="Operation request object")],
         _request_timeout: Union[
             None,
@@ -11199,6 +9283,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Asynchronously invokes an Operation at a specified path
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param operation_request_value_only: Operation request object (required)
+        :type operation_request_value_only: OperationRequestValueOnly
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__invoke_operation_async_value_only_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            operation_request_value_only,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __invoke_operation_async_value_only_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        operation_request_value_only: Annotated[OperationRequestValueOnly, Field(description="Operation request object")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._invoke_operation_async_value_only_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -11217,74 +9367,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__invoke_operation_async_value_only_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            operation_request_value_only,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __invoke_operation_async_value_only_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        operation_request_value_only: Annotated[OperationRequestValueOnly, Field(description="Operation request object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Asynchronously invokes an Operation at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param operation_request_value_only: Operation request object (required)
-        :type operation_request_value_only: OperationRequestValueOnly
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -11294,64 +9376,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def invoke_operation_async_value_only_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        operation_request_value_only: Annotated[OperationRequestValueOnly, Field(description="Operation request object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Asynchronously invokes an Operation at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param operation_request_value_only: Operation request object (required)
-        :type operation_request_value_only: OperationRequestValueOnly
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _invoke_operation_async_value_only_serialize(
         self,
@@ -11483,11 +9507,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__invoke_operation_sync (
         submodel_identifier,
         id_short_path,
@@ -11502,8 +9522,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __invoke_operation_sync(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         operation_request: Annotated[OperationRequest, Field(description="Operation request object")],
         _request_timeout: Union[
             None,
@@ -11565,6 +9588,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[OperationResult]:
+        """Synchronously invokes an Operation at a specified path
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param operation_request: Operation request object (required)
+        :type operation_request: OperationRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__invoke_operation_sync_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            operation_request,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __invoke_operation_sync_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        operation_request: Annotated[OperationRequest, Field(description="Operation request object")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[OperationResult]:
         _param = self._invoke_operation_sync_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -11583,74 +9672,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__invoke_operation_sync_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            operation_request,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __invoke_operation_sync_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        operation_request: Annotated[OperationRequest, Field(description="Operation request object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[OperationResult]:
-        """Synchronously invokes an Operation at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param operation_request: Operation request object (required)
-        :type operation_request: OperationRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -11660,64 +9681,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def invoke_operation_sync_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        operation_request: Annotated[OperationRequest, Field(description="Operation request object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Synchronously invokes an Operation at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param operation_request: Operation request object (required)
-        :type operation_request: OperationRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _invoke_operation_sync_serialize(
         self,
@@ -11849,11 +9812,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__invoke_operation_sync_value_only (
         submodel_identifier,
         id_short_path,
@@ -11868,8 +9827,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __invoke_operation_sync_value_only(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         operation_request_value_only: Annotated[OperationRequestValueOnly, Field(description="Operation request object")],
         _request_timeout: Union[
             None,
@@ -11931,6 +9893,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[OperationResultValueOnly]:
+        """Synchronously invokes an Operation at a specified path
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param operation_request_value_only: Operation request object (required)
+        :type operation_request_value_only: OperationRequestValueOnly
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__invoke_operation_sync_value_only_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            operation_request_value_only,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __invoke_operation_sync_value_only_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        operation_request_value_only: Annotated[OperationRequestValueOnly, Field(description="Operation request object")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[OperationResultValueOnly]:
         _param = self._invoke_operation_sync_value_only_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -11949,74 +9977,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__invoke_operation_sync_value_only_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            operation_request_value_only,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __invoke_operation_sync_value_only_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        operation_request_value_only: Annotated[OperationRequestValueOnly, Field(description="Operation request object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[OperationResultValueOnly]:
-        """Synchronously invokes an Operation at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param operation_request_value_only: Operation request object (required)
-        :type operation_request_value_only: OperationRequestValueOnly
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -12026,64 +9986,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def invoke_operation_sync_value_only_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        operation_request_value_only: Annotated[OperationRequestValueOnly, Field(description="Operation request object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Synchronously invokes an Operation at a specified path
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param operation_request_value_only: Operation request object (required)
-        :type operation_request_value_only: OperationRequestValueOnly
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _invoke_operation_sync_value_only_serialize(
         self,
@@ -12215,11 +10117,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__patch_submodel (
         submodel_identifier,
         submodel,
@@ -12234,8 +10132,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __patch_submodel(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         submodel: Annotated[Submodel, Field(description="Submodel object")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -12297,6 +10198,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates the Submodel
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param submodel: Submodel object (required)
+        :type submodel: Submodel
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__patch_submodel_with_http_info (
+            submodel_identifier,
+            submodel,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __patch_submodel_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        submodel: Annotated[Submodel, Field(description="Submodel object")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._patch_submodel_serialize(
             submodel_identifier=submodel_identifier,
             submodel=submodel,
@@ -12315,74 +10282,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__patch_submodel_with_http_info (self,
-            submodel_identifier,
-            submodel,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __patch_submodel_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel: Annotated[Submodel, Field(description="Submodel object")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel: Submodel object (required)
-        :type submodel: Submodel
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -12392,64 +10291,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def patch_submodel_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel: Annotated[Submodel, Field(description="Submodel object")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel: Submodel object (required)
-        :type submodel: Submodel
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _patch_submodel_serialize(
         self,
@@ -12586,11 +10427,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__patch_submodel_element_value_by_path (
         submodel_identifier,
         id_short_path,
@@ -12606,9 +10443,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __patch_submodel_element_value_by_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         submodel_element: Annotated[SubmodelElement, Field(description="The updated value of the submodel element")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -12672,6 +10513,77 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates an existing submodel element value at a specified path within submodel elements hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param submodel_element: The updated value of the submodel element (required)
+        :type submodel_element: SubmodelElement
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__patch_submodel_element_value_by_path_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            submodel_element,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __patch_submodel_element_value_by_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        submodel_element: Annotated[SubmodelElement, Field(description="The updated value of the submodel element")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._patch_submodel_element_value_by_path_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -12691,78 +10603,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__patch_submodel_element_value_by_path_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            submodel_element,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __patch_submodel_element_value_by_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element: Annotated[SubmodelElement, Field(description="The updated value of the submodel element")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates an existing submodel element value at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element: The updated value of the submodel element (required)
-        :type submodel_element: SubmodelElement
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -12772,67 +10612,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def patch_submodel_element_value_by_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element: Annotated[SubmodelElement, Field(description="The updated value of the submodel element")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates an existing submodel element value at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element: The updated value of the submodel element (required)
-        :type submodel_element: SubmodelElement
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _patch_submodel_element_value_by_path_serialize(
         self,
@@ -12972,11 +10751,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__patch_submodel_element_value_by_path_metadata (
         submodel_identifier,
         id_short_path,
@@ -12992,9 +10767,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __patch_submodel_element_value_by_path_metadata(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         submodel_element_metadata: Annotated[SubmodelElementMetadata, Field(description="The updated metadata attributes of the submodel element")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -13058,6 +10837,77 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates the metadata attributes of an existing submodel element value at a specified path within submodel elements hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param submodel_element_metadata: The updated metadata attributes of the submodel element (required)
+        :type submodel_element_metadata: SubmodelElementMetadata
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__patch_submodel_element_value_by_path_metadata_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            submodel_element_metadata,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __patch_submodel_element_value_by_path_metadata_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        submodel_element_metadata: Annotated[SubmodelElementMetadata, Field(description="The updated metadata attributes of the submodel element")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._patch_submodel_element_value_by_path_metadata_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -13077,78 +10927,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__patch_submodel_element_value_by_path_metadata_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            submodel_element_metadata,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __patch_submodel_element_value_by_path_metadata_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element_metadata: Annotated[SubmodelElementMetadata, Field(description="The updated metadata attributes of the submodel element")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates the metadata attributes of an existing submodel element value at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element_metadata: The updated metadata attributes of the submodel element (required)
-        :type submodel_element_metadata: SubmodelElementMetadata
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -13158,67 +10936,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def patch_submodel_element_value_by_path_metadata_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element_metadata: Annotated[SubmodelElementMetadata, Field(description="The updated metadata attributes of the submodel element")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates the metadata attributes of an existing submodel element value at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element_metadata: The updated metadata attributes of the submodel element (required)
-        :type submodel_element_metadata: SubmodelElementMetadata
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _patch_submodel_element_value_by_path_metadata_serialize(
         self,
@@ -13358,11 +11075,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__patch_submodel_element_value_by_path_value_only (
         submodel_identifier,
         id_short_path,
@@ -13378,9 +11091,13 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __patch_submodel_element_value_by_path_value_only(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         submodel_element_value: Annotated[SubmodelElementValue, Field(description="The updated value of the submodel element")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -13444,6 +11161,77 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates the value of an existing submodel element value at a specified path within submodel elements hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param submodel_element_value: The updated value of the submodel element (required)
+        :type submodel_element_value: SubmodelElementValue
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__patch_submodel_element_value_by_path_value_only_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            submodel_element_value,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __patch_submodel_element_value_by_path_value_only_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        submodel_element_value: Annotated[SubmodelElementValue, Field(description="The updated value of the submodel element")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._patch_submodel_element_value_by_path_value_only_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -13463,78 +11251,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__patch_submodel_element_value_by_path_value_only_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            submodel_element_value,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __patch_submodel_element_value_by_path_value_only_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element_value: Annotated[SubmodelElementValue, Field(description="The updated value of the submodel element")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates the value of an existing submodel element value at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element_value: The updated value of the submodel element (required)
-        :type submodel_element_value: SubmodelElementValue
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -13544,67 +11260,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def patch_submodel_element_value_by_path_value_only_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element_value: Annotated[SubmodelElementValue, Field(description="The updated value of the submodel element")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates the value of an existing submodel element value at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element_value: The updated value of the submodel element (required)
-        :type submodel_element_value: SubmodelElementValue
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _patch_submodel_element_value_by_path_value_only_serialize(
         self,
@@ -13741,11 +11396,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__patch_submodel_metadata (
         submodel_identifier,
         submodel_metadata,
@@ -13760,8 +11411,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __patch_submodel_metadata(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         submodel_metadata: Annotated[SubmodelMetadata, Field(description="Submodel object")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -13823,6 +11477,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates the metadata attributes of the Submodel
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param submodel_metadata: Submodel object (required)
+        :type submodel_metadata: SubmodelMetadata
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__patch_submodel_metadata_with_http_info (
+            submodel_identifier,
+            submodel_metadata,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __patch_submodel_metadata_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        submodel_metadata: Annotated[SubmodelMetadata, Field(description="Submodel object")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._patch_submodel_metadata_serialize(
             submodel_identifier=submodel_identifier,
             submodel_metadata=submodel_metadata,
@@ -13841,74 +11561,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__patch_submodel_metadata_with_http_info (self,
-            submodel_identifier,
-            submodel_metadata,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __patch_submodel_metadata_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel_metadata: Annotated[SubmodelMetadata, Field(description="Submodel object")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates the metadata attributes of the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel_metadata: Submodel object (required)
-        :type submodel_metadata: SubmodelMetadata
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -13918,64 +11570,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def patch_submodel_metadata_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel_metadata: Annotated[SubmodelMetadata, Field(description="Submodel object")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates the metadata attributes of the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel_metadata: Submodel object (required)
-        :type submodel_metadata: SubmodelMetadata
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _patch_submodel_metadata_serialize(
         self,
@@ -14109,11 +11703,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__patch_submodel_value_only (
         submodel_identifier,
         submodel_value,
@@ -14128,8 +11718,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __patch_submodel_value_only(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         submodel_value: Annotated[SubmodelValue, Field(description="Submodel object in the ValueOnly representation")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -14191,6 +11784,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates teh values of the Submodel
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param submodel_value: Submodel object in the ValueOnly representation (required)
+        :type submodel_value: SubmodelValue
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__patch_submodel_value_only_with_http_info (
+            submodel_identifier,
+            submodel_value,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __patch_submodel_value_only_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        submodel_value: Annotated[SubmodelValue, Field(description="Submodel object in the ValueOnly representation")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._patch_submodel_value_only_serialize(
             submodel_identifier=submodel_identifier,
             submodel_value=submodel_value,
@@ -14209,74 +11868,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__patch_submodel_value_only_with_http_info (self,
-            submodel_identifier,
-            submodel_value,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __patch_submodel_value_only_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel_value: Annotated[SubmodelValue, Field(description="Submodel object in the ValueOnly representation")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates teh values of the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel_value: Submodel object in the ValueOnly representation (required)
-        :type submodel_value: SubmodelValue
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -14286,64 +11877,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def patch_submodel_value_only_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel_value: Annotated[SubmodelValue, Field(description="Submodel object in the ValueOnly representation")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates teh values of the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel_value: Submodel object in the ValueOnly representation (required)
-        :type submodel_value: SubmodelValue
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _patch_submodel_value_only_serialize(
         self,
@@ -14474,11 +12007,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__post_submodel_element (
         submodel_identifier,
         submodel_element,
@@ -14492,7 +12021,9 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __post_submodel_element(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
         _request_timeout: Union[
             None,
@@ -14553,6 +12084,67 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[SubmodelElement]:
+        """Creates a new submodel element
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param submodel_element: Requested submodel element (required)
+        :type submodel_element: SubmodelElement
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__post_submodel_element_with_http_info (
+            submodel_identifier,
+            submodel_element,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __post_submodel_element_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SubmodelElement]:
         _param = self._post_submodel_element_serialize(
             submodel_identifier=submodel_identifier,
             submodel_element=submodel_element,
@@ -14571,70 +12163,6 @@ class AssetAdministrationShellServiceApi:
             '409': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__post_submodel_element_with_http_info (self,
-            submodel_identifier,
-            submodel_element,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __post_submodel_element_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SubmodelElement]:
-        """Creates a new submodel element
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel_element: Requested submodel element (required)
-        :type submodel_element: SubmodelElement
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -14644,61 +12172,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def post_submodel_element_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Creates a new submodel element
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel_element: Requested submodel element (required)
-        :type submodel_element: SubmodelElement
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _post_submodel_element_serialize(
         self,
@@ -14827,11 +12300,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__post_submodel_element_by_path (
         submodel_identifier,
         id_short_path,
@@ -14846,8 +12315,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __post_submodel_element_by_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
         _request_timeout: Union[
             None,
@@ -14910,6 +12382,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[SubmodelElement]:
+        """Creates a new submodel element at a specified path within submodel elements hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param submodel_element: Requested submodel element (required)
+        :type submodel_element: SubmodelElement
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__post_submodel_element_by_path_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            submodel_element,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __post_submodel_element_by_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SubmodelElement]:
         _param = self._post_submodel_element_by_path_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -14929,74 +12467,6 @@ class AssetAdministrationShellServiceApi:
             '409': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__post_submodel_element_by_path_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            submodel_element,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __post_submodel_element_by_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SubmodelElement]:
-        """Creates a new submodel element at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element: Requested submodel element (required)
-        :type submodel_element: SubmodelElement
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -15006,64 +12476,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def post_submodel_element_by_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Creates a new submodel element at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element: Requested submodel element (required)
-        :type submodel_element: SubmodelElement
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _post_submodel_element_by_path_serialize(
         self,
@@ -15201,6 +12613,7 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __post_submodel_reference(
         self,
+
         reference: Annotated[Reference, Field(description="Reference to the Submodel")],
         _request_timeout: Union[
             None,
@@ -15258,6 +12671,61 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[Reference]:
+        """Creates a submodel reference at the Asset Administration Shell
+
+
+        :param reference: Reference to the Submodel (required)
+        :type reference: Reference
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__post_submodel_reference_with_http_info (
+            reference,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __post_submodel_reference_with_http_info(
+        self,
+
+        reference: Annotated[Reference, Field(description="Reference to the Submodel")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[Reference]:
         _param = self._post_submodel_reference_serialize(
             reference=reference,
             _request_auth=_request_auth,
@@ -15274,61 +12742,6 @@ class AssetAdministrationShellServiceApi:
             '409': "Result",
             '500': "Result",
         }
-
-        return self.__post_submodel_reference_with_http_info (self,
-            reference,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __post_submodel_reference_with_http_info(
-        self,
-        reference: Annotated[Reference, Field(description="Reference to the Submodel")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Reference]:
-        """Creates a submodel reference at the Asset Administration Shell
-
-
-        :param reference: Reference to the Submodel (required)
-        :type reference: Reference
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -15338,58 +12751,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def post_submodel_reference_without_preload_content(
-        self,
-        reference: Annotated[Reference, Field(description="Reference to the Submodel")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Creates a submodel reference at the Asset Administration Shell
-
-
-        :param reference: Reference to the Submodel (required)
-        :type reference: Reference
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _post_submodel_reference_serialize(
         self,
@@ -15521,6 +12882,7 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __put_asset_administration_shell(
         self,
+
         asset_administration_shell: Annotated[AssetAdministrationShell, Field(description="Asset Administration Shell object")],
         _request_timeout: Union[
             None,
@@ -15577,6 +12939,61 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates an existing Asset Administration Shell
+
+
+        :param asset_administration_shell: Asset Administration Shell object (required)
+        :type asset_administration_shell: AssetAdministrationShell
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__put_asset_administration_shell_with_http_info (
+            asset_administration_shell,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __put_asset_administration_shell_with_http_info(
+        self,
+
+        asset_administration_shell: Annotated[AssetAdministrationShell, Field(description="Asset Administration Shell object")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._put_asset_administration_shell_serialize(
             asset_administration_shell=asset_administration_shell,
             _request_auth=_request_auth,
@@ -15592,61 +13009,6 @@ class AssetAdministrationShellServiceApi:
             '403': "Result",
             '500': "Result",
         }
-
-        return self.__put_asset_administration_shell_with_http_info (self,
-            asset_administration_shell,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __put_asset_administration_shell_with_http_info(
-        self,
-        asset_administration_shell: Annotated[AssetAdministrationShell, Field(description="Asset Administration Shell object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates an existing Asset Administration Shell
-
-
-        :param asset_administration_shell: Asset Administration Shell object (required)
-        :type asset_administration_shell: AssetAdministrationShell
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -15656,58 +13018,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def put_asset_administration_shell_without_preload_content(
-        self,
-        asset_administration_shell: Annotated[AssetAdministrationShell, Field(description="Asset Administration Shell object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates an existing Asset Administration Shell
-
-
-        :param asset_administration_shell: Asset Administration Shell object (required)
-        :type asset_administration_shell: AssetAdministrationShell
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _put_asset_administration_shell_serialize(
         self,
@@ -15839,6 +13149,7 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __put_asset_information(
         self,
+
         asset_information: Annotated[AssetInformation, Field(description="Asset Information object")],
         _request_timeout: Union[
             None,
@@ -15895,6 +13206,61 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates the Asset Information
+
+
+        :param asset_information: Asset Information object (required)
+        :type asset_information: AssetInformation
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__put_asset_information_with_http_info (
+            asset_information,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __put_asset_information_with_http_info(
+        self,
+
+        asset_information: Annotated[AssetInformation, Field(description="Asset Information object")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._put_asset_information_serialize(
             asset_information=asset_information,
             _request_auth=_request_auth,
@@ -15910,61 +13276,6 @@ class AssetAdministrationShellServiceApi:
             '403': "Result",
             '500': "Result",
         }
-
-        return self.__put_asset_information_with_http_info (self,
-            asset_information,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __put_asset_information_with_http_info(
-        self,
-        asset_information: Annotated[AssetInformation, Field(description="Asset Information object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates the Asset Information
-
-
-        :param asset_information: Asset Information object (required)
-        :type asset_information: AssetInformation
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -15974,58 +13285,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def put_asset_information_without_preload_content(
-        self,
-        asset_information: Annotated[AssetInformation, Field(description="Asset Information object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates the Asset Information
-
-
-        :param asset_information: Asset Information object (required)
-        :type asset_information: AssetInformation
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _put_asset_information_serialize(
         self,
@@ -16106,7 +13365,7 @@ class AssetAdministrationShellServiceApi:
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
         file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -16154,11 +13413,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__put_file_by_path (
         submodel_identifier,
         id_short_path,
@@ -16174,10 +13429,14 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __put_file_by_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
+
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -16226,7 +13485,78 @@ class AssetAdministrationShellServiceApi:
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
         file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Uploads file content to an existing submodel element at a specified path within submodel elements hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param file_name:
+        :type file_name: str
+        :param file:
+        :type file: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__put_file_by_path_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            file_name,
+            file,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __put_file_by_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        file_name: Optional[StrictStr] = None,
+
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -16259,78 +13589,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__put_file_by_path_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            file_name,
-            file,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __put_file_by_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Uploads file content to an existing submodel element at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param file_name:
-        :type file_name: str
-        :param file:
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -16340,67 +13598,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def put_file_by_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Uploads file content to an existing submodel element at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param file_name:
-        :type file_name: str
-        :param file:
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _put_file_by_path_serialize(
         self,
@@ -16535,11 +13732,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__put_submodel (
         submodel_identifier,
         submodel,
@@ -16554,8 +13747,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __put_submodel(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         submodel: Annotated[Submodel, Field(description="Submodel object")],
+
         level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
         _request_timeout: Union[
             None,
@@ -16617,6 +13813,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates the Submodel
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param submodel: Submodel object (required)
+        :type submodel: Submodel
+        :param level: Determines the structural depth of the respective resource content
+        :type level: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__put_submodel_with_http_info (
+            submodel_identifier,
+            submodel,
+            level,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __put_submodel_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        submodel: Annotated[Submodel, Field(description="Submodel object")],
+
+        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._put_submodel_serialize(
             submodel_identifier=submodel_identifier,
             submodel=submodel,
@@ -16635,74 +13897,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__put_submodel_with_http_info (self,
-            submodel_identifier,
-            submodel,
-            level,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __put_submodel_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel: Annotated[Submodel, Field(description="Submodel object")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel: Submodel object (required)
-        :type submodel: Submodel
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -16712,64 +13906,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def put_submodel_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        submodel: Annotated[Submodel, Field(description="Submodel object")],
-        level: Annotated[Optional[StrictStr], Field(description="Determines the structural depth of the respective resource content")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates the Submodel
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param submodel: Submodel object (required)
-        :type submodel: Submodel
-        :param level: Determines the structural depth of the respective resource content
-        :type level: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _put_submodel_serialize(
         self,
@@ -16903,11 +14039,7 @@ class AssetAdministrationShellServiceApi:
         """ # noqa: E501
 
 
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
         return self.__put_submodel_element_by_path (
         submodel_identifier,
         id_short_path,
@@ -16922,8 +14054,11 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __put_submodel_element_by_path(
         self,
+
         submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
         id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
         submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
         _request_timeout: Union[
             None,
@@ -16985,6 +14120,72 @@ class AssetAdministrationShellServiceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates an existing submodel element at a specified path within submodel elements hierarchy
+
+
+        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type submodel_identifier: bytearray
+        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
+        :type id_short_path: str
+        :param submodel_element: Requested submodel element (required)
+        :type submodel_element: SubmodelElement
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        submodel_identifier = ApiClient.base64_url_encode(submodel_identifier)
+        return self.__put_submodel_element_by_path_with_http_info (
+            submodel_identifier,
+            id_short_path,
+            submodel_element,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __put_submodel_element_by_path_with_http_info(
+        self,
+
+        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
+
+        submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._put_submodel_element_by_path_serialize(
             submodel_identifier=submodel_identifier,
             id_short_path=id_short_path,
@@ -17003,74 +14204,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(submodel_identifier, str):
-            submodel_identifier_bytes = data.encode('utf-8')
-            submodel_identifier = base64.standard_b64encode(submodel_identifier_bytes)
-        else:
-            submodel_identifier = base64.standard_b64encode(submodel_identifier)
-
-        return self.__put_submodel_element_by_path_with_http_info (self,
-            submodel_identifier,
-            id_short_path,
-            submodel_element,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __put_submodel_element_by_path_with_http_info(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates an existing submodel element at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element: Requested submodel element (required)
-        :type submodel_element: SubmodelElement
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -17080,64 +14213,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def put_submodel_element_by_path_without_preload_content(
-        self,
-        submodel_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Submodel’s unique id (UTF8-BASE64-URL-encoded)")],
-        id_short_path: Annotated[StrictStr, Field(description="IdShort path to the submodel element (dot-separated)")],
-        submodel_element: Annotated[SubmodelElement, Field(description="Requested submodel element")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates an existing submodel element at a specified path within submodel elements hierarchy
-
-
-        :param submodel_identifier: The Submodel’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type submodel_identifier: bytearray
-        :param id_short_path: IdShort path to the submodel element (dot-separated) (required)
-        :type id_short_path: str
-        :param submodel_element: Requested submodel element (required)
-        :type submodel_element: SubmodelElement
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _put_submodel_element_by_path_serialize(
         self,
@@ -17222,7 +14297,7 @@ class AssetAdministrationShellServiceApi:
     def put_thumbnail(
         self,
         file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -17279,8 +14354,10 @@ class AssetAdministrationShellServiceApi:
     @validate_call
     def __put_thumbnail(
         self,
+
         file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
+
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -17325,7 +14402,67 @@ class AssetAdministrationShellServiceApi:
     def put_thumbnail_with_http_info(
         self,
         file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """put_thumbnail
+
+
+        :param file_name:
+        :type file_name: str
+        :param file:
+        :type file: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__put_thumbnail_with_http_info (
+            file_name,
+            file,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __put_thumbnail_with_http_info(
+        self,
+
+        file_name: Optional[StrictStr] = None,
+
+        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -17356,65 +14493,6 @@ class AssetAdministrationShellServiceApi:
             '404': "Result",
             '500': "Result",
         }
-
-        return self.__put_thumbnail_with_http_info (self,
-            file_name,
-            file,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __put_thumbnail_with_http_info(
-        self,
-        file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """put_thumbnail
-
-
-        :param file_name:
-        :type file_name: str
-        :param file:
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -17424,61 +14502,6 @@ class AssetAdministrationShellServiceApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def put_thumbnail_without_preload_content(
-        self,
-        file_name: Optional[StrictStr] = None,
-        file: Optional[Union[StrictBytes, StrictStr]] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """put_thumbnail
-
-
-        :param file_name:
-        :type file_name: str
-        :param file:
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _put_thumbnail_serialize(
         self,

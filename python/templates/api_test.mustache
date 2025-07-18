@@ -1,0 +1,30 @@
+# coding: utf-8
+
+{{>partial_header}}
+
+import os
+import unittest
+import importlib
+from test_runner import DeclarativeTestCase
+
+from {{apiPackage}}.{{classFilename}} import {{classname}}
+
+class Test{{classname}}(unittest.TestCase):
+    """{{classname}} functional test using declarative test definitions"""
+
+    def setUp(self) -> None:
+        self.api = {{classname}}()
+
+    {{#operation}}
+    def test_{{operationId}}(self):
+        """{{summary}}"""
+        test_file = os.path.join(
+            os.getenv("BASYXTEST_FOLDER", "tests/definitions"),
+            "{{testIdentifier}}",
+            "{{operationId}}.yaml"
+        )
+        if not os.path.exists(test_file):
+            self.skipTest("No declarative test definition found for {{operationId}}")
+        runner = DeclarativeTestCase()
+        runner.run_test_case(test_file, self.api)
+    {{/operation}}

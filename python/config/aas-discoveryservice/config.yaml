@@ -1,5 +1,11 @@
 additionalProperties:  
+  useOneOfDiscriminatorLookup: true
   imports:
-    - import: from basyxclients.models.discovery.paged_result_or_string_items import PagedResultOrStringItems
+    - import: from basyxclients.models.discovery.get_all_asset_links_result import GetAllAssetLinksResult
     - import: from basyxclients.models.part2.service_description import ServiceDescription
     - import: from basyxclients.models.part1.specific_asset_id import SpecificAssetId
+
+# files:
+#   __init__package.mustache:
+#     templateType: SupportingFiles
+#     destinationFilename: basyxclients/models/discovery/__init__.py

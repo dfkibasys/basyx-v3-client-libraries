@@ -1,4 +1,11 @@
-
+- op: add
+  path: /components/schemas/PropertyValue/discriminator
+  value:
+    propertyName: type
+    mapping:
+      string: '#/components/schemas/StringValue'
+      number: '#/components/schemas/NumberValue'
+      boolean: '#/components/schemas/BooleanValue'
 - op: remove
   path: /components/schemas/AssetAdministrationShellDescriptor/example
 - op: replace
@@ -7,6 +14,12 @@
 - op: replace
   path: /components/schemas/AssetAdministrationShellDescriptor/allOf/1/properties/globalAssetId/pattern
   value: "^[\\x09\\x0A\\x0D\\x20-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFFF]*$"
+- op: replace
+  path: /components/schemas/ServiceDescription/example
+  value: 
+    profiles:
+    - "https://admin-shell.io/aas/API/3/0/AssetAdministrationShellRegistryServiceSpecification/SSP-002"
+    - "https://admin-shell.io/aas/API/3/0/SubmodelRegistryServiceSpecification/SSP-002"
 - op: replace
   path: /components/schemas/AssetAdministrationShellDescriptor/allOf/1/properties/id/pattern
   value: "^[\\x09\\x0A\\x0D\\x20-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFFF]*$"
@@ -90,8 +103,6 @@
 - op: add
   path: /components/parameters/HandleId/x-utf8-base64-url-encoded-as-string
   value: true
-
-
 
 # # # due to the bug in yaml patch just remove the patterns here
 # # # - op: remove

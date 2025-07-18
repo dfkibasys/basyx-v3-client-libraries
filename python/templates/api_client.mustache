@@ -10,9 +10,10 @@ import mimetypes
 import os
 import re
 import tempfile
+import base64
 
 from urllib.parse import quote
-from typing import Tuple, Optional, List, Dict, Union
+from typing import Tuple, Optional, List, Dict, Union, Any, Optional
 from pydantic import SecretStr
 {{#tornado}}
 import tornado.gen
@@ -800,3 +801,41 @@ class ApiClient:
         """
 
         return klass.from_dict(data)
+
+    @staticmethod
+    def base64_url_encode(value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        bytes_value = value.encode('utf-8')
+        encoded_bytes = base64.urlsafe_b64encode(bytes_value)
+        return encoded_bytes.decode('utf-8')
+
+    @staticmethod
+    def base64_url_encode_list(values: Optional[List[str]]) -> Optional[List[str]]:
+        if values is None:
+            return None
+        return [ApiClient.base64_url_encode(each_value) for each_value in values]
+
+    @staticmethod
+    def base64_url_encode_object(value: Any) -> Optional[str]:
+        if value is None:
+            return None
+
+        # Converts the object to a dictionary if it's a custom model
+        if hasattr(value, "to_dict"):
+            value = value.to_dict()
+        elif hasattr(value, "model_dump"):
+            value = value.model_dump(mode='json')
+
+        try:
+            # Now, json.dumps works correctly on the dictionary
+            json_string_value = json.dumps(value, separators=(',', ':'))
+            return ApiClient.base64_url_encode(json_string_value)
+        except TypeError as e:
+            raise ValueError(f"Object could not be serialized to JSON: {e}") from e
+
+    @staticmethod
+    def base64_url_encode_object_list(values: Optional[List[Any]]) -> Optional[str]:
+        if values is None:
+            return None
+        return [ApiClient.base64_url_encode_object(each_value) for each_value in values]

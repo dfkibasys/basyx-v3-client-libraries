@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part2.protocol_information_security_attributes import ProtocolInformationSecurityAttributes
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -80,9 +79,9 @@ class ProtocolInformation(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in security_attributes (list)
         _items = []
         if self.security_attributes:
-            for _item in self.security_attributes:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_security_attributes in self.security_attributes:
+                if _item_security_attributes:
+                    _items.append(_item_security_attributes.to_dict())
             _dict['securityAttributes'] = _items
         return _dict
 
@@ -106,4 +105,7 @@ class ProtocolInformation(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part2.protocol_information_security_attributes import ProtocolInformationSecurityAttributes
+# TODO: Rewrite to not use raise_errors
+ProtocolInformation.model_rebuild(raise_errors=False)
 

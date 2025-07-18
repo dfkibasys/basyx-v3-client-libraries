@@ -18,18 +18,8 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from basyxclients.models.part1.annotated_relationship_element import AnnotatedRelationshipElement
-from basyxclients.models.part1.basic_event_element import BasicEventElement
-from basyxclients.models.part1.blob import Blob
-from basyxclients.models.part1.capability import Capability
-from basyxclients.models.part1.file import File
-from basyxclients.models.part1.model_property import ModelProperty
-from basyxclients.models.part1.multi_language_property import MultiLanguageProperty
-from basyxclients.models.part1.range import Range
-from basyxclients.models.part1.reference_element import ReferenceElement
-from basyxclients.models.part1.relationship_element import RelationshipElement
 from pydantic import StrictStr, Field
-from typing import Union, List, Optional, Dict
+from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
 SUBMODELELEMENTCHOICE_ONE_OF_SCHEMAS = ["AnnotatedRelationshipElement", "BasicEventElement", "Blob", "Capability", "Entity", "File", "ModelProperty", "MultiLanguageProperty", "Operation", "Range", "ReferenceElement", "RelationshipElement", "SubmodelElementCollection", "SubmodelElementList"]
@@ -67,15 +57,28 @@ class SubmodelElementChoice(BaseModel):
     # data type: SubmodelElementList
     oneof_schema_14_validator: Optional[SubmodelElementList] = None
     actual_instance: Optional[Union[AnnotatedRelationshipElement, BasicEventElement, Blob, Capability, Entity, File, ModelProperty, MultiLanguageProperty, Operation, Range, ReferenceElement, RelationshipElement, SubmodelElementCollection, SubmodelElementList]] = None
-    one_of_schemas: List[str] = Field(default=Literal["AnnotatedRelationshipElement", "BasicEventElement", "Blob", "Capability", "Entity", "File", "ModelProperty", "MultiLanguageProperty", "Operation", "Range", "ReferenceElement", "RelationshipElement", "SubmodelElementCollection", "SubmodelElementList"])
+    one_of_schemas: Set[str] = { "AnnotatedRelationshipElement", "BasicEventElement", "Blob", "Capability", "Entity", "File", "ModelProperty", "MultiLanguageProperty", "Operation", "Range", "ReferenceElement", "RelationshipElement", "SubmodelElementCollection", "SubmodelElementList" }
 
     model_config = ConfigDict(
         validate_assignment=True,
         protected_namespaces=(),
     )
 
-
     discriminator_value_class_map: Dict[str, str] = {
+        'RelationshipElement': 'RelationshipElement',
+        'AnnotatedRelationshipElement': 'AnnotatedRelationshipElement',
+        'BasicEventElement': 'BasicEventElement',
+        'Blob': 'Blob',
+        'Capability': 'Capability',
+        'Entity': 'Entity',
+        'File': 'File',
+        'MultiLanguageProperty': 'MultiLanguageProperty',
+        'Operation': 'Operation',
+        'Property': 'ModelProperty',
+        'Range': 'Range',
+        'ReferenceElement': 'ReferenceElement',
+        'SubmodelElementCollection': 'SubmodelElementCollection',
+        'SubmodelElementList': 'SubmodelElementList'
     }
 
     def __init__(self, *args, **kwargs) -> None:
@@ -377,6 +380,21 @@ class SubmodelElementChoice(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
+from basyxclients.models.part1.annotated_relationship_element import AnnotatedRelationshipElement
+from basyxclients.models.part1.basic_event_element import BasicEventElement
+from basyxclients.models.part1.blob import Blob
+from basyxclients.models.part1.capability import Capability
+from basyxclients.models.part1.file import File
+from basyxclients.models.part1.model_property import ModelProperty
+from basyxclients.models.part1.multi_language_property import MultiLanguageProperty
+from basyxclients.models.part1.range import Range
+from basyxclients.models.part1.reference_element import ReferenceElement
+from basyxclients.models.part1.relationship_element import RelationshipElement
+from basyxclients.models.part1.entity import Entity
+from basyxclients.models.part1.operation import Operation
+from basyxclients.models.part1.model_property import ModelProperty
+from basyxclients.models.part1.submodel_element_collection import SubmodelElementCollection
+from basyxclients.models.part1.submodel_element_list import SubmodelElementList
 # TODO: Rewrite to not use raise_errors
 SubmodelElementChoice.model_rebuild(raise_errors=False)
 

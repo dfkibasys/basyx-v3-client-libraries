@@ -25,6 +25,7 @@ from basyxclients.api_client import ApiClient, RequestSerialized
 from basyxclients.api_response import ApiResponse
 from basyxclients.rest import RESTResponseType
 
+import base64
 from base64 import urlsafe_b64encode
 
 class ConceptDescriptionRepositoryApi:
@@ -85,11 +86,7 @@ class ConceptDescriptionRepositoryApi:
         """ # noqa: E501
 
 
-        if isinstance(cd_identifier, str):
-            cd_identifier_bytes = data.encode('utf-8')
-            cd_identifier = base64.standard_b64encode(cd_identifier_bytes)
-        else:
-            cd_identifier = base64.standard_b64encode(cd_identifier)
+        cd_identifier = ApiClient.base64_url_encode(cd_identifier)
         return self.__delete_concept_description_by_id (
         cd_identifier,
         _request_timeout,
@@ -102,6 +99,7 @@ class ConceptDescriptionRepositoryApi:
     @validate_call
     def __delete_concept_description_by_id(
         self,
+
         cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
             None,
@@ -158,6 +156,62 @@ class ConceptDescriptionRepositoryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Deletes a Concept Description
+
+
+        :param cd_identifier: The Concept Description’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type cd_identifier: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        cd_identifier = ApiClient.base64_url_encode(cd_identifier)
+        return self.__delete_concept_description_by_id_with_http_info (
+            cd_identifier,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __delete_concept_description_by_id_with_http_info(
+        self,
+
+        cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._delete_concept_description_by_id_serialize(
             cd_identifier=cd_identifier,
             _request_auth=_request_auth,
@@ -173,66 +227,6 @@ class ConceptDescriptionRepositoryApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(cd_identifier, str):
-            cd_identifier_bytes = data.encode('utf-8')
-            cd_identifier = base64.standard_b64encode(cd_identifier_bytes)
-        else:
-            cd_identifier = base64.standard_b64encode(cd_identifier)
-
-        return self.__delete_concept_description_by_id_with_http_info (self,
-            cd_identifier,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __delete_concept_description_by_id_with_http_info(
-        self,
-        cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Deletes a Concept Description
-
-
-        :param cd_identifier: The Concept Description’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type cd_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -242,58 +236,6 @@ class ConceptDescriptionRepositoryApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def delete_concept_description_by_id_without_preload_content(
-        self,
-        cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Deletes a Concept Description
-
-
-        :param cd_identifier: The Concept Description’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type cd_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _delete_concept_description_by_id_serialize(
         self,
@@ -420,8 +362,11 @@ class ConceptDescriptionRepositoryApi:
     @validate_call
     def __generate_serialization_by_ids(
         self,
+
         aas_ids: Annotated[Optional[List[StrictStr]], Field(description="The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)")] = None,
+
         submodel_ids: Annotated[Optional[List[StrictStr]], Field(description="The Submodels' unique ids (UTF8-BASE64-URL-encoded)")] = None,
+
         include_concept_descriptions: Annotated[Optional[StrictBool], Field(description="Include Concept Descriptions?")] = None,
         _request_timeout: Union[
             None,
@@ -481,6 +426,71 @@ class ConceptDescriptionRepositoryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[bytearray]:
+        """Returns an appropriate serialization based on the specified format (see SerializationFormat)
+
+
+        :param aas_ids: The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)
+        :type aas_ids: List[str]
+        :param submodel_ids: The Submodels' unique ids (UTF8-BASE64-URL-encoded)
+        :type submodel_ids: List[str]
+        :param include_concept_descriptions: Include Concept Descriptions?
+        :type include_concept_descriptions: bool
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__generate_serialization_by_ids_with_http_info (
+            aas_ids,
+            submodel_ids,
+            include_concept_descriptions,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __generate_serialization_by_ids_with_http_info(
+        self,
+
+        aas_ids: Annotated[Optional[List[StrictStr]], Field(description="The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)")] = None,
+
+        submodel_ids: Annotated[Optional[List[StrictStr]], Field(description="The Submodels' unique ids (UTF8-BASE64-URL-encoded)")] = None,
+
+        include_concept_descriptions: Annotated[Optional[StrictBool], Field(description="Include Concept Descriptions?")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[bytearray]:
         _param = self._generate_serialization_by_ids_serialize(
             aas_ids=aas_ids,
             submodel_ids=submodel_ids,
@@ -497,69 +507,6 @@ class ConceptDescriptionRepositoryApi:
             '403': "Result",
             '500': "Result",
         }
-
-        return self.__generate_serialization_by_ids_with_http_info (self,
-            aas_ids,
-            submodel_ids,
-            include_concept_descriptions,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __generate_serialization_by_ids_with_http_info(
-        self,
-        aas_ids: Annotated[Optional[List[StrictStr]], Field(description="The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)")] = None,
-        submodel_ids: Annotated[Optional[List[StrictStr]], Field(description="The Submodels' unique ids (UTF8-BASE64-URL-encoded)")] = None,
-        include_concept_descriptions: Annotated[Optional[StrictBool], Field(description="Include Concept Descriptions?")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[bytearray]:
-        """Returns an appropriate serialization based on the specified format (see SerializationFormat)
-
-
-        :param aas_ids: The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)
-        :type aas_ids: List[str]
-        :param submodel_ids: The Submodels' unique ids (UTF8-BASE64-URL-encoded)
-        :type submodel_ids: List[str]
-        :param include_concept_descriptions: Include Concept Descriptions?
-        :type include_concept_descriptions: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -569,64 +516,6 @@ class ConceptDescriptionRepositoryApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def generate_serialization_by_ids_without_preload_content(
-        self,
-        aas_ids: Annotated[Optional[List[StrictStr]], Field(description="The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)")] = None,
-        submodel_ids: Annotated[Optional[List[StrictStr]], Field(description="The Submodels' unique ids (UTF8-BASE64-URL-encoded)")] = None,
-        include_concept_descriptions: Annotated[Optional[StrictBool], Field(description="Include Concept Descriptions?")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns an appropriate serialization based on the specified format (see SerializationFormat)
-
-
-        :param aas_ids: The Asset Administration Shells' unique ids (UTF8-BASE64-URL-encoded)
-        :type aas_ids: List[str]
-        :param submodel_ids: The Submodels' unique ids (UTF8-BASE64-URL-encoded)
-        :type submodel_ids: List[str]
-        :param include_concept_descriptions: Include Concept Descriptions?
-        :type include_concept_descriptions: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _generate_serialization_by_ids_serialize(
         self,
@@ -761,16 +650,8 @@ class ConceptDescriptionRepositoryApi:
         """ # noqa: E501
 
 
-        if isinstance(is_case_of, str):
-            is_case_of_bytes = data.encode('utf-8')
-            is_case_of = base64.standard_b64encode(is_case_of_bytes)
-        else:
-            is_case_of = base64.standard_b64encode(is_case_of)
-        if isinstance(data_specification_ref, str):
-            data_specification_ref_bytes = data.encode('utf-8')
-            data_specification_ref = base64.standard_b64encode(data_specification_ref_bytes)
-        else:
-            data_specification_ref = base64.standard_b64encode(data_specification_ref)
+        is_case_of = ApiClient.base64_url_encode(is_case_of)
+        data_specification_ref = ApiClient.base64_url_encode(data_specification_ref)
         return self.__get_all_concept_descriptions (
         id_short,
         is_case_of,
@@ -787,10 +668,15 @@ class ConceptDescriptionRepositoryApi:
     @validate_call
     def __get_all_concept_descriptions(
         self,
+
         id_short: Annotated[Optional[StrictStr], Field(description="The Concept Description’s IdShort")] = None,
+
         is_case_of: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="IsCaseOf reference (UTF8-BASE64-URL-encoded)")] = None,
+
         data_specification_ref: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="DataSpecification reference (UTF8-BASE64-URL-encoded)")] = None,
+
         limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
         cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
         _request_timeout: Union[
             None,
@@ -854,6 +740,83 @@ class ConceptDescriptionRepositoryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetConceptDescriptionsResult]:
+        """Returns all Concept Descriptions
+
+
+        :param id_short: The Concept Description’s IdShort
+        :type id_short: str
+        :param is_case_of: IsCaseOf reference (UTF8-BASE64-URL-encoded)
+        :type is_case_of: bytearray
+        :param data_specification_ref: DataSpecification reference (UTF8-BASE64-URL-encoded)
+        :type data_specification_ref: bytearray
+        :param limit: The maximum number of elements in the response array
+        :type limit: int
+        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
+        :type cursor: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        is_case_of = ApiClient.base64_url_encode(is_case_of)
+        data_specification_ref = ApiClient.base64_url_encode(data_specification_ref)
+        return self.__get_all_concept_descriptions_with_http_info (
+            id_short,
+            is_case_of,
+            data_specification_ref,
+            limit,
+            cursor,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_all_concept_descriptions_with_http_info(
+        self,
+
+        id_short: Annotated[Optional[StrictStr], Field(description="The Concept Description’s IdShort")] = None,
+
+        is_case_of: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="IsCaseOf reference (UTF8-BASE64-URL-encoded)")] = None,
+
+        data_specification_ref: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="DataSpecification reference (UTF8-BASE64-URL-encoded)")] = None,
+
+        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
+
+        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetConceptDescriptionsResult]:
         _param = self._get_all_concept_descriptions_serialize(
             id_short=id_short,
             is_case_of=is_case_of,
@@ -872,87 +835,6 @@ class ConceptDescriptionRepositoryApi:
             '403': "Result",
             '500': "Result",
         }
-        if isinstance(is_case_of, str):
-            is_case_of_bytes = data.encode('utf-8')
-            is_case_of = base64.standard_b64encode(is_case_of_bytes)
-        else:
-            is_case_of = base64.standard_b64encode(is_case_of)
-        if isinstance(data_specification_ref, str):
-            data_specification_ref_bytes = data.encode('utf-8')
-            data_specification_ref = base64.standard_b64encode(data_specification_ref_bytes)
-        else:
-            data_specification_ref = base64.standard_b64encode(data_specification_ref)
-
-        return self.__get_all_concept_descriptions_with_http_info (self,
-            id_short,
-            is_case_of,
-            data_specification_ref,
-            limit,
-            cursor,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_all_concept_descriptions_with_http_info(
-        self,
-        id_short: Annotated[Optional[StrictStr], Field(description="The Concept Description’s IdShort")] = None,
-        is_case_of: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="IsCaseOf reference (UTF8-BASE64-URL-encoded)")] = None,
-        data_specification_ref: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="DataSpecification reference (UTF8-BASE64-URL-encoded)")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetConceptDescriptionsResult]:
-        """Returns all Concept Descriptions
-
-
-        :param id_short: The Concept Description’s IdShort
-        :type id_short: str
-        :param is_case_of: IsCaseOf reference (UTF8-BASE64-URL-encoded)
-        :type is_case_of: bytearray
-        :param data_specification_ref: DataSpecification reference (UTF8-BASE64-URL-encoded)
-        :type data_specification_ref: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -962,70 +844,6 @@ class ConceptDescriptionRepositoryApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_all_concept_descriptions_without_preload_content(
-        self,
-        id_short: Annotated[Optional[StrictStr], Field(description="The Concept Description’s IdShort")] = None,
-        is_case_of: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="IsCaseOf reference (UTF8-BASE64-URL-encoded)")] = None,
-        data_specification_ref: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="DataSpecification reference (UTF8-BASE64-URL-encoded)")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(strict=True, ge=1)]], Field(description="The maximum number of elements in the response array")] = None,
-        cursor: Annotated[Optional[StrictStr], Field(description="A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns all Concept Descriptions
-
-
-        :param id_short: The Concept Description’s IdShort
-        :type id_short: str
-        :param is_case_of: IsCaseOf reference (UTF8-BASE64-URL-encoded)
-        :type is_case_of: bytearray
-        :param data_specification_ref: DataSpecification reference (UTF8-BASE64-URL-encoded)
-        :type data_specification_ref: bytearray
-        :param limit: The maximum number of elements in the response array
-        :type limit: int
-        :param cursor: A server-generated identifier retrieved from pagingMetadata that specifies from which position the result listing should continue
-        :type cursor: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_all_concept_descriptions_serialize(
         self,
@@ -1154,11 +972,7 @@ class ConceptDescriptionRepositoryApi:
         """ # noqa: E501
 
 
-        if isinstance(cd_identifier, str):
-            cd_identifier_bytes = data.encode('utf-8')
-            cd_identifier = base64.standard_b64encode(cd_identifier_bytes)
-        else:
-            cd_identifier = base64.standard_b64encode(cd_identifier)
+        cd_identifier = ApiClient.base64_url_encode(cd_identifier)
         return self.__get_concept_description_by_id (
         cd_identifier,
         _request_timeout,
@@ -1171,6 +985,7 @@ class ConceptDescriptionRepositoryApi:
     @validate_call
     def __get_concept_description_by_id(
         self,
+
         cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
         _request_timeout: Union[
             None,
@@ -1227,6 +1042,62 @@ class ConceptDescriptionRepositoryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ConceptDescription]:
+        """Returns a specific Concept Description
+
+
+        :param cd_identifier: The Concept Description’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type cd_identifier: bytearray
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        cd_identifier = ApiClient.base64_url_encode(cd_identifier)
+        return self.__get_concept_description_by_id_with_http_info (
+            cd_identifier,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __get_concept_description_by_id_with_http_info(
+        self,
+
+        cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[ConceptDescription]:
         _param = self._get_concept_description_by_id_serialize(
             cd_identifier=cd_identifier,
             _request_auth=_request_auth,
@@ -1242,66 +1113,6 @@ class ConceptDescriptionRepositoryApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(cd_identifier, str):
-            cd_identifier_bytes = data.encode('utf-8')
-            cd_identifier = base64.standard_b64encode(cd_identifier_bytes)
-        else:
-            cd_identifier = base64.standard_b64encode(cd_identifier)
-
-        return self.__get_concept_description_by_id_with_http_info (self,
-            cd_identifier,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __get_concept_description_by_id_with_http_info(
-        self,
-        cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ConceptDescription]:
-        """Returns a specific Concept Description
-
-
-        :param cd_identifier: The Concept Description’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type cd_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -1311,58 +1122,6 @@ class ConceptDescriptionRepositoryApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_concept_description_by_id_without_preload_content(
-        self,
-        cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns a specific Concept Description
-
-
-        :param cd_identifier: The Concept Description’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type cd_identifier: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_concept_description_by_id_serialize(
         self,
@@ -1527,19 +1286,32 @@ class ConceptDescriptionRepositoryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ServiceDescription]:
-        _param = self._get_description_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
+        """Returns the self-describing information of a network resource (ServiceDescription)
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ServiceDescription",
-            '403': "Result",
-        }
 
-        return self.__get_description_with_http_info (self,
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__get_description_with_http_info (
             _request_timeout,
             _request_auth,
             _content_type,
@@ -1564,31 +1336,17 @@ class ConceptDescriptionRepositoryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ServiceDescription]:
-        """Returns the self-describing information of a network resource (ServiceDescription)
+        _param = self._get_description_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
 
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ServiceDescription",
+            '403': "Result",
+        }
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -1598,55 +1356,6 @@ class ConceptDescriptionRepositoryApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def get_description_without_preload_content(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Returns the self-describing information of a network resource (ServiceDescription)
-
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _get_description_serialize(
         self,
@@ -1762,6 +1471,7 @@ class ConceptDescriptionRepositoryApi:
     @validate_call
     def __post_concept_description(
         self,
+
         concept_description: Annotated[ConceptDescription, Field(description="Concept Description object")],
         _request_timeout: Union[
             None,
@@ -1818,6 +1528,61 @@ class ConceptDescriptionRepositoryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ConceptDescription]:
+        """Creates a new Concept Description
+
+
+        :param concept_description: Concept Description object (required)
+        :type concept_description: ConceptDescription
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        return self.__post_concept_description_with_http_info (
+            concept_description,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __post_concept_description_with_http_info(
+        self,
+
+        concept_description: Annotated[ConceptDescription, Field(description="Concept Description object")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[ConceptDescription]:
         _param = self._post_concept_description_serialize(
             concept_description=concept_description,
             _request_auth=_request_auth,
@@ -1833,61 +1598,6 @@ class ConceptDescriptionRepositoryApi:
             '409': "Result",
             '500': "Result",
         }
-
-        return self.__post_concept_description_with_http_info (self,
-            concept_description,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __post_concept_description_with_http_info(
-        self,
-        concept_description: Annotated[ConceptDescription, Field(description="Concept Description object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ConceptDescription]:
-        """Creates a new Concept Description
-
-
-        :param concept_description: Concept Description object (required)
-        :type concept_description: ConceptDescription
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -1897,58 +1607,6 @@ class ConceptDescriptionRepositoryApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def post_concept_description_without_preload_content(
-        self,
-        concept_description: Annotated[ConceptDescription, Field(description="Concept Description object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Creates a new Concept Description
-
-
-        :param concept_description: Concept Description object (required)
-        :type concept_description: ConceptDescription
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _post_concept_description_serialize(
         self,
@@ -2071,11 +1729,7 @@ class ConceptDescriptionRepositoryApi:
         """ # noqa: E501
 
 
-        if isinstance(cd_identifier, str):
-            cd_identifier_bytes = data.encode('utf-8')
-            cd_identifier = base64.standard_b64encode(cd_identifier_bytes)
-        else:
-            cd_identifier = base64.standard_b64encode(cd_identifier)
+        cd_identifier = ApiClient.base64_url_encode(cd_identifier)
         return self.__put_concept_description_by_id (
         cd_identifier,
         concept_description,
@@ -2089,7 +1743,9 @@ class ConceptDescriptionRepositoryApi:
     @validate_call
     def __put_concept_description_by_id(
         self,
+
         cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
+
         concept_description: Annotated[ConceptDescription, Field(description="Concept Description object")],
         _request_timeout: Union[
             None,
@@ -2148,6 +1804,67 @@ class ConceptDescriptionRepositoryApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
+        """Updates an existing Concept Description
+
+
+        :param cd_identifier: The Concept Description’s unique id (UTF8-BASE64-URL-encoded) (required)
+        :type cd_identifier: bytearray
+        :param concept_description: Concept Description object (required)
+        :type concept_description: ConceptDescription
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        cd_identifier = ApiClient.base64_url_encode(cd_identifier)
+        return self.__put_concept_description_by_id_with_http_info (
+            cd_identifier,
+            concept_description,
+            _request_timeout,
+            _request_auth,
+            _content_type,
+            _headers,
+            _host_index,
+        )
+
+
+    @validate_call
+    def __put_concept_description_by_id_with_http_info(
+        self,
+
+        cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
+
+        concept_description: Annotated[ConceptDescription, Field(description="Concept Description object")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
         _param = self._put_concept_description_by_id_serialize(
             cd_identifier=cd_identifier,
             concept_description=concept_description,
@@ -2164,70 +1881,6 @@ class ConceptDescriptionRepositoryApi:
             '404': "Result",
             '500': "Result",
         }
-        if isinstance(cd_identifier, str):
-            cd_identifier_bytes = data.encode('utf-8')
-            cd_identifier = base64.standard_b64encode(cd_identifier_bytes)
-        else:
-            cd_identifier = base64.standard_b64encode(cd_identifier)
-
-        return self.__put_concept_description_by_id_with_http_info (self,
-            cd_identifier,
-            concept_description,
-            _request_timeout,
-            _request_auth,
-            _content_type,
-            _headers,
-            _host_index,
-        )
-
-
-    @validate_call
-    def __put_concept_description_by_id_with_http_info(
-        self,
-        cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
-        concept_description: Annotated[ConceptDescription, Field(description="Concept Description object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Updates an existing Concept Description
-
-
-        :param cd_identifier: The Concept Description’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type cd_identifier: bytearray
-        :param concept_description: Concept Description object (required)
-        :type concept_description: ConceptDescription
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
         response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
@@ -2237,61 +1890,6 @@ class ConceptDescriptionRepositoryApi:
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
-
-    @validate_call
-    def put_concept_description_by_id_without_preload_content(
-        self,
-        cd_identifier: Annotated[Union[StrictBytes, StrictStr], Field(description="The Concept Description’s unique id (UTF8-BASE64-URL-encoded)")],
-        concept_description: Annotated[ConceptDescription, Field(description="Concept Description object")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Updates an existing Concept Description
-
-
-        :param cd_identifier: The Concept Description’s unique id (UTF8-BASE64-URL-encoded) (required)
-        :type cd_identifier: bytearray
-        :param concept_description: Concept Description object (required)
-        :type concept_description: ConceptDescription
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
 
     def _put_concept_description_by_id_serialize(
         self,

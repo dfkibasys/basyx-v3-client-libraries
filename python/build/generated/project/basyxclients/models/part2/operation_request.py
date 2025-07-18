@@ -85,16 +85,16 @@ class OperationRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in inoutput_arguments (list)
         _items = []
         if self.inoutput_arguments:
-            for _item in self.inoutput_arguments:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_inoutput_arguments in self.inoutput_arguments:
+                if _item_inoutput_arguments:
+                    _items.append(_item_inoutput_arguments.to_dict())
             _dict['inoutputArguments'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in input_arguments (list)
         _items = []
         if self.input_arguments:
-            for _item in self.input_arguments:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_input_arguments in self.input_arguments:
+                if _item_input_arguments:
+                    _items.append(_item_input_arguments.to_dict())
             _dict['inputArguments'] = _items
         return _dict
 
@@ -114,4 +114,7 @@ class OperationRequest(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.operation_variable import OperationVariable
+# TODO: Rewrite to not use raise_errors
+OperationRequest.model_rebuild(raise_errors=False)
 

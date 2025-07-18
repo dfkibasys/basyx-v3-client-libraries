@@ -20,7 +20,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from basyxclients.models.part2.reference_value import ReferenceValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -94,4 +93,7 @@ class RelationshipElementValue(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part2.reference_value import ReferenceValue
+# TODO: Rewrite to not use raise_errors
+RelationshipElementValue.model_rebuild(raise_errors=False)
 

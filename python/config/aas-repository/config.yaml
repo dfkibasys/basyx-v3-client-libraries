@@ -1,4 +1,6 @@
-additionalProperties: 
+useOneOfDiscriminatorLookup: true
+additionalProperties:
+  useOneOfDiscriminatorLookup: true
   imports:
   - import: from basyxclients.models.part1.asset_administration_shell import AssetAdministrationShell
   - import: from basyxclients.models.part1.asset_information import AssetInformation
@@ -32,3 +34,4 @@ additionalProperties:
   - import: from basyxclients.models.part1.key import Key
   - import: from basyxclients.models.part1.entity_type import EntityType
   - import: from basyxclients.models.part1.administrative_information import AdministrativeInformation
+  - import: from basyxclients.models.part1.specific_asset_id import SpecificAssetId

@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from basyxclients.models.part1.reference import Reference
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -78,9 +77,9 @@ class HasSemantics(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in supplemental_semantic_ids (list)
         _items = []
         if self.supplemental_semantic_ids:
-            for _item in self.supplemental_semantic_ids:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_supplemental_semantic_ids in self.supplemental_semantic_ids:
+                if _item_supplemental_semantic_ids:
+                    _items.append(_item_supplemental_semantic_ids.to_dict())
             _dict['supplementalSemanticIds'] = _items
         return _dict
 
@@ -99,4 +98,7 @@ class HasSemantics(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.reference import Reference
+# TODO: Rewrite to not use raise_errors
+HasSemantics.model_rebuild(raise_errors=False)
 

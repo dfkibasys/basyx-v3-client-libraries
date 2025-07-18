@@ -21,7 +21,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
-from basyxclients.models.part1.key_types import KeyTypes
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -89,4 +88,7 @@ class Key(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part1.key_types import KeyTypes
+# TODO: Rewrite to not use raise_errors
+Key.model_rebuild(raise_errors=False)
 

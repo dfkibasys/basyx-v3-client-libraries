@@ -1,33 +1,45 @@
-import sys
-import os
+from basyxclients.api import AssetAdministrationShellBasicDiscoveryApi
+from basyxclients.api import SubmodelRepositoryApi
+from basyxclients import Configuration
+from basyxclients import ApiClient
+from basyxclients import ApiException
+from basyxclients.models.part1 import SpecificAssetId
 
-# Füge den Pfad der lokalen Bibliothek zum Systempfad hinzu
-sys.path.append(os.path.join(os.path.dirname(__file__), '../build/generated/project'))
-import basyxclients
-from basyxclients.rest import ApiException
 from pprint import pprint
 
-def main():
-    # Defining the host is optional and defaults to http://localhost
-    # See configuration.py for a list of all supported configuration parameters.
-    configuration = basyxclients.Configuration(
-        host = "http://localhost:8083"
-    )
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = Configuration(
+    host = "http://localhost:8081"
+)
 
-    # Enter a context with an instance of the API client
-    with basyxclients.ApiClient(configuration) as api_client:
-        # Create an instance of the API class
-        api_instance = basyxclients.AssetAdministrationShellRegistryApi(api_client)
-
-        try:
-            # Deletes an Asset Administration Shell Descriptor, i.e. de-registers an AAS
-            result = api_instance.get_all_asset_administration_shell_descriptors()
-            print("Got result: %d\n " % len(result.result))
-            
-        except ApiException as e:
-            print("Exception when calling AssetAdministrationShellRegistryApi->delete_asset_administration_shell_descriptor_by_id: %s\n" % e)
-
+# Enter a context with an instance of the API client
+with ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+ #   api_instance = AssetAdministrationShellBasicDiscoveryApi(api_client)
+    api_instance = SubmodelRepositoryApi(api_client)
     
+    try:
+        # asset_id = SpecificAssetId(
+        #     name="globalAssetId",
+        #     value="http://aas.dfki.de/ids/asset/clip/l130"
+        # )
 
-if __name__ == "__main__":
-    main()
+        # # The API expects a list of these objects.
+        # asset_id_list = [asset_id]
+        # api_response = api_instance.post_asset_links_by_shell_id_with_http_info(aas_identifier="http://aas.dfki.de/shell/clip/l130", specific_asset_id=asset_id_list)
+        # print("Response:")
+        # pprint(api_response)
+        # api_response = api_instance.get_all_shell_ids_by_asset_links_with_http_info(asset_ids=asset_id_list)
+        # print("Response:")
+        # pprint(api_response)
+
+        api_response = api_instance.get_all_submodels().result[0].id
+        print("Response:")
+        pprint(api_response)
+        api_response = api_instance.get_all_submodel_elements(submodel_identifier="http://acplt.test/Submodels/Assets/TestAsset/Identification")
+        print("Response:")
+        pprint(api_response)
+    except ApiException as e: # Die Ausnahmemeldung wurde korrigiert, um zum API-Aufruf zu passen
+        print("Exception when calling AssetAdministrationShellBasicDiscoveryApi->get_all_shell_ids_by_asset_links: %s\n" % e)
+

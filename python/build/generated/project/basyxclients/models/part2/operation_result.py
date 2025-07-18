@@ -20,9 +20,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from typing import Any, ClassVar, Dict, List, Optional
-from basyxclients.models.part2.execution_state import ExecutionState
-from basyxclients.models.part2.message import Message
-from basyxclients.models.part1.operation_variable import OperationVariable
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -79,23 +76,23 @@ class OperationResult(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of each item in messages (list)
         _items = []
         if self.messages:
-            for _item in self.messages:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_messages in self.messages:
+                if _item_messages:
+                    _items.append(_item_messages.to_dict())
             _dict['messages'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in inoutput_arguments (list)
         _items = []
         if self.inoutput_arguments:
-            for _item in self.inoutput_arguments:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_inoutput_arguments in self.inoutput_arguments:
+                if _item_inoutput_arguments:
+                    _items.append(_item_inoutput_arguments.to_dict())
             _dict['inoutputArguments'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in output_arguments (list)
         _items = []
         if self.output_arguments:
-            for _item in self.output_arguments:
-                if _item:
-                    _items.append(_item.to_dict())
+            for _item_output_arguments in self.output_arguments:
+                if _item_output_arguments:
+                    _items.append(_item_output_arguments.to_dict())
             _dict['outputArguments'] = _items
         return _dict
 
@@ -117,4 +114,9 @@ class OperationResult(BaseModel):
         })
         return _obj
 
+from basyxclients.models.part2.execution_state import ExecutionState
+from basyxclients.models.part2.message import Message
+from basyxclients.models.part1.operation_variable import OperationVariable
+# TODO: Rewrite to not use raise_errors
+OperationResult.model_rebuild(raise_errors=False)
 
