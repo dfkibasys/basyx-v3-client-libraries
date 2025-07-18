@@ -74,9 +74,13 @@ components:
             maxLength: 2000
             pattern: "^([\\t\\n\\r -\ud7ff\ue000-\ufffd]|\\ud800[\\udc00-\\udfff]|[\\ud801-\\udbfe][\\udc00-\\udfff]|\\udbff[\\udc00-\\udfff])*$"
     AnnotatedRelationshipElement:
+      type: object
+      title: AnnotatedRelationshipElement
+      x-discriminator-value: AnnotatedRelationshipElement
       allOf:
       - "$ref": "#/components/schemas/RelationshipElement_abstract"
-      - properties:
+      - type: object
+        properties:
           annotations:
             type: array
             items:
@@ -84,7 +88,10 @@ components:
             minItems: 1
           modelType:
             type: string
-            pattern: AnnotatedRelationshipElement
+            enum: 
+            - AnnotatedRelationshipElement
+        required: 
+        - modelType
     AssetAdministrationShell:
       allOf:
       - "$ref": "#/components/schemas/Identifiable"
@@ -137,9 +144,13 @@ components:
       - NotApplicable
       - Type
     BasicEventElement:
+      type: object
+      title: BasicEventElement
+      x-discriminator-value: BasicEventElement
       allOf:
       - "$ref": "#/components/schemas/EventElement"
-      - properties:
+      - type: object
+        properties:
           observed:
             "$ref": "#/components/schemas/Reference"
           direction:
@@ -164,15 +175,21 @@ components:
             pattern: "^-?P((([0-9]+Y([0-9]+M)?([0-9]+D)?|([0-9]+M)([0-9]+D)?|([0-9]+D))(T(([0-9]+H)([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?|([0-9]+M)([0-9]+(\\.[0-9]+)?S)?|([0-9]+(\\.[0-9]+)?S)))?)|(T(([0-9]+H)([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?|([0-9]+M)([0-9]+(\\.[0-9]+)?S)?|([0-9]+(\\.[0-9]+)?S))))$"
           modelType:
             type: string
-            pattern: BasicEventElement
+            enum: 
+            - BasicEventElement
         required:
         - observed
         - direction
         - state
+        - modelType
     Blob:
+      type: object
+      title: Blob
+      x-discriminator-value: Blob
       allOf:
       - "$ref": "#/components/schemas/DataElement"
-      - properties:
+      - type: object
+        properties:
           value:
             type: string
             format: byte
@@ -187,16 +204,25 @@ components:
                 !#-\\[\\]-~]|[\x80-ÿ])|\\\\([\\t !-~]|[\x80-ÿ]))*\"))*$"
           modelType:
             type: string
-            pattern: Blob
+            enum: 
+            - Blob
         required:
         - contentType
+        - modelType
     Capability:
+      type: object
+      title: Capability
+      x-discriminator-value: Capability
       allOf:
       - "$ref": "#/components/schemas/SubmodelElement"
-      - properties:
+      - type: object
+        properties:
           modelType:
             type: string
-            pattern: Capability
+            enum: 
+            - Capability
+        required: 
+        - modelType
     ConceptDescription:
       allOf:
       - "$ref": "#/components/schemas/Identifiable"
@@ -355,9 +381,13 @@ components:
       - dataSpecification
       - dataSpecificationContent
     Entity:
+      type: object
+      title: Entity
+      x-discriminator-value: Entity
       allOf:
       - $ref: "#/components/schemas/SubmodelElement"
-      - properties:
+      - type: object
+        properties:
           statements:
             type: array
             items:
@@ -377,9 +407,11 @@ components:
             minItems: 1
           modelType:
             type: string
-            pattern: Entity
+            enum: 
+            - Entity
         required:
         - entityType
+        - modelType
     EntityType:
       type: string
       enum:
@@ -455,9 +487,13 @@ components:
         required:
         - name
     File:
+      type: object
+      title: File
+      x-discriminator-value: File
       allOf:
       - "$ref": "#/components/schemas/DataElement"
-      - properties:
+      - type: object
+        properties:
           value:
             type: string
             allOf:
@@ -474,9 +510,11 @@ components:
             - pattern: "^([!#$%&'*+\\-.^_`|~0-9a-zA-Z])+/([!#$%&'*+\\-.^_`|~0-9a-zA-Z])+([\\t]*;[ \\t]*([!#$%&'*+\\-.^_`|~0-9a-zA-Z])+=(([!#$%&'*+\\-.^_`|~0-9a-zA-Z])+|\"(([\\t!#-\\[\\]-~]|[\x80-ÿ])|\\\\([\\t !-~]|[\x80-ÿ]))*\"))*$"
           modelType:
             type: string
-            pattern: File
+            enum: 
+            - File
         required:
         - contentType
+        - modelType
     HasDataSpecification:
       type: object
       properties:
@@ -634,9 +672,13 @@ components:
       - Instance
       - Template
     MultiLanguageProperty:
+      type: object
+      title: MultiLanguageProperty
+      x-discriminator-value: MultiLanguageProperty
       allOf:
       - "$ref": "#/components/schemas/DataElement"
-      - properties:
+      - type: object
+        properties:
           value:
             type: array
             items:
@@ -646,11 +688,18 @@ components:
             "$ref": "#/components/schemas/Reference"
           modelType:
             type: string
-            pattern: MultiLanguageProperty
+            enum: 
+            - MultiLanguageProperty
+        required: 
+        - modelType
     Operation:
+      type: object
+      title: Operation
+      x-discriminator-value: Operation
       allOf:
       - "$ref": "#/components/schemas/SubmodelElement"
-      - properties:
+      - type: object 
+        properties:
           inputVariables:
             type: array
             items:
@@ -668,7 +717,10 @@ components:
             minItems: 1
           modelType:
             type: string
-            pattern: Operation
+            enum: 
+            - Operation
+        required:
+        - modelType
     OperationVariable:
       type: object
       properties:
@@ -677,9 +729,13 @@ components:
       required:
       - value
     Property:
+      type: object
+      title: Property
+      x-discriminator-value: Property
       allOf:
       - "$ref": "#/components/schemas/DataElement"
-      - properties:
+      - type: object
+        properties:
           valueType:
             "$ref": "#/components/schemas/DataTypeDefXsd"
           value:
@@ -688,9 +744,11 @@ components:
             "$ref": "#/components/schemas/Reference"
           modelType:
             type: string
-            pattern: Property
+            enum: 
+            - Property
         required:
         - valueType
+        - modelType
     Qualifiable:
       type: object
       properties:
@@ -730,9 +788,13 @@ components:
       - TemplateQualifier
       - ValueQualifier
     Range:
+      type: object
+      title: Range
+      x-discriminator-value: Range
       allOf:
       - "$ref": "#/components/schemas/DataElement"
-      - properties:
+      - type: object
+        properties:
           valueType:
             "$ref": "#/components/schemas/DataTypeDefXsd"
           min:
@@ -741,9 +803,11 @@ components:
             type: string
           modelType:
             type: string
-            pattern: Range
+            enum: 
+            - Range
         required:
         - valueType
+        - modelType
     Referable:
       allOf:
       - "$ref": "#/components/schemas/HasExtensions"
@@ -795,26 +859,40 @@ components:
         - type
         - keys
     ReferenceElement:
+      type: object
+      title: ReferenceElement
+      x-discriminator-value: ReferenceElement
       allOf:
       - "$ref": "#/components/schemas/DataElement"
-      - properties:
+      - type: object
+        properties:
           value:
             "$ref": "#/components/schemas/Reference"
           modelType:
             type: string
-            pattern: ReferenceElement
+            enum: 
+            - ReferenceElement    
+        required:
+        - modelType
     ReferenceTypes:
       type: string
       enum:
       - ExternalReference
       - ModelReference
     RelationshipElement:
+      type: object
+      title: RelationshipElement
+      x-discriminator-value: RelationshipElement
       allOf:
       - "$ref": "#/components/schemas/RelationshipElement_abstract"
-      - properties:
+      - type: object
+        properties:
           modelType:
             type: string
-            pattern: RelationshipElement
+            enum: 
+            - RelationshipElement
+        required: 
+        - modelType
     RelationshipElement_abstract:
       allOf:
       - "$ref": "#/components/schemas/SubmodelElement"
@@ -898,9 +976,13 @@ components:
       - "$ref": "#/components/schemas/Qualifiable"
       - "$ref": "#/components/schemas/HasDataSpecification"
     SubmodelElementCollection:
+      type: object
+      title: SubmodelElementCollection
+      x-discriminator-value: SubmodelElementCollection
       allOf:
       - "$ref": "#/components/schemas/SubmodelElement"
-      - properties:
+      - type: object
+        properties:
           value:
             type: array
             items:
@@ -908,11 +990,18 @@ components:
             minItems: 1
           modelType:
             type: string
-            pattern: SubmodelElementCollection
+            enum: 
+            - SubmodelElementCollection
+        required: 
+        - modelType
     SubmodelElementList:
+      type: object
+      title: SubmodelElementList
+      x-discriminator-value: SubmodelElementList
       allOf:
       - "$ref": "#/components/schemas/SubmodelElement"
-      - properties:
+      - type: object
+        properties:
           orderRelevant:
             type: boolean
           semanticIdListElement:
@@ -928,9 +1017,11 @@ components:
             minItems: 1
           modelType:
             type: string
-            pattern: SubmodelElementList
+            enum: 
+            - SubmodelElementList
         required:
         - typeValueListElement
+        - modelType
     SubmodelElement_choice:
       oneOf:
       - "$ref": "#/components/schemas/RelationshipElement"
