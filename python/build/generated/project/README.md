@@ -21,7 +21,9 @@ Python 3.9+
 
 ## Installation
 
-**It's highly recommended to use a virtual environment (`venv`)** for your project to manage dependencies cleanly.
+**1. Set up a Virtual Environment (Recommended)**
+
+It's highly recommended to use a virtual environment (`venv`) to manage dependencies cleanly.
 
 ```sh
 # Create a virtual environment
@@ -34,24 +36,12 @@ source .venv/bin/activate
 .venv\Scripts\activate
 ```
 
-### From PyPI (Recommended)
+**2. Install from GitHub**
 
-Once your virtual environment is activated, you can install the package directly from PyPI:
-
-```sh
-pip install basyx-v3-clients
-```
-
-### For Development (Local Installation)
-
-If you want to contribute to the library, clone the repository and install it in "editable" mode:
+Once your virtual environment is activated, install the package directly from the GitHub repository:
 
 ```sh
 pip install git+https://github.com/dfkibasys/basyx-v3-client-libraries.git@master#subdirectory=python/build/generated/project
-# Navigate to the correct project directory
-cd basyx-v3-client-libraries/python/build/generated/project
-# Install in editable mode
-pip install -e .
 ```
 
 -----
@@ -119,13 +109,6 @@ elif isinstance(element_prop.actual_instance, File):
     print(f"Detected a File: {element_prop.actual_instance.id_short}, Content Type: {element_prop.actual_instance.content_type}")
 else:
     print(f"Detected an unknown SubmodelElement type: {type(element_prop.actual_instance)}")
-
-# Deserializing a file
-element_file: SubmodelElementChoice = SubmodelElementChoice.from_json(mock_file_json)
-if isinstance(element_file.actual_instance, File):
-    print(f"Detected a File: {element_file.actual_instance.id_short}, Content Type: {element_file.actual_instance.content_type}")
-else:
-    print(f"Detected another SubmodelElement type: {type(element_file.actual_instance)}")
 ```
 
 -----
